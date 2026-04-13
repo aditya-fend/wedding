@@ -1,15 +1,23 @@
 // app/(dashboard)/page.tsx
-import { createServerSupabase } from '@/lib/supabase/server';
-import { prisma } from '@/lib/prisma';
+import { createServerSupabase } from "@/lib/supabase/server";
+import { prisma } from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from 'next/link';
-import { Plus, Calendar, Users, Eye } from 'lucide-react';
-import Image from 'next/image';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import { Plus, Calendar, Users, Eye } from "lucide-react";
+import Image from "next/image";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!session?.user) {
     return <div>Not authenticated</div>;
@@ -20,14 +28,14 @@ export default async function DashboardPage() {
     include: {
       template: true,
       rsvps: {
-        orderBy: { createdAt: 'desc' },
+        orderBy: { createdAt: "desc" },
       },
     },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 
   const templates = await prisma.template.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { createdAt: "desc" },
   });
 
   return (
@@ -36,11 +44,16 @@ export default async function DashboardPage() {
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-4xl font-bold tracking-tight">Selamat Datang</h1>
-          <p className="text-zinc-400 mt-2">Kelola undangan pernikahan digital kamu</p>
+          <p className="text-zinc-400 mt-2">
+            Kelola undangan pernikahan digital kamu
+          </p>
         </div>
-        
+
         <Link href="/dashboard/create">
-          <Button size="lg" className="bg-white text-black hover:bg-zinc-200 flex items-center gap-2">
+          <Button
+            size="lg"
+            className="bg-white text-black hover:bg-zinc-200 flex items-center gap-2"
+          >
             <Plus className="w-5 h-5" />
             Buat Undangan Baru
           </Button>
@@ -68,7 +81,11 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-5xl font-bold">
-              {invitations.reduce((sum: number, inv) => sum + inv.rsvps.length, 0)}
+              {invitations.reduce(
+                (sum: number, inv: { rsvps: { id: string }[] }) =>
+                  sum + inv.rsvps.length,
+                0,
+              )}
             </p>
           </CardContent>
         </Card>
@@ -78,19 +95,25 @@ export default async function DashboardPage() {
       <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-semibold">Pilih Template</h2>
-          <Link href="/templates" className="text-sm text-zinc-400 hover:text-white">
+          <Link
+            href="/templates"
+            className="text-sm text-zinc-400 hover:text-white"
+          >
             Lihat Semua ✨
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {templates.map((template) => (
-            <Card key={template.id} className="bg-zinc-900 border-zinc-800 overflow-hidden group">
+            <Card
+              key={template.id}
+              className="bg-zinc-900 border-zinc-800 overflow-hidden group"
+            >
               <div className="relative h-48">
-                <Image 
-                  src={template.thumbnail} 
+                <Image
+                  src={template.thumbnail}
                   alt={template.name}
-                  fill 
+                  fill
                   className="object-cover group-hover:scale-105 transition-transform"
                 />
                 {template.isPremium && (
@@ -127,14 +150,18 @@ export default async function DashboardPage() {
           ) : (
             <div className="space-y-8">
               {invitations.map((inv) => (
-                <div key={inv.id} className="border border-zinc-800 rounded-2xl p-6">
+                <div
+                  key={inv.id}
+                  className="border border-zinc-800 rounded-2xl p-6"
+                >
                   <div className="flex justify-between items-start mb-6">
                     <div>
                       <h3 className="text-xl font-semibold">
                         {inv.groomName} & {inv.brideName}
                       </h3>
                       <p className="text-zinc-400 text-sm mt-1">
-                        {inv.venue} • {new Date(inv.weddingDate).toLocaleDateString('id-ID')}
+                        {inv.venue} •{" "}
+                        {new Date(inv.weddingDate).toLocaleDateString("id-ID")}
                       </p>
                     </div>
 
@@ -152,18 +179,27 @@ export default async function DashboardPage() {
                   <div className="flex items-center gap-8 text-sm">
                     <div>
                       <span className="text-zinc-400">Total RSVP:</span>{" "}
-                      <span className="font-semibold text-white">{inv.rsvps.length}</span>
+                      <span className="font-semibold text-white">
+                        {inv.rsvps.length}
+                      </span>
                     </div>
                     <div>
                       <span className="text-zinc-400">Hadir:</span>{" "}
                       <span className="font-semibold text-green-400">
-                        {inv.rsvps.filter(r => r.attendance === "hadir").length}
+                        {
+                          inv.rsvps.filter((r) => r.attendance === "hadir")
+                            .length
+                        }
                       </span>
                     </div>
                     <div>
                       <span className="text-zinc-400">Tidak Hadir:</span>{" "}
                       <span className="font-semibold text-red-400">
-                        {inv.rsvps.filter(r => r.attendance === "tidak_hadir").length}
+                        {
+                          inv.rsvps.filter(
+                            (r) => r.attendance === "tidak_hadir",
+                          ).length
+                        }
                       </span>
                     </div>
                   </div>
@@ -171,28 +207,44 @@ export default async function DashboardPage() {
                   {/* List RSVP Terbaru */}
                   {inv.rsvps.length > 0 && (
                     <div className="mt-6 pt-6 border-t border-zinc-800">
-                      <p className="text-sm text-zinc-400 mb-3">Konfirmasi Terbaru:</p>
+                      <p className="text-sm text-zinc-400 mb-3">
+                        Konfirmasi Terbaru:
+                      </p>
                       <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                         {inv.rsvps.slice(0, 5).map((rsvp) => (
-                          <div key={rsvp.id} className="flex justify-between items-center text-sm bg-zinc-950 p-3 rounded-lg">
+                          <div
+                            key={rsvp.id}
+                            className="flex justify-between items-center text-sm bg-zinc-950 p-3 rounded-lg"
+                          >
                             <div>
-                              <span className="font-medium">{rsvp.guestName}</span>
+                              <span className="font-medium">
+                                {rsvp.guestName}
+                              </span>
                               {rsvp.guestPhone && (
-                                <span className="text-zinc-500 ml-2">• {rsvp.guestPhone}</span>
+                                <span className="text-zinc-500 ml-2">
+                                  • {rsvp.guestPhone}
+                                </span>
                               )}
                             </div>
                             <div className="flex items-center gap-4">
-                              <span className={`px-3 py-1 text-xs rounded-full ${
-                                rsvp.attendance === 'hadir' 
-                                  ? 'bg-green-500/20 text-green-400' 
-                                  : rsvp.attendance === 'tidak_hadir' 
-                                  ? 'bg-red-500/20 text-red-400' 
-                                  : 'bg-yellow-500/20 text-yellow-400'
-                              }`}>
-                                {rsvp.attendance === 'hadir' ? 'Hadir' : 
-                                 rsvp.attendance === 'tidak_hadir' ? 'Tidak Hadir' : 'Mungkin'}
+                              <span
+                                className={`px-3 py-1 text-xs rounded-full ${
+                                  rsvp.attendance === "hadir"
+                                    ? "bg-green-500/20 text-green-400"
+                                    : rsvp.attendance === "tidak_hadir"
+                                      ? "bg-red-500/20 text-red-400"
+                                      : "bg-yellow-500/20 text-yellow-400"
+                                }`}
+                              >
+                                {rsvp.attendance === "hadir"
+                                  ? "Hadir"
+                                  : rsvp.attendance === "tidak_hadir"
+                                    ? "Tidak Hadir"
+                                    : "Mungkin"}
                               </span>
-                              <span className="text-zinc-500">({rsvp.numberOfGuest} orang)</span>
+                              <span className="text-zinc-500">
+                                ({rsvp.numberOfGuest} orang)
+                              </span>
                             </div>
                           </div>
                         ))}
