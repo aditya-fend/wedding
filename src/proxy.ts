@@ -3,7 +3,7 @@ import { type NextRequest } from 'next/server';
 import { createServerSupabase } from './lib/supabase/server';
 import { updateSession } from './lib/supabase/middleware'; // kita buat nanti
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const supabase = await createServerSupabase();
   const { data: { session } } = await supabase.auth.getSession();
 
