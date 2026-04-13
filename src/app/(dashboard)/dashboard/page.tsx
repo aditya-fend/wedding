@@ -12,6 +12,7 @@ import {
 import Link from "next/link";
 import { Plus, Calendar, Users, Eye } from "lucide-react";
 import Image from "next/image";
+import type { Template } from "@prisma/client";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();
@@ -34,7 +35,7 @@ export default async function DashboardPage() {
     orderBy: { createdAt: "desc" },
   });
 
-  const templates = await prisma.template.findMany({
+  const templates: Template[] = await prisma.template.findMany({
     orderBy: { createdAt: "desc" },
   });
 
