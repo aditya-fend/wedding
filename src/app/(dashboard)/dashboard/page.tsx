@@ -68,7 +68,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-5xl font-bold">
-              {invitations.reduce((sum, inv) => sum + inv.rsvps.length, 0)}
+              {invitations.reduce((sum: number, inv) => sum + inv.rsvps.length, 0)}
             </p>
           </CardContent>
         </Card>
