@@ -12,7 +12,15 @@ import {
 import Link from "next/link";
 import { Plus, Calendar, Users, Eye } from "lucide-react";
 import Image from "next/image";
-import type { Template } from "@prisma/client";
+
+export type Template = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  thumbnail: string;
+  isPremium: boolean;
+};
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();
@@ -105,7 +113,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {templates.map((template) => (
+          {templates.map((template: Template) => (
             <Card
               key={template.id}
               className="bg-zinc-900 border-zinc-800 overflow-hidden group"
