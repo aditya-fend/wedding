@@ -13,8 +13,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5">
-          <span className="font-semibold text-3xl tracking-tighter text-[#2C2C2C]">
-            Undangan<span className="text-[#D4AF97]">Ku</span>
+          <span className="font-semibold text-xl tracking-tighter text-[#2C2C2C]">
+            Undang<span className="text-[#D4AF97]">Dong</span>
           </span>
         </Link>
 

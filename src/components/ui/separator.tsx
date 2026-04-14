@@ -17,7 +17,9 @@ function Separator({
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        "shrink-0 bg-border data-horizontal:h-px data-horizontal:w-full data-vertical:w-px data-vertical:self-stretch",
+        // Modifikasi: Menggunakan warna border spesifik tema (#E5E0D8)
+        // Penambahan opacity 0.8 untuk kesan yang lebih 'airy' dan elegan
+        "shrink-0 bg-[#E5E0D8]/80 data-horizontal:h-px data-horizontal:w-full data-vertical:h-full data-vertical:w-px",
         className
       )}
       {...props}

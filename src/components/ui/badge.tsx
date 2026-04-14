@@ -5,20 +5,27 @@ import { Slot } from "radix-ui"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(
-  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-4xl border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex h-5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap transition-all focus-visible:ring-2 focus-visible:ring-[#D4AF97] [&>svg]:pointer-events-none [&>svg]:size-3",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        // Primary: Elegant Gold untuk status aktif/premium
+        default: 
+          "bg-[#D4AF97] text-[#2C2C2C] shadow-sm [a]:hover:bg-[#E8C8A0]",
+        // Secondary: Soft Cream untuk status pending atau netral
         secondary:
-          "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
+          "bg-[#F0EDE6] text-[#6B6B6B] border-[#E5E0D8] [a]:hover:bg-[#E5E0D8]",
+        // Destructive: Soft Red untuk error atau suspended
         destructive:
-          "bg-destructive/10 text-destructive focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:focus-visible:ring-destructive/40 [a]:hover:bg-destructive/20",
+          "bg-[#B95C5C]/10 text-[#B95C5C] border-[#B95C5C]/20 [a]:hover:bg-[#B95C5C]/20",
+        // Outline: Tipis dan minimalis untuk kategori template
         outline:
-          "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+          "border-[#D4AF97] text-[#D4AF97] bg-transparent [a]:hover:bg-[#D4AF97]/10",
+        // Ghost: Tanpa background untuk filter dashboard
         ghost:
-          "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "text-[#6B6B6B] hover:bg-[#F0EDE6] hover:text-[#2C2C2C]",
+        // Link: Untuk navigasi slug atau preview link
+        link: "text-[#D4AF97] underline-offset-4 hover:underline font-semibold",
       },
     },
     defaultVariants: {
