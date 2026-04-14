@@ -11,7 +11,6 @@ export default function Hero() {
 
       <div className="max-w-6xl mx-auto px-5 md:px-6 relative z-10 w-full">
         <div className="max-w-4xl mx-auto text-center">
-          
           {/* Badge - Responsive padding & font */}
           <div className="inline-flex items-center gap-2 bg-white border border-[#E5E0D8] px-4 md:px-5 py-2 rounded-full mb-6 md:mb-8 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 md:w-4 h-4 text-[#D4AF97]" />
@@ -21,23 +20,26 @@ export default function Hero() {
           </div>
 
           {/* Headline - Ukuran lebih adaptif */}
+          {/* Headline - FIXED SPACING BUG */}
           <h1 className="text-[2.5rem] leading-[1.1] md:text-6xl lg:text-7xl font-semibold tracking-tighter text-[#2C2C2C] mb-6 md:mb-8">
-            Buat undangan pernikahan<br className="hidden md:block" />
-            yang <span className="text-[#D4AF97]">elegan</span><br className="hidden md:block" />
+            Buat undangan pernikahan <br className="hidden md:block" />
+            yang <span className="text-[#D4AF97]">elegan</span>{" "}
+            {/* Tambahkan spasi di sini */}
+            <br className="hidden md:block" />
             dalam hitungan menit
           </h1>
 
           {/* Subheadline - Line height & size tweak */}
           <p className="text-base md:text-xl text-[#6B6B6B] max-w-2xl mx-auto mb-10 md:mb-12 leading-relaxed px-2 md:px-0">
-            Desain modern yang cantik, sistem RSVP real-time, 
-            dan pembayaran mudah via QRIS. Semua dalam satu platform.
+            Desain modern yang cantik, sistem RSVP real-time, dan pembayaran
+            mudah via QRIS. Semua dalam satu platform.
           </p>
 
           {/* CTA Buttons - Optimasi tap area & mobile padding */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
             <Link href="/register" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="btn-primary text-base md:text-lg px-8 md:px-10 py-6 md:py-7 rounded-2xl font-medium w-full flex items-center justify-center gap-3 group"
               >
                 Buat Undangan Gratis
@@ -46,9 +48,9 @@ export default function Hero() {
             </Link>
 
             <Link href="#harga" className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                variant="outline" 
+              <Button
+                size="lg"
+                variant="outline"
                 className="text-base md:text-lg px-8 md:px-10 py-6 md:py-7 rounded-2xl border-[#D4AF97] text-[#2C2C2C] hover:bg-white w-full bg-white/50 backdrop-blur-sm"
               >
                 Lihat Paket Harga
@@ -57,17 +59,17 @@ export default function Hero() {
           </div>
 
           {/* Trust Signals - Menggunakan Flex Wrap agar tidak bertumpuk di layar medium */}
-          <div className="mt-12 md:mt-16 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-xs md:text-sm text-[#6B6B6B]">
-            <div className="flex items-center gap-2">
-              <span className="text-[#D4AF97] font-bold text-lg">✓</span> 
+          <div className="mt-12 md:mt-16 grid grid-cols-1 sm:flex sm:flex-wrap justify-center items-center gap-x-8 gap-y-4 text-xs md:text-sm text-[#6B6B6B]">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-[#D4AF97] font-bold text-lg">✓</span>
               Gratis untuk dicoba
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#D4AF97] font-bold text-lg">✓</span> 
+              <span className="text-[#D4AF97] font-bold text-lg">✓</span>
               Ribuan pasangan Indonesia
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[#D4AF97] font-bold text-lg">✓</span> 
+              <span className="text-[#D4AF97] font-bold text-lg">✓</span>
               Pembayaran QRIS + WA
             </div>
           </div>
