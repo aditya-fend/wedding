@@ -22,7 +22,8 @@ export default function Hero() {
           {/* Headline - Ukuran lebih adaptif */}
           {/* Headline - FIXED SPACING BUG */}
           <h1 className="text-[2.5rem] leading-[1.1] md:text-6xl lg:text-7xl font-semibold tracking-tighter text-[#2C2C2C] mb-6 md:mb-8">
-            Buat undangan pernikahan <br className="hidden md:block" />
+            Buat undangan pernikahan {" "}
+            <br className="hidden md:block" />
             yang <span className="text-[#D4AF97]">elegan</span>{" "}
             {/* Tambahkan spasi di sini */}
             <br className="hidden md:block" />
@@ -59,8 +60,8 @@ export default function Hero() {
           </div>
 
           {/* Trust Signals - Menggunakan Flex Wrap agar tidak bertumpuk di layar medium */}
-          <div className="mt-12 md:mt-16 grid grid-cols-1 sm:flex sm:flex-wrap justify-center items-center gap-x-8 gap-y-4 text-xs md:text-sm text-[#6B6B6B]">
-            <div className="flex items-center justify-center gap-2">
+          <div className="mt-12 md:mt-16 flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-xs md:text-sm text-[#6B6B6B]">
+            <div className="flex items-center gap-2">
               <span className="text-[#D4AF97] font-bold text-lg">✓</span>
               Gratis untuk dicoba
             </div>
