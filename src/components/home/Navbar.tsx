@@ -19,7 +19,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-10 text-sm font-medium text-[#2C2C2C]">
+        <div className="hidden lg:flex items-center gap-10 text-sm font-medium text-[#2C2C2C]">
           <a href="#fitur" className="hover:text-[#D4AF97] transition-colors">Fitur</a>
           <a href="#template" className="hover:text-[#D4AF97] transition-colors">Template</a>
           <a href="#harga" className="hover:text-[#D4AF97] transition-colors">Harga</a>
@@ -27,26 +27,32 @@ export default function Navbar() {
         </div>
 
         {/* Auth Buttons */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link href="/login">
-            <Button 
-              variant="ghost" 
-              className="font-medium text-[#2C2C2C] hover:text-[#D4AF97]"
-            >
-              Masuk
-            </Button>
-          </Link>
-          <Link href="/register">
-            <Button className="btn-primary text-base font-medium px-8">
-              Daftar Gratis
-            </Button>
-          </Link>
+        <div className="hidden lg:flex items-center gap-4">
+
+            <Link href="/login" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="btn-primary px-6 py-3 rounded-md border-[#D4AF97] text-[#2C2C2C] hover:bg-white w-full bg-white/50 backdrop-blur-sm"
+              >
+                Masuk
+              </Button>
+            </Link>
+
+            <Link href="/register" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="px-6 py-3 rounded-md font-medium w-full flex items-center justify-center gap-3 group"
+              >
+                Daftar Gratis
+              </Button>
+            </Link>
         </div>
 
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-[#2C2C2C] p-2"
+          className="lg:hidden text-[#2C2C2C] p-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +73,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-[#E5E0D8] bg-white py-6 px-6">
+        <div className="lg:hidden border-t border-[#E5E0D8] bg-white py-6 px-6">
           <div className="flex flex-col gap-6 text-sm text-[#2C2C2C]">
             <a href="#fitur" className="hover:text-[#D4AF97]">Fitur</a>
             <a href="#template" className="hover:text-[#D4AF97]">Template</a>
@@ -75,12 +81,24 @@ export default function Navbar() {
             <a href="#testimoni" className="hover:text-[#D4AF97]">Testimoni</a>
 
             <div className="pt-6 border-t border-[#E5E0D8] flex flex-col gap-3">
-              <Link href="/login" className="w-full">
-                <Button variant="outline" className="w-full">Masuk</Button>
-              </Link>
-              <Link href="/register" className="w-full">
-                <Button className="btn-primary w-full">Daftar Gratis</Button>
-              </Link>
+            <Link href="/login" className="w-full sm:w-auto">
+              <Button
+                variant="outline"
+                size="lg"
+                className="btn-primary px-6 py-3 rounded-md border-[#D4AF97] text-[#2C2C2C] hover:bg-white w-full bg-white/50 backdrop-blur-sm"
+              >
+                Masuk
+              </Button>
+            </Link>
+
+            <Link href="/register" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                className="px-6 py-3 rounded-md font-medium w-full flex items-center justify-center gap-3 group"
+              >
+                Daftar Gratis
+              </Button>
+            </Link>
             </div>
           </div>
         </div>
