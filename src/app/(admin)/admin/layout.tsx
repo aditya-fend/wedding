@@ -1,16 +1,35 @@
 import type { Metadata } from 'next';
-import Navbar from './Navbar';
+import Navbar from '../../../components/admin/layout/Navbar';
+import { redirect } from 'next/navigation';
+import { createServerSupabase } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard | UndanganKu',
   description: 'Admin panel for managing UndanganKu',
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || !user.email) {
+    redirect('/masuk');
+  }
+
+  // Check admin role from Prisma DB
+  const dbUser = await prisma.user.findUnique({
+    where: { email: user.email },
+  });
+
+  if (!dbUser || dbUser.role !== 'admin') {
+    redirect('/masuk');
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
       <Navbar />

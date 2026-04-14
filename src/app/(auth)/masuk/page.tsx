@@ -45,7 +45,13 @@ export default function MasukPage() {
     }
 
     toast.success("Login berhasil! Mengalihkan...");
-    router.push("/dashboard");
+    
+    if (data.user.user_metadata.role === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
+
     router.refresh();
   };
 
