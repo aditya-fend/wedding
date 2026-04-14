@@ -20,6 +20,7 @@ interface PaymentModalProps {
   userData: {
     nama: string
     email: string
+    package: string // Tambahkan ini agar sinkron dengan halaman daftar
   }
 }
 
@@ -27,12 +28,14 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
   const router = useRouter()
 
   const handleWhatsAppChat = () => {
-    // Note: Untuk WA Me, pastikan angka dimulai dengan kode negara tanpa 0 (62882...)
     const adminNumber = "6288290483433" 
+    
+    // Pesan otomatis yang mencantumkan nama, email, dan paket yang dipilih
     const message = `Halo Admin Undang Dong, saya telah melakukan pembayaran.\n\n` +
-                    `Detail Akun:\n` +
+                    `*Detail Akun*:\n` +
                     `- Nama: ${userData.nama}\n` +
-                    `- Email: ${userData.email}\n\n` +
+                    `- Email: ${userData.email}\n` +
+                    `- Paket: *${userData.package}*\n\n` + // Paket ditebalkan agar menonjol
                     `Mohon verifikasi pembayaran saya untuk aktivasi akun. Terima kasih.`
     
     const url = `https://wa.me/${adminNumber}?text=${encodeURIComponent(message)}`
@@ -44,7 +47,6 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
       <DialogContent 
         className="max-w-[95vw] sm:max-w-[450px] max-h-[90vh] flex flex-col p-0 overflow-hidden"
       >
-        {/* Kontainer Scrollable agar DialogTitle & Footer tetap terlihat jika memungkinkan */}
         <div className="flex flex-col h-full overflow-y-auto p-6 scrollbar-thin scrollbar-thumb-[#D4AF97]">
           
           <DialogHeader className="items-center text-center pb-4">
@@ -53,12 +55,12 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
             </div>
             <DialogTitle className="text-2xl">Satu Langkah Lagi!</DialogTitle>
             <DialogDescription className="text-center text-[#6B6B6B]">
-              Pendaftaran berhasil. Silakan bayar via QRIS untuk aktivasi akun.
+              Pendaftaran berhasil. Silakan bayar sesuai harga paket **{userData.package}** via QRIS di bawah ini.
             </DialogDescription>
           </DialogHeader>
 
           <div className="flex flex-col items-center gap-6 py-2">
-            {/* QRIS Container - Ukuran responsif */}
+            {/* QRIS Container */}
             <div className="relative group overflow-hidden rounded-2xl border-4 border-[#F0EDE6] shadow-inner p-2 bg-white w-full max-w-[280px]">
               <Image 
                 src={qrisImage} 
@@ -66,14 +68,14 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
                 layout="responsive"
                 width={250} 
                 height={250}
-                className="rounded-lg transition-all duration-300"
+                className="rounded-lg"
               />
             </div>
 
             <div className="text-center space-y-2 pb-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#D4AF97]">Instruksi Aktivasi</p>
               <p className="text-sm text-[#6B6B6B] leading-relaxed">
-                Klik tombol WhatsApp di bawah untuk kirim bukti. Akun aktif maksimal dalam **1x24 jam**.
+                Pilih paket: **{userData.package}**. Klik tombol di bawah untuk kirim bukti transfer. Akun aktif maksimal dalam **1x24 jam**.
               </p>
             </div>
           </div>
