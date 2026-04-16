@@ -7,19 +7,27 @@ import AuraDark from "@/components/templates/AuraDark";
 import NeroGold from "@/components/templates/NeroGold";
 
 export function LivePreview() {
+  // Ambil activeTemplate langsung dari store
   const { formData, activeTemplate } = useEditorStore();
+
+  // Helper untuk menentukan template mana yang harus tampil
+  const renderTemplate = () => {
+    switch (activeTemplate) {
+      case "Nero Gold":
+        return <NeroGold data={formData} />;
+      case "Aura Dark":
+      default:
+        return <AuraDark data={formData} />;
+    }
+  };
 
   return (
     <div className="w-full h-full flex items-center justify-center relative">
-      {/* Container untuk Emulator agar selalu di tengah */}
       <div className="relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] transform scale-[0.85] lg:scale-100 transition-transform">
-        <MobileDeviceEmulator deviceType="iphone13">
+        <MobileDeviceEmulator deviceType="galaxyS21">
           <div className="w-full h-full overflow-y-auto scrollbar-hide">
-            {activeTemplate === "nero-gold" ? (
-              <NeroGold data={formData} />
-            ) : (
-              <AuraDark data={formData} />
-            )}
+            {/* Render template secara dinamis berdasarkan state */}
+            {renderTemplate()}
           </div>
         </MobileDeviceEmulator>
       </div>
