@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, KeyRound, Mail, Loader2 } from "lucide-react";
+import { getUserRole } from "@/lib/actions/auth";
 
 export default function MasukPage() {
   const [email, setEmail] = useState("");
@@ -33,9 +34,8 @@ export default function MasukPage() {
       password,
     });
 
-    setLoading(false);
-
     if (error) {
+      setLoading(false);
       toast.error(
         error.message === "Invalid login credentials"
           ? "Email atau kata sandi salah"
@@ -45,14 +45,20 @@ export default function MasukPage() {
     }
 
     toast.success("Login berhasil! Mengalihkan...");
-    
-    if (data.user.user_metadata.role === "admin") {
-      router.push("/admin");
-    } else {
-      router.push("/dashboard");
+
+    // Logika Pengalihan
+    if (data.user) {
+      const actualRole = await getUserRole(data.user.id);
+
+      if (actualRole === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
     }
 
     router.refresh();
+    setLoading(false);
   };
 
   return (

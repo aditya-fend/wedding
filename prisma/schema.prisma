@@ -19,52 +19,59 @@ enum UserStatus {
   suspended
 }
 
-model User {
-  id         String     @id @default(cuid()) // [cite: 32]
-  name       String     // [cite: 33]
-  email      String     @unique // [cite: 34]
-  password   String     // [cite: 35]
-  role       Role       @default(user) // [cite: 37]
-  status     UserStatus @default(pending) // [cite: 38]
-  createdAt  DateTime   @default(now()) // [cite: 40]
-  
-  // Relations
-  tokens      Token[]      // 
-  invitations Invitation[] // [cite: 62]
+enum PackageType {
+  BASIC
+  STANDARD
+  PREMIUM
 }
 
-// 3.2. Token [cite: 41]
-model Token {
-  id          String   @id @default(cuid()) // [cite: 44]
-  tokenCode   String   @unique // [cite: 45]
-  isUsed      Boolean  @default(false) // [cite: 46]
-  packageType String   // Misal: 'Basic', 'Premium' 
-  createdAt   DateTime @default(now()) // 
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  password   String
+  role       Role       @default(user)
+  status     UserStatus @default(pending)
+  createdAt  DateTime   @default(now())
+  
+  // Ubah baris ini:
+  tokens     Int        @default(0) // Menyimpan jumlah saldo token sebagai angka
+  package    PackageType @default(BASIC)
   
   // Relations
-  userId      String?  // 
-  user        User?    @relation(fields: [userId], references: [id])
+  invitations Invitation[]
 }
 
 // 3.3. Template [cite: 48]
 model Template {
-  id           String   @id @default(cuid()) // [cite: 50]
-  title        String   // [cite: 51]
-  description  String?  @db.Text // [cite: 52]
-  thumbnailUrl String?  // [cite: 53]
-  previewUrl   String?  // [cite: 55]
-  configPath   String   // [cite: 56]
-  category     String   // [cite: 57]
+  id           String   @id @default(cuid())
+  title        String
+  description  String?  @db.Text
+  thumbnailUrl String?
+  previewUrl   String?
+  configPath   String
+  category     String
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
   
-  // Relations
-  invitations  Invitation[] // [cite: 63]
+  // Tambahan relasi musik (opsional, jika template punya musik default)
+  defaultMusicId String?
+  
+  invitations  Invitation[]
 }
 
-// 3.4. Undangan (Invitation) [cite: 58]
+model Music {
+  id        String   @id @default(cuid())
+  title     String
+  artist    String?
+  url       String   // URL dari Supabase Storage
+  category  String?
+  createdAt DateTime @default(now())
+}// 3.4. Undangan (Invitation) [cite: 58]
 model Invitation {
   id          String   @id @default(cuid()) // [cite: 60]
   title       String   // [cite: 64]
-  slugUrl     String   @unique // [cite: 65]
+  slug        String   @unique // [cite: 65]
   isActive    Boolean  @default(true) // [cite: 66]
   viewsCount  Int      @default(0) // [cite: 75]
   createdAt   DateTime @default(now()) // [cite: 76]
@@ -73,7 +80,7 @@ model Invitation {
    * Mencakup: mempelai_pria, mempelai_wanita, acara, love_story, gallery, 
    * digital_envelope, music_url, dan dress_code. [cite: 68, 69, 70, 71, 72, 73, 74]
    */
-  contentData Json // [cite: 67]
+  contentData Json? // [cite: 67]
 
   // Relations
   userId      String   // [cite: 62]

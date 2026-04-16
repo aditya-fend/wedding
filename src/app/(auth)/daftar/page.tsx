@@ -21,7 +21,7 @@ import {
   ChevronLeft,
   Crown
 } from "lucide-react";
-import { PaymentModal } from "@/components/modal-pembayaran";
+import { PaymentModal } from "@/components/user/pay/modal-pembayaran";
 import { cn } from "@/lib/utils";
 
 const packages = [
@@ -98,20 +98,20 @@ export default function DaftarPage() {
 
   return (
     <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center p-4 md:p-6">
-      <div className="w-full max-w-[480px] space-y-6">
+      <div className="w-full max-w-120 space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight text-[#2C2C2C]">Undang Dong</h1>
-          <p className="text-[#6B6B6B] text-sm">Wujudkan undangan pernikahan impian Anda</p>
+          <p className="text-muted-foreground text-sm">Wujudkan undangan pernikahan impian Anda</p>
         </div>
 
-        <Card className="border-[#E5E0D8] shadow-xl rounded-2xl overflow-hidden">
-          <CardHeader className="bg-white border-b border-[#E5E0D8]/50 pb-6">
+        <Card className="border-border shadow-xl rounded-2xl overflow-hidden">
+          <CardHeader className="bg-white border-b border-border/50 pb-6">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF97]">
                 Langkah {step} dari 2
               </span>
               {step === 2 && (
-                <button onClick={prevStep} className="text-xs flex items-center text-[#6B6B6B] hover:text-[#2C2C2C]">
+                <button onClick={prevStep} className="text-xs flex items-center text-muted-foreground hover:text-[#2C2C2C]">
                   <ChevronLeft className="size-3 mr-1" /> Kembali
                 </button>
               )}

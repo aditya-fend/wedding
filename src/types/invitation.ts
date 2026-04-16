@@ -49,3 +49,68 @@ export interface GuestWish {
   is_present: AttendanceStatus; // [cite: 83, 84, 85]
   created_at: Date;
 }
+
+// types/invitation.ts
+
+export interface Template {
+  id: string;
+  title: string;
+  description?: string | null;
+  thumbnailUrl?: string | null;
+  previewUrl?: string | null;
+  configPath: string;
+  category: string;
+}
+
+export interface Music {
+  id: string;
+  title: string;
+  artist?: string;
+  url: string;
+  category?: string;
+}
+
+export interface InvitationFormData {
+  templateId: string;
+  musicId: string;
+  mempelaiPria: string;
+  mempelaiWanita: string;
+  tanggalAcara: string;
+  lokasiMaps: string;
+}
+
+export interface InvitationData {
+  mempelai_pria: {
+    nama: string;
+    ortu_ayah: string;
+    ortu_ibu: string;
+    instagram?: string;
+  };
+  mempelai_wanita: {
+    nama: string;
+    ortu_ayah: string;
+    ortu_ibu: string;
+    instagram?: string;
+  };
+  acara: {
+    tipe: string;
+    tanggal: string;
+    jam: string;
+    lokasi: string;
+    alamat_lengkap: string;
+    link_maps: string;
+  }[];
+  love_story: {
+    tahun: string;
+    cerita: string;
+    foto: string;
+  }[];
+  gallery: string[];
+  digital_envelope: {
+    bank_name: string;
+    account_number: string;
+    account_holder: string;
+  }[];
+  music_url?: string;
+  dress_code?: string;
+}
