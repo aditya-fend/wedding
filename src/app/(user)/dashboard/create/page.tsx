@@ -75,7 +75,7 @@ export default async function CreateInvitationPage() {
     : defaultContent;
 
   return (
-    <main className="h-screen overflow-hidden bg-[#F8F5F0]">
+    <main className="h-screen w-full overflow-hidden bg-[#F8F5F0]">
       <CreateDesktopView
         invitationId={invitationData?.id || "guest-mode"}
         initialData={initialData}

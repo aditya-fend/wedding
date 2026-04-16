@@ -22,11 +22,10 @@ export function LivePreview() {
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center relative">
-      <div className="relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] transform scale-[0.85] lg:scale-100 transition-transform">
+    <div className="w-full h-full flex items-start justify-center relative">
+      <div className="flex relative z-10 drop-shadow-[0_20px_50px_rgba(0,0,0,0.15)] transform scale-[0.85] lg:scale-100 transition-transform">
         <MobileDeviceEmulator deviceType="galaxyS21">
           <div className="w-full h-full overflow-y-auto scrollbar-hide">
-            {/* Render template secara dinamis berdasarkan state */}
             {renderTemplate()}
           </div>
         </MobileDeviceEmulator>

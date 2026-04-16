@@ -38,12 +38,12 @@ export default function Hero() {
 
           {/* CTA Buttons - Optimasi tap area & mobile padding */}
           <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center">
-            <Link href="/register" className="w-full sm:w-auto">
+            <Link href="/daftar" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="btn-primary text-base md:text-lg px-8 md:px-10 py-6 md:py-7 rounded-2xl font-medium w-full flex items-center justify-center gap-3 group"
               >
-                Buat Undangan Gratis
+                Buat Undangan
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>

@@ -137,7 +137,7 @@ export default function DaftarPage() {
                         ? "border-[#D4AF97] bg-[#F8F5F0]/50 ring-1 ring-[#D4AF97]" 
                         : "border-[#E5E0D8] bg-white hover:border-[#D4AF97]/50"
                     )}
-                    onClick={() => setSelectedPackage(pkg.name)}
+                    onClick={(e) => {setSelectedPackage(pkg.name); e.stopPropagation(); toggleExpand(pkg.name);}}
                   >
                     <div className="p-4 flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -232,6 +232,11 @@ export default function DaftarPage() {
             </div>
           </CardContent>
         </Card>
+
+        <p className="text-center text-xs text-[#6B6B6B]">
+          &copy; {new Date().getFullYear()} UndangDong. Semua hak cipta
+          dilindungi.
+        </p>
       </div>
 
       <PaymentModal

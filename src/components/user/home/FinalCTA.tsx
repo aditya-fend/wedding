@@ -32,12 +32,12 @@ export default function FinalCTA() {
               size="lg" 
               className="btn-primary text-base md:text-lg px-8 md:px-12 py-6 md:py-7 rounded-2xl font-medium flex items-center justify-center gap-3 group w-full"
             >
-              Buat Undangan Gratis
+              Buat Undangan
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
 
-          <Link href="/login" className="w-full sm:w-auto">
+          <Link href="/masuk" className="w-full sm:w-auto">
             <Button 
               size="lg" 
               variant="outline" 

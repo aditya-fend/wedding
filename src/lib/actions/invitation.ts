@@ -154,3 +154,37 @@ export async function getInvitationById(id: string) {
     include: { template: true }
   });
 }
+
+export async function deleteInvitation(invitationId: string) {
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) throw new Error("Unauthorized");
+
+  try {
+    // 1. Validasi kepemilikan
+    const existing = await prisma.invitation.findUnique({
+      where: { id: invitationId },
+      select: { userId: true },
+    });
+
+    if (!existing || existing.userId !== user.id) {
+      throw new Error("Anda tidak memiliki akses untuk menghapus undangan ini.");
+    }
+
+    // 2. Hapus undangan
+    await prisma.invitation.delete({
+      where: { id: invitationId },
+    });
+
+    // 3. Revalidate dashboard
+    revalidatePath("/dashboard");
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Delete Error:", error);
+    throw new Error(error.message || "Gagal menghapus undangan.");
+  }
+}

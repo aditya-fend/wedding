@@ -3,11 +3,12 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Plus, Ticket, ExternalLink, Settings2 } from "lucide-react";
+import { Calendar, Plus, Ticket, ExternalLink, Settings2, Trash } from "lucide-react";
 import { CreateInvitationModal } from "@/components/user/dashboard/CreateInvitationModal";
 import Link from "next/link";
 import { Invitation, Template } from "@prisma/client";
-import { InvitationContent } from "@/types/invitation"; // Sesuaikan path-nya
+import { InvitationContent } from "@/types/invitation";
+import { DeleteInvitationButton } from "@/components/user/dashboard/DeleteInvitationButton";
 
 // Tipe data untuk hasil query Prisma
 type InvitationWithTemplate = Invitation & {
@@ -121,24 +122,26 @@ export default async function DashboardPage() {
                     <Button
                       asChild
                       variant="outline"
-                      className="flex-1 rounded-xl border-[#E5E0D8] h-10 text-xs"
+                      className="flex-1 rounded-xl border-[#E5E0D8] h-10 text-xs gap-2"
                     >
                       <Link href={`/dashboard/edit/${item.id}`}>
-                        <Settings2 className="size-3 mr-2" /> Edit
+                        <Settings2 className="size-3.5" /> Edit
                       </Link>
                     </Button>
                     <Button
                       asChild
-                      className="flex-1 rounded-xl bg-[#2C2C2C] h-10 text-xs text-white"
+                      variant="secondary"
+                      className="flex-1 rounded-xl h-10 text-xs gap-2"
                     >
                       <a
                         href={`/v/${item.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        <ExternalLink className="size-3 mr-2" /> Preview
+                        <ExternalLink className="size-3.5" /> Preview
                       </a>
                     </Button>
+                    <DeleteInvitationButton id={item.id} title={item.title} />
                   </div>
                 </CardContent>
               </Card>

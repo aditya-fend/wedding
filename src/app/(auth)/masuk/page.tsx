@@ -174,7 +174,7 @@ export default function MasukPage() {
 
         {/* Footer Link */}
         <p className="text-center text-xs text-[#6B6B6B]">
-          &copy; {new Date().getFullYear()} Undang Dong. Semua hak cipta
+          &copy; {new Date().getFullYear()} UndangDong. Semua hak cipta
           dilindungi.
         </p>
       </div>

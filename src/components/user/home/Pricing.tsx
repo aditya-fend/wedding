@@ -74,12 +74,11 @@ export default function Pricing() {
             <Card
               key={index}
               className={`relative flex flex-col h-full border-[#E5E0D8] transition-all duration-300 hover:shadow-xl hover:-translate-y-2 
-    overflow-visible /* TAMBAHKAN INI UNTUK FIX BADGE KEPOTONG */
+    overflow-visible 
     ${pkg.popular ? "border-[#D4AF97] shadow-lg ring-1 ring-[#D4AF97]" : "shadow-sm"}
     ${index === 2 ? "md:col-span-2 lg:col-span-1" : ""}
   `}
             >
-              {/* PERBAIKAN BADGE: Gunakan top-0 dan hilangkan overflow-hidden jika perlu, atau ubah struktur */}
               {pkg.popular && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 whitespace-nowrap">
                   <span className="bg-[#D4AF97] text-[#2C2C2C] text-[10px] md:text-xs font-bold px-4 py-1.5 rounded-full shadow-md">
@@ -124,7 +123,7 @@ export default function Pricing() {
                   ))}
                 </ul>
 
-                <Link href="/register" className="block mt-auto">
+                <Link href="/daftar" className="block mt-auto">
                   <Button
                     className={`w-full py-6 md:py-7 text-base font-medium rounded-xl md:rounded-2xl transition-all 
                       ${
