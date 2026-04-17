@@ -28,25 +28,37 @@ export default function MasukPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-    setLoading(false);
+      const data = await res.json();
+      setLoading(false);
 
-    if (error) {
-      toast.error(
-        error.message === "Invalid login credentials"
-          ? "Email atau kata sandi salah"
-          : error.message,
-      );
-      return;
+      if (!res.ok) {
+        toast.error(data.error || "Gagal melakukan login.");
+        return;
+      }
+
+      toast.success("Login berhasil! Mengalihkan...");
+
+      // ALIH KAN SESUAI ROLE
+      if (data.user.role === 'admin') {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+
+      router.refresh();
+    } catch (err) {
+      setLoading(false);
+      toast.error("Terjadi masalah pada server autentikasi.");
     }
-
-    toast.success("Login berhasil! Mengalihkan...");
-    router.push("/dashboard");
-    router.refresh();
   };
 
   return (

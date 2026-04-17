@@ -1,24 +1,31 @@
-// middleware.ts
-import { type NextRequest } from 'next/server';
-import { createServerSupabase } from './lib/supabase/server';
-import { updateSession } from './lib/supabase/middleware'; // kita buat nanti
+// proxy.ts (Pengganti middleware.ts di Next.js 16)
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function proxy(request: NextRequest) {
-  const supabase = await createServerSupabase();
-  const { data: { session } } = await supabase.auth.getSession();
+  const isAuthPage = request.nextUrl.pathname.startsWith('/masuk') || 
+                     request.nextUrl.pathname.startsWith('/daftar');
+  const isAdminPage = request.nextUrl.pathname.startsWith('/admin');
+  const isDashboardPage = request.nextUrl.pathname.startsWith('/dashboard');
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
-                     request.nextUrl.pathname.startsWith('/register');
+  if (isAuthPage || isAdminPage || isDashboardPage) {
+    const sessionCookie = request.cookies.get('user_session');
+    const session = sessionCookie ? sessionCookie.value : null;
 
-  // Jika belum login dan mencoba akses dashboard → redirect ke login
-  if (!session && !isAuthPage && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return Response.redirect(new URL('/login', request.url));
+    if (!session && (isAdminPage || isDashboardPage)) {
+      return NextResponse.redirect(new URL('/masuk', request.url));
+    }
+
+    if (session && isAuthPage) {
+      return NextResponse.redirect(new URL('/admin', request.url));
+    }
   }
 
-  // Jika sudah login dan di halaman auth → redirect ke dashboard
-  if (session && isAuthPage) {
-    return Response.redirect(new URL('/dashboard', request.url));
-  }
-
-  return updateSession(request); // untuk refresh session
+  return NextResponse.next();
 }
+
+
+export const config = {
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};

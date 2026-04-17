@@ -29,7 +29,7 @@ export default function Navbar() {
         {/* Auth Buttons */}
         <div className="hidden lg:flex items-center gap-4">
 
-            <Link href="/login" className="w-full sm:w-auto">
+            <Link href="/masuk" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
@@ -39,7 +39,7 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <Link href="/register" className="w-full sm:w-auto">
+            <Link href="/daftar" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="px-6 py-3 rounded-md font-medium w-full flex items-center justify-center gap-3 group"
@@ -81,7 +81,7 @@ export default function Navbar() {
             <a href="#testimoni" className="hover:text-[#D4AF97]">Testimoni</a>
 
             <div className="pt-6 border-t border-[#E5E0D8] flex flex-col gap-3">
-            <Link href="/login" className="w-full sm:w-auto">
+            <Link href="/masuk" className="w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="lg"
@@ -91,7 +91,7 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <Link href="/register" className="w-full sm:w-auto">
+            <Link href="/daftar" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="px-6 py-3 rounded-md font-medium w-full flex items-center justify-center gap-3 group"
