@@ -104,7 +104,7 @@ export default function DaftarPage() {
           <p className="text-muted-foreground text-sm">Wujudkan undangan pernikahan impian Anda</p>
         </div>
 
-        <Card className="border-border shadow-xl rounded-2xl overflow-hidden">
+        <Card className="border-border max-w-md mx-auto shadow-xl rounded-2xl overflow-hidden">
           <CardHeader className="bg-white border-b border-border/50 pb-6">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF97]">

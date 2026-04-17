@@ -32,7 +32,7 @@ export function DeleteInvitationButton({ id, title }: DeleteInvitationButtonProp
         toast.success("Undangan berhasil dihapus")
         setIsOpen(false)
       }
-    } catch (error: any) {
+    } catch (error) {
       toast.error(error.message || "Gagal menghapus undangan")
     } finally {
       setIsLoading(false)

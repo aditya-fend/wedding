@@ -3,12 +3,21 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Plus, Ticket, ExternalLink, Settings2, Trash } from "lucide-react";
+import {
+  Calendar,
+  Plus,
+  Ticket,
+  ExternalLink,
+  Settings2,
+  Trash,
+  Send,
+} from "lucide-react";
 import { CreateInvitationModal } from "@/components/user/dashboard/CreateInvitationModal";
 import Link from "next/link";
 import { Invitation, Template } from "@prisma/client";
 import { InvitationContent } from "@/types/invitation";
 import { DeleteInvitationButton } from "@/components/user/dashboard/DeleteInvitationButton";
+import { ShareInvitationModal } from "@/components/user/dashboard/ShareInvitationModal";
 
 // Tipe data untuk hasil query Prisma
 type InvitationWithTemplate = Invitation & {
@@ -88,9 +97,9 @@ export default async function DashboardPage() {
             {invitations.map((item) => (
               <Card
                 key={item.id}
-                className="border-[#E5E0D8] bg-white overflow-hidden hover:shadow-md transition-shadow"
+                className="w-full border-[#E5E0D8] bg-white overflow-hidden hover:shadow-md transition-shadow"
               >
-                <CardContent className="p-6 space-y-4">
+                <CardContent className="w-full p-6 space-y-4">
                   <div className="flex justify-between items-start">
                     <div className="bg-[#F8F5F0] p-3 rounded-xl">
                       <Calendar className="size-6 text-[#D4AF97]" />
@@ -118,11 +127,11 @@ export default async function DashboardPage() {
                     </p>
                   )}
 
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-1 pt-2">
                     <Button
                       asChild
                       variant="outline"
-                      className="flex-1 rounded-xl border-[#E5E0D8] h-10 text-xs gap-2"
+                      className="flex-1 rounded-xl h-10 text-xs gap-2"
                     >
                       <Link href={`/dashboard/edit/${item.id}`}>
                         <Settings2 className="size-3.5" /> Edit
@@ -142,6 +151,7 @@ export default async function DashboardPage() {
                       </a>
                     </Button>
                     <DeleteInvitationButton id={item.id} title={item.title} />
+                    <ShareInvitationModal slug={item.slug} title={item.title} />
                   </div>
                 </CardContent>
               </Card>

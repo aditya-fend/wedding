@@ -44,7 +44,7 @@ export default function Navbar() {
                 size="lg"
                 className="px-6 py-3 rounded-md font-medium w-full flex items-center justify-center gap-3 group"
               >
-                Buat Undangan
+                Daftar
               </Button>
             </Link>
         </div>
