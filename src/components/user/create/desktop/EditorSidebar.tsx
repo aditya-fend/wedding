@@ -111,14 +111,12 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
               <Palette className="size-3 text-[#D4AF97]" /> Template
             </Label>
-            {/* FIX: Pastikan activeTemplate membaca ID yang benar dari store */}
             <Select value={activeTemplate} onValueChange={setActiveTemplate}>
-              <SelectTrigger className="h-10 rounded-xl bg-slate-50 border-slate-200 text-xs font-bold shadow-sm focus:ring-[#D4AF97]">
+              <SelectTrigger className="h-10 rounded-xl bg-white border-slate-200 text-xs font-bold shadow-sm focus:ring-[#D4AF97]">
                 <SelectValue placeholder="Pilih Template" />
               </SelectTrigger>
               <SelectContent className="rounded-xl">
                 {templates.map((t) => (
-                  // FIX FATAL: value harus t.id, BUKAN t.title!
                   <SelectItem key={t.id} value={t.title}> 
                     {t.title}
                   </SelectItem>

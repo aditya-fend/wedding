@@ -7,12 +7,12 @@ export async function proxy(request: NextRequest) {
   const supabase = await createServerSupabase();
   const { data: { session } } = await supabase.auth.getSession();
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
-                     request.nextUrl.pathname.startsWith('/register');
+  const isAuthPage = request.nextUrl.pathname.startsWith('/masuk') || 
+                     request.nextUrl.pathname.startsWith('/daftar');
 
   // Jika belum login dan mencoba akses dashboard → redirect ke login
   if (!session && !isAuthPage && request.nextUrl.pathname.startsWith('/dashboard')) {
-    return Response.redirect(new URL('/login', request.url));
+    return Response.redirect(new URL('/masuk', request.url));
   }
 
   // Jika sudah login dan di halaman auth → redirect ke dashboard
