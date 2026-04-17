@@ -1,0 +1,10 @@
+[
+  {
+    "id": "token-001",
+    "tokenCode": "CORE-001-ABCD",
+    "packageType": "Basic",
+    "isUsed": false,
+    "createdAt": "2026-04-17T00:00:00.000Z",
+    "userId": null
+  }
+]

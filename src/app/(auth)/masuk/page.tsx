@@ -44,20 +44,40 @@ export default function MasukPage() {
       return;
     }
 
-    toast.success("Login berhasil! Mengalihkan...");
-
-    // Logika Pengalihan
-    if (data.user) {
-      const actualRole = await getUserRole(data.user.id);
-
-      if (actualRole === "admin") {
-        router.push("/admin");
-      } else {
-        router.push("/dashboard");
-      }
+    if (!data.user) {
+      setLoading(false);
+      toast.error("User tidak ditemukan");
+      return;
     }
 
+    // 🔥 Ambil role dari database
+    const actualRole = await getUserRole(data.user.id);
+
+    await fetch("/api/set-session", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: data.user.id,
+      }),
+    });
+
+    toast.success("Login berhasil! Mengalihkan...");
+
+    // 🔥 PENTING: tunggu sebentar agar cookie Supabase tersimpan
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    // 🔥 Refresh dulu supaya server component kebaca session
     router.refresh();
+
+    // 🔥 Baru redirect
+    if (actualRole === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/dashboard");
+    }
+
     setLoading(false);
   };
 
