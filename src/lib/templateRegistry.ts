@@ -7,6 +7,7 @@ import { InvitationContent } from "@/types/invitation";
 
 export type TemplateComponent = React.ComponentType<{
   data: InvitationContent;
+  invitationId?: string;
 }>;
 
 export const templateRegistry = {
@@ -16,7 +17,7 @@ export const templateRegistry = {
   royal: Royal,
 };
 
-export const getTemplate: Record<string, React.ComponentType<unknown>> = {
+export const getTemplate: Record<string, TemplateComponent> = {
   AuraDark,
   NeroGold,
   Pink,

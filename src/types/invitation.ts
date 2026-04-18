@@ -53,6 +53,7 @@ export interface InvitationContent {
   closing_message?: string;
   dress_code?: string; // [cite: 74]
   dress_code_description?: string; // [cite: 74]
+  hero_image?: string;
 }
 
 export interface GuestWish {

@@ -3,18 +3,41 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { InvitationContent } from '@/types/invitation';
+import { saveGuestWish } from '@/lib/actions/guestWish';
 
 interface RoyalRSVPProps {
   data: InvitationContent;
+  invitationId?: string;
 }
 
-const RoyalRSVP = ({ data }: RoyalRSVPProps) => {
+const RoyalRSVP = ({ data, invitationId }: RoyalRSVPProps) => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    guestCount: '1',
+    presence: 'Hadir'
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!invitationId) return;
+    
     setStatus('submitting');
-    setTimeout(() => setStatus('submitted'), 2000);
+    
+    const result = await saveGuestWish({
+      invitationId,
+      guestName: formData.name,
+      message: `RSVP: ${formData.presence} - ${formData.guestCount} orang`,
+      isPresent: formData.presence,
+      guestCount: parseInt(formData.guestCount)
+    });
+
+    if (result.success) {
+      setStatus('submitted');
+    } else {
+      setStatus('idle');
+      alert('Gagal mengirim konfirmasi. Silakan coba lagi.');
+    }
   };
 
   const containerVariants = {
@@ -59,6 +82,8 @@ const RoyalRSVP = ({ data }: RoyalRSVPProps) => {
               <label className="text-[10px] uppercase tracking-widest text-slate-400 ml-2">Nama Lengkap</label>
               <input 
                 required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full bg-pink-50/30 border border-pink-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-pink-200 transition-all font-serif"
                 placeholder="Contoh: Bpk. Dharma"
               />
@@ -66,9 +91,16 @@ const RoyalRSVP = ({ data }: RoyalRSVPProps) => {
 
             <div className="space-y-1">
               <label className="text-[10px] uppercase tracking-widest text-slate-400 ml-2">Jumlah Tamu</label>
-              <select className="w-full bg-pink-50/30 border border-pink-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-pink-200 appearance-none font-serif">
-                <option>1 Orang</option>
-                <option>2 Orang</option>
+              <select 
+                value={formData.guestCount}
+                onChange={(e) => setFormData({ ...formData, guestCount: e.target.value })}
+                className="w-full bg-pink-50/30 border border-pink-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-pink-200 appearance-none font-serif"
+              >
+                <option value="1">1 Orang</option>
+                <option value="2">2 Orang</option>
+                <option value="3">3 Orang</option>
+                <option value="4">4 Orang</option>
+                <option value="5">5 Orang</option>
               </select>
             </div>
 
@@ -77,7 +109,13 @@ const RoyalRSVP = ({ data }: RoyalRSVPProps) => {
               <div className="flex gap-2">
                 {['Hadir', 'Tidak Hadir'].map((opt) => (
                   <label key={opt} className="flex-1">
-                    <input type="radio" name="attend" className="hidden peer" defaultChecked={opt === 'Hadir'} />
+                    <input 
+                      type="radio" 
+                      name="attend" 
+                      className="hidden peer" 
+                      checked={formData.presence === opt}
+                      onChange={() => setFormData({ ...formData, presence: opt })} 
+                    />
                     <div className="text-center py-2 border border-pink-100 rounded-xl text-xs peer-checked:bg-pink-400 peer-checked:text-white peer-checked:border-pink-400 transition-all cursor-pointer text-slate-500 font-serif">
                       {opt}
                     </div>

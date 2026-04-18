@@ -18,6 +18,7 @@ const montserrat = Montserrat({
 
 interface TemplateProps {
   data?: InvitationContent;
+  invitationId?: string;
 }
 
 export default function Pink({ data }: TemplateProps) {

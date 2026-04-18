@@ -102,6 +102,7 @@ model GuestWish {
   guestName    String   // [cite: 82]
   message      String   @db.Text // [cite: 83]
   isPresent    Presence // [cite: 84]
+  guestCount   Int      @default(1)
   createdAt    DateTime @default(now()) // [cite: 85]
 
   // Relations

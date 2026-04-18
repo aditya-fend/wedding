@@ -19,6 +19,7 @@ import { Invitation, Template } from "@prisma/client";
 import { InvitationContent } from "@/types/invitation";
 import { DeleteInvitationButton } from "@/components/user/dashboard/DeleteInvitationButton";
 import { ShareInvitationModal } from "@/components/user/dashboard/ShareInvitationModal";
+import { DownloadGuestDataButton } from "@/components/user/dashboard/DownloadGuestDataButton";
 
 // Tipe data untuk hasil query Prisma
 type InvitationWithTemplate = Invitation & {
@@ -148,6 +149,7 @@ export default async function DashboardPage() {
                     </Button>
                     <DeleteInvitationButton id={item.id} title={item.title} />
                     <ShareInvitationModal slug={item.slug} title={item.title} />
+                    <DownloadGuestDataButton invitationId={item.id} title={item.title} />
                   </div>
                 </CardContent>
               </Card>

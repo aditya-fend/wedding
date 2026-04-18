@@ -12,6 +12,7 @@ import { InvitationContent } from "@/types/invitation";
 interface Props {
   data: InvitationContent;
   templateId: string;
+  invitationId?: string;
 }
 
 export default function PublicInvitationClient({ data, templateId }: Props) {
@@ -36,10 +37,10 @@ export default function PublicInvitationClient({ data, templateId }: Props) {
 
     if (!Component) {
       const DefaultComponent = templateRegistry.pink;
-      return <DefaultComponent data={data} />;
+      return <DefaultComponent data={data} invitationId={invitationId} />;
     }
 
-    return <Component data={data} />;
+    return <Component data={data} invitationId={invitationId} />;
   };
   
   if (isDesktop) {

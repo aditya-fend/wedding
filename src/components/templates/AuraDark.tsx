@@ -16,6 +16,7 @@ const playfair = Playfair_Display({
 
 interface TemplateProps {
   data: InvitationContent;
+  invitationId?: string;
 }
 
 export default function AuraDark({ data }: TemplateProps) {

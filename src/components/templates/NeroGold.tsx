@@ -9,6 +9,7 @@ const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "600"] });
 
 interface TemplateProps {
   data: InvitationContent;
+  invitationId?: string;
 }
 
 export default function NeroGold({ data }: TemplateProps) {

@@ -1,14 +1,42 @@
-"use client";
-
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { InvitationContent } from '@/types/invitation';
+import { saveGuestWish } from '@/lib/actions/guestWish';
 
 interface RoyalWishesProps {
   data: InvitationContent;
+  invitationId?: string;
 }
 
-const RoyalWishes = ({ data }: RoyalWishesProps) => {
+const RoyalWishes = ({ data, invitationId }: RoyalWishesProps) => {
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
+  const [formData, setFormData] = useState({
+    name: '',
+    message: ''
+  });
+
+  const handleSubmit = async () => {
+    if (!invitationId || !formData.name || !formData.message) return;
+    
+    setStatus('submitting');
+    
+    const result = await saveGuestWish({
+      invitationId,
+      guestName: formData.name,
+      message: formData.message,
+      isPresent: 'Hadir', // Default for wishes
+      guestCount: 1
+    });
+
+    if (result.success) {
+      setStatus('submitted');
+      setFormData({ name: '', message: '' });
+    } else {
+      setStatus('idle');
+      alert('Gagal mengirim ucapan. Silakan coba lagi.');
+    }
+  };
+
   const displayWishes = (data.guest_wishes && data.guest_wishes.length > 0) 
     ? data.guest_wishes.map(w => ({ name: w.name, message: w.message, time: "Baru saja" }))
     : [
@@ -42,13 +70,28 @@ const RoyalWishes = ({ data }: RoyalWishesProps) => {
         whileInView={{ opacity: 1, y: 0 }}
         className="mb-12 bg-white p-6 rounded-[2rem] shadow-sm border border-pink-50"
       >
-        <textarea 
-          placeholder="Tuliskan ucapan manis Anda..."
-          className="w-full text-xs font-serif italic bg-transparent border-none focus:ring-0 text-slate-600 resize-none h-20"
-        />
+        <div className="space-y-4">
+          <input 
+            type="text"
+            placeholder="Nama Anda"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full text-xs font-serif bg-pink-50/30 border border-pink-100 rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-pink-200"
+          />
+          <textarea 
+            placeholder="Tuliskan ucapan manis Anda..."
+            value={formData.message}
+            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            className="w-full text-xs font-serif italic bg-transparent border-none focus:ring-0 text-slate-600 resize-none h-20"
+          />
+        </div>
         <div className="flex justify-end mt-2">
-          <button className="text-[9px] tracking-[0.2em] bg-pink-400 text-white px-4 py-2 rounded-full shadow-md shadow-pink-100">
-            KIRIM UCAPAN
+          <button 
+            onClick={handleSubmit}
+            disabled={status === 'submitting'}
+            className="text-[9px] tracking-[0.2em] bg-pink-400 text-white px-4 py-2 rounded-full shadow-md shadow-pink-100 disabled:bg-pink-200"
+          >
+            {status === 'submitting' ? 'MENGIRIM...' : 'KIRIM UCAPAN'}
           </button>
         </div>
       </motion.div>
@@ -84,6 +127,7 @@ const RoyalWishes = ({ data }: RoyalWishesProps) => {
         <img 
           src="https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=200&auto=format&fit=crop" 
           className="w-32 h-32 object-contain"
+          alt="floral"
         />
       </motion.div>
     </section>

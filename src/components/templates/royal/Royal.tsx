@@ -21,9 +21,10 @@ import RoyalClosing from "@/components/templates/royal/sections/RoyalClosing";
 
 interface RoyalProps {
   data: InvitationContent;
+  invitationId?: string;
 }
 
-export default function Royal({ data }: RoyalProps) {
+export default function Royal({ data, invitationId }: RoyalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [showGiftModal, setShowGiftModal] = useState(false);
   const [isMusicPlaying, setIsMusicPlaying] = useState(false);
@@ -65,13 +66,15 @@ export default function Royal({ data }: RoyalProps) {
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 5 }}
-                src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop"
+                src={data.hero_image || "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop"}
                 className="w-full h-full object-cover"
                />
                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white" />
                <div className="absolute bottom-10 left-0 w-full text-center px-4">
                   <p className="text-pink-400 tracking-[0.5em] text-[10px] uppercase mb-2">The Wedding Of</p>
-                  <h2 className="text-5xl font-serif italic text-slate-800">Aurora & Julian</h2>
+                  <h2 className="text-5xl font-serif italic text-slate-800">
+                    {groomName} & {brideName}
+                  </h2>
                </div>
             </section>
 
@@ -84,8 +87,8 @@ export default function Royal({ data }: RoyalProps) {
             <RoyalGallery data={data} />
             <RoyalDressCode data={data} />
             <RoyalLocation data={data} />
-            <RoyalWishes data={data} />
-            <RoyalRSVP data={data} />
+            <RoyalWishes data={data} invitationId={invitationId} />
+            <RoyalRSVP data={data} invitationId={invitationId} />
             <RoyalClosing data={data} /> {/* Penutup Puitis */}
 
             {/* Floating UI Elements */}
@@ -118,7 +121,7 @@ export default function Royal({ data }: RoyalProps) {
 
             <footer className="py-10 text-center bg-white">
                <p className="text-[9px] text-slate-300 tracking-[0.2em] uppercase">
-                 Created with love for Aurora & Julian
+                 Created with love for {groomName} & {brideName}
                </p>
             </footer>
           </motion.div>

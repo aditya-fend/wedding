@@ -473,6 +473,17 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 className="min-h-[80px] rounded-xl bg-white resize-none text-xs"
               />
             </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Hero Image URL (Template Royal)
+              </Label>
+              <Input
+                value={formData.hero_image || ""}
+                onChange={(e) => setFormData({ hero_image: e.target.value })}
+                placeholder="https://example.com/hero.jpg"
+                className="rounded-xl bg-white"
+              />
+            </div>
           </div>
         </SectionCard>
 
@@ -774,39 +785,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           </div>
         </SectionCard>
 
-        <SectionCard
-          title="RSVP / Konfirmasi Kehadiran"
-          icon={MailCheck}
-          isActive={activeSection === "rsvp"}
-          onClick={() =>
-            setActiveSection(activeSection === "rsvp" ? "" : "rsvp")
-          }
-        >
-          <div className="flex flex-col gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Catatan RSVP
-              </Label>
-              <Textarea
-                value={formData.rsvp_note || ""}
-                onChange={(e) => setFormData({ rsvp_note: e.target.value })}
-                placeholder="Silakan konfirmasi kehadiran Anda melalui tautan di bawah ini."
-                className="min-h-[100px] rounded-xl bg-white resize-none text-xs"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Link RSVP
-              </Label>
-              <Input
-                value={formData.rsvp_url || ""}
-                onChange={(e) => setFormData({ rsvp_url: e.target.value })}
-                placeholder="https://..."
-                className="h-10 rounded-xl bg-white"
-              />
-            </div>
-          </div>
-        </SectionCard>
+
 
         {/* ═══════════════════════════════════════════
             Section: Cerita Cinta (Love Story)
@@ -983,82 +962,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           </div>
         </SectionCard>
 
-        <SectionCard
-          title="Ucapan & Doa"
-          icon={MessageCircle}
-          isActive={activeSection === "guest_wishes"}
-          onClick={() =>
-            setActiveSection(
-              activeSection === "guest_wishes" ? "" : "guest_wishes",
-            )
-          }
-        >
-          <div className="flex flex-col gap-4">
-            {formData.guest_wishes?.map((wish, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 relative group"
-              >
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem("guest_wishes", idx)}
-                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Nama
-                  </Label>
-                  <Input
-                    value={wish.name}
-                    onChange={(e) =>
-                      updateArrayField(
-                        "guest_wishes",
-                        idx,
-                        "name",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="Nama pengirim"
-                    className="h-8 rounded-lg bg-white"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Ucapan / Doa
-                  </Label>
-                  <Textarea
-                    value={wish.message}
-                    onChange={(e) =>
-                      updateArrayField(
-                        "guest_wishes",
-                        idx,
-                        "message",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="Semoga kalian berbahagia selamanya..."
-                    className="min-h-[80px] rounded-lg bg-white resize-none text-xs"
-                  />
-                </div>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full rounded-xl border-dashed border-[#D4AF97] text-[#D4AF97] hover:bg-[#F8F5F0]"
-              onClick={() =>
-                addArrayItem("guest_wishes", {
-                  name: "",
-                  message: "",
-                })
-              }
-            >
-              <Plus className="size-4 mr-2" /> Tambah Ucapan
-            </Button>
-          </div>
-        </SectionCard>
+
 
         {/* ═══════════════════════════════════════════
             Section: Amplop Digital (Digital Envelope)

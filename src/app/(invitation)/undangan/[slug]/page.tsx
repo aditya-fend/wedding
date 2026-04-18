@@ -28,5 +28,11 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
     ? normalizeTemplateName(invitation.template.title).toLowerCase()
     : "pink";
 
-  return <PublicInvitationClient data={data} templateId={templateId} />;
+  return (
+    <PublicInvitationClient
+      data={data}
+      templateId={templateId}
+      invitationId={invitation.id}
+    />
+  );
 }
