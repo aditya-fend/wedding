@@ -52,6 +52,7 @@ export interface InvitationContent {
   cover_subtitle?: string;
   closing_message?: string;
   dress_code?: string; // [cite: 74]
+  dress_code_description?: string; // [cite: 74]
 }
 
 export interface GuestWish {

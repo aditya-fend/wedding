@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+type Params = { params: Promise<{ id: string }> };
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: Params,
 ) {
+  const { id } = await params;
+
   try {
     const user = await prisma.user.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         name: true,
@@ -48,7 +52,7 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error("GET /api/admin/users/[id] error", error);
+    console.error("GET error", error);
     return NextResponse.json(
       { error: "Gagal memuat pengguna" },
       { status: 500 },
@@ -58,8 +62,10 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: Params,
 ) {
+  const { id } = await params;
+
   try {
     const body = await request.json();
     const { name, email, role, status } = body;
@@ -72,13 +78,13 @@ export async function PUT(
     }
 
     const user = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         name,
         email,
         role: role === "admin" ? "admin" : "user",
         status: ["active", "pending", "suspended"].includes(status)
-          ? (status as "active" | "pending" | "suspended")
+          ? status
           : "pending",
       },
       select: {
@@ -98,23 +104,9 @@ export async function PUT(
       },
     });
 
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        password: "",
-        role: user.role,
-        status: user.status,
-        createdAt: user.createdAt.toISOString(),
-        tokens: [],
-        _count: {
-          invitations: user._count.invitations,
-        },
-      },
-    });
+    return NextResponse.json({ user });
   } catch (error) {
-    console.error("PUT /api/admin/users/[id] error", error);
+    console.error("PUT error", error);
     return NextResponse.json(
       { error: "Gagal mengupdate pengguna" },
       { status: 500 },
@@ -124,13 +116,15 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: Params,
 ) {
+  const { id } = await params;
+
   try {
-    await prisma.user.delete({ where: { id: params.id } });
+    await prisma.user.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE /api/admin/users/[id] error", error);
+    console.error("DELETE error", error);
     return NextResponse.json(
       { error: "Gagal menghapus pengguna" },
       { status: 500 },

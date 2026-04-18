@@ -3,7 +3,7 @@
 import React from "react";
 import { MobileDeviceEmulator } from "react-mobile-emulator";
 import { useEditorStore } from "@/store/useEditorStore";
-import { getTemplate } from "@/lib/templateRegistry";
+import { getTemplate, TemplateComponent } from "@/lib/templateRegistry";
 
 export function LivePreview() {
   // Ambil activeTemplate langsung dari store
@@ -16,7 +16,7 @@ export function LivePreview() {
 
   const renderTemplate = () => {
     const key = normalizeTemplateName(activeTemplate); // "Nero Gold" → "NeroGold"
-    const Component = getTemplate[key];
+    const Component = getTemplate[key] as TemplateComponent | undefined;
 
     if (!Component) {
       return (

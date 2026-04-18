@@ -2,7 +2,11 @@
 
 import React from "react";
 import { MobileDeviceEmulator } from "react-mobile-emulator";
-import { getTemplate, templateRegistry } from "@/lib/templateRegistry";
+import {
+  getTemplate,
+  TemplateComponent,
+  templateRegistry,
+} from "@/lib/templateRegistry";
 import { InvitationContent } from "@/types/invitation";
 
 interface Props {
@@ -21,23 +25,23 @@ export default function PublicInvitationClient({ data, templateId }: Props) {
     return () => window.removeEventListener("resize", checkScreen);
   }, []);
 
-    const normalizeTemplateName = (title: string) => {
+  const normalizeTemplateName = (title: string) => {
     return title.replace(/\s+/g, "");
   };
 
   const renderTemplate = () => {
-    const key = normalizeTemplateName(templateId); // "Nero Gold" → "NeroGold"
-    const Component = getTemplate[key];
+    const key = normalizeTemplateName(templateId);
+
+    const Component = getTemplate[key] as TemplateComponent | undefined;
 
     if (!Component) {
-      // Default to pink if template not found
       const DefaultComponent = templateRegistry.pink;
-      return DefaultComponent ? <DefaultComponent data={data} /> : null;
+      return <DefaultComponent data={data} />;
     }
 
     return <Component data={data} />;
   };
-
+  
   if (isDesktop) {
     return (
       <div

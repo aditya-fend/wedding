@@ -31,11 +31,13 @@ async function saveTokens(tokens: TokenRecord[]) {
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
+
   try {
     const tokens = await loadTokens();
-    const index = tokens.findIndex((token) => token.id === params.id);
+    const index = tokens.findIndex((token) => token.id === id);
 
     if (index === -1) {
       return NextResponse.json(
@@ -74,7 +76,7 @@ export async function PUT(
 
     return NextResponse.json({ token: { ...updated, user } });
   } catch (error) {
-    console.error("PUT /api/admin/tokens/[id] error", error);
+    console.error("PUT error", error);
     return NextResponse.json(
       { error: "Gagal mengupdate token" },
       { status: 500 },
@@ -84,11 +86,13 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
+  const { id } = await params;
+
   try {
     const tokens = await loadTokens();
-    const index = tokens.findIndex((token) => token.id === params.id);
+    const index = tokens.findIndex((token) => token.id === id);
 
     if (index === -1) {
       return NextResponse.json(
@@ -102,7 +106,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE /api/admin/tokens/[id] error", error);
+    console.error("DELETE error", error);
     return NextResponse.json(
       { error: "Gagal menghapus token" },
       { status: 500 },

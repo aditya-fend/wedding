@@ -24,7 +24,7 @@ export default function Pink({ data }: TemplateProps) {
   const [isOpened, setIsOpened] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const invitation = data ?? dummyData;
+  const invitation = (data ?? dummyData) as InvitationContent;
   const groom = invitation.mempelai_pria?.nama || "Pria";
   const bride = invitation.mempelai_wanita?.nama || "Wanita";
 
@@ -440,7 +440,7 @@ export default function Pink({ data }: TemplateProps) {
                   {wish.name}
                 </div>
                 <div className="text-xs text-[#880E4F] italic">
-                  "{wish.message}"
+                  &quot;{wish.message}&quot;
                 </div>
               </motion.div>
             ))}
