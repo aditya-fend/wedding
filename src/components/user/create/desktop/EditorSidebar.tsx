@@ -62,6 +62,9 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
   const [musicSearchQuery, setMusicSearchQuery] = useState("");
   const [playingMusicId, setPlayingMusicId] = useState<string | null>(null);
   const [galleryDragActive, setGalleryDragActive] = useState(false);
+  const [heroDragActive, setHeroDragActive] = useState(false);
+  const [priaDragActive, setPriaDragActive] = useState(false);
+  const [wanitaDragActive, setWanitaDragActive] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Handle music playback
@@ -215,7 +218,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
               </button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-5xl rounded-[32px] p-6 sm:p-8">
+            <DialogContent className="max-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-[32px] p-6 sm:p-8 no-scrollbar">
               <DialogHeader>
                 <DialogTitle>Pilih Template</DialogTitle>
                 <DialogDescription>
@@ -347,7 +350,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
               </button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-2xl rounded-[32px] p-6 sm:p-8">
+            <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-[32px] p-6 sm:p-8 no-scrollbar">
               <DialogHeader>
                 <DialogTitle>Pilih Musik Latar</DialogTitle>
                 <DialogDescription>
@@ -440,53 +443,9 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
       </div>
 
       <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar no-scrollbar">
-        <SectionCard
-          title="Cover / Pembuka"
-          icon={Sparkles}
-          isActive={activeSection === "cover"}
-          onClick={() =>
-            setActiveSection(activeSection === "cover" ? "" : "cover")
-          }
-        >
-          <div className="flex flex-col gap-4">
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Judul Cover
-              </Label>
-              <Input
-                value={formData.cover_title || ""}
-                onChange={(e) => setFormData({ cover_title: e.target.value })}
-                placeholder="Undangan Pernikahan Aditya & Aura"
-                className="rounded-xl bg-white"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Subtitel / Pembuka
-              </Label>
-              <Textarea
-                value={formData.cover_subtitle || ""}
-                onChange={(e) =>
-                  setFormData({ cover_subtitle: e.target.value })
-                }
-                placeholder="Kami mengundang Anda untuk hadir dalam acara pernikahan kami."
-                className="min-h-[80px] rounded-xl bg-white resize-none text-xs"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Hero Image URL (Template Royal)
-              </Label>
-              <Input
-                value={formData.hero_image || ""}
-                onChange={(e) => setFormData({ hero_image: e.target.value })}
-                placeholder="https://example.com/hero.jpg"
-                className="rounded-xl bg-white"
-              />
-            </div>
-          </div>
-        </SectionCard>
-
+        {/* ═══════════════════════════════════════════
+            Section: Mempelai Pria
+        ═══════════════════════════════════════════ */}
         <SectionCard
           title="Mempelai Pria"
           icon={User2}
@@ -500,6 +459,69 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           <div className="flex flex-col gap-4">
             <div className="space-y-1.5">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Foto Mempelai Pria
+              </Label>
+              <div
+                className={`group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
+                  priaDragActive
+                    ? "border-[#D4AF97] bg-[#ECFDF5]"
+                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setPriaDragActive(true);
+                }}
+                onDragLeave={() => setPriaDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setPriaDragActive(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const url = URL.createObjectURL(file);
+                    updateField("mempelai_pria", "foto", url);
+                  }
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      updateField("mempelai_pria", "foto", url);
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                {formData.mempelai_pria?.foto ? (
+                  <>
+                    <Image
+                      src={formData.mempelai_pria.foto}
+                      alt="Groom Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                        <ImageIcon size={16} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                    <ImageIcon size={24} className="opacity-40" />
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Drop atau Klik Foto
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Nama Lengkap & Gelar
               </Label>
               <Input
@@ -507,7 +529,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 onChange={(e) =>
                   updateField("mempelai_pria", "nama", e.target.value)
                 }
-                placeholder="Contoh: Aditya Pratama, S.Kom"
+                placeholder="Aditya Pratama, S.Kom"
                 className="rounded-xl border-slate-200 bg-white"
               />
             </div>
@@ -522,7 +544,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                     updateField("mempelai_pria", "ortu_ayah", e.target.value)
                   }
                   placeholder="Nama ayah"
-                  className="rounded-xl bg-white"
+                  className="rounded-xl bg-white text-xs"
                 />
               </div>
               <div className="space-y-1.5">
@@ -535,7 +557,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                     updateField("mempelai_pria", "ortu_ibu", e.target.value)
                   }
                   placeholder="Nama ibu"
-                  className="rounded-xl bg-white"
+                  className="rounded-xl bg-white text-xs"
                 />
               </div>
             </div>
@@ -571,6 +593,69 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           <div className="flex flex-col gap-4">
             <div className="space-y-1.5">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Foto Mempelai Wanita
+              </Label>
+              <div
+                className={`group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
+                  wanitaDragActive
+                    ? "border-[#D4AF97] bg-[#ECFDF5]"
+                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setWanitaDragActive(true);
+                }}
+                onDragLeave={() => setWanitaDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setWanitaDragActive(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const url = URL.createObjectURL(file);
+                    updateField("mempelai_wanita", "foto", url);
+                  }
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      updateField("mempelai_wanita", "foto", url);
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                {formData.mempelai_wanita?.foto ? (
+                  <>
+                    <Image
+                      src={formData.mempelai_wanita.foto}
+                      alt="Bride Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                        <ImageIcon size={16} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                    <ImageIcon size={24} className="opacity-40" />
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Drop atau Klik Foto
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 Nama Lengkap & Gelar
               </Label>
               <Input
@@ -578,7 +663,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 onChange={(e) =>
                   updateField("mempelai_wanita", "nama", e.target.value)
                 }
-                placeholder="Contoh: Aura Putri Kusuma, B.A"
+                placeholder="Aura Putri Kusuma, B.A"
                 className="rounded-xl border-slate-200 bg-white"
               />
             </div>
@@ -593,7 +678,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                     updateField("mempelai_wanita", "ortu_ayah", e.target.value)
                   }
                   placeholder="Nama ayah"
-                  className="rounded-xl bg-white"
+                  className="rounded-xl bg-white text-xs"
                 />
               </div>
               <div className="space-y-1.5">
@@ -606,7 +691,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                     updateField("mempelai_wanita", "ortu_ibu", e.target.value)
                   }
                   placeholder="Nama ibu"
-                  className="rounded-xl bg-white"
+                  className="rounded-xl bg-white text-xs"
                 />
               </div>
             </div>
@@ -627,6 +712,95 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
         </SectionCard>
 
         {/* ═══════════════════════════════════════════
+            Section: Cover / Pembuka
+        ═══════════════════════════════════════════ */}
+        <SectionCard
+          title="Cover / Pembuka"
+          icon={Sparkles}
+          isActive={activeSection === "cover"}
+          onClick={() =>
+            setActiveSection(activeSection === "cover" ? "" : "cover")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-3">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Hero Image / Foto Utama
+              </Label>
+              
+              <div
+                className={`group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
+                  heroDragActive
+                    ? "border-[#D4AF97] bg-[#ECFDF5]"
+                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(true);
+                }}
+                onDragLeave={() => setHeroDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const url = URL.createObjectURL(file);
+                    setFormData({ hero_image: url });
+                  }
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setFormData({ hero_image: url });
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                {formData.hero_image ? (
+                  <>
+                    <Image
+                      src={formData.hero_image}
+                      alt="Hero Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                        <ImageIcon size={16} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                    <ImageIcon size={24} className="opacity-40" />
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Drop atau Klik Foto
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <Input
+                  value={formData.hero_image || ""}
+                  onChange={(e) => setFormData({ hero_image: e.target.value })}
+                  placeholder="Atau masukkan URL gambar..."
+                  className="rounded-xl bg-white text-xs pl-8"
+                />
+                <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* ═══════════════════════════════════════════
             Section: Jadwal Acara
         ═══════════════════════════════════════════ */}
         <SectionCard
@@ -637,151 +811,21 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             setActiveSection(activeSection === "acara" ? "" : "acara")
           }
         >
-          <div className="flex flex-col gap-6">
-            <div className="space-y-1.5 rounded-3xl border border-slate-200 bg-white p-4">
+          <div className="flex flex-col gap-4">
+            <div className="space-y-1.5">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Tanggal Countdown
+                Tanggal Pernikahan
               </Label>
               <Input
-                type="datetime-local"
-                value={formData.countdown_date || ""}
-                onChange={(e) =>
-                  setFormData({ countdown_date: e.target.value })
-                }
+                type="date"
+                value={formData.wedding_date || ""}
+                onChange={(e) => setFormData({ wedding_date: e.target.value })}
                 className="h-10 rounded-xl bg-white"
               />
-              <p className="text-[10px] text-slate-500">
-                Gunakan untuk menampilkan hitung mundur di template Pink.
+              <p className="text-[10px] text-slate-500 italic">
+                Pilih tanggal lewat kalender untuk mengisi otomatis.
               </p>
             </div>
-            {formData.acara?.map((item, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 relative group"
-              >
-                {/* Delete button */}
-                <button
-                  type="button"
-                  onClick={() => removeArrayItem("acara", idx)}
-                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600"
-                >
-                  <Trash2 className="size-3.5" />
-                </button>
-
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Tipe Acara
-                  </Label>
-                  <Input
-                    value={item.tipe}
-                    onChange={(e) =>
-                      updateArrayField("acara", idx, "tipe", e.target.value)
-                    }
-                    placeholder="Akad / Resepsi"
-                    className="h-8 rounded-lg bg-white"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Tanggal
-                    </Label>
-                    <Input
-                      type="date"
-                      value={item.tanggal}
-                      onChange={(e) =>
-                        updateArrayField(
-                          "acara",
-                          idx,
-                          "tanggal",
-                          e.target.value,
-                        )
-                      }
-                      className="h-8 rounded-lg bg-white"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                      Jam
-                    </Label>
-                    <Input
-                      type="time"
-                      value={item.jam}
-                      onChange={(e) =>
-                        updateArrayField("acara", idx, "jam", e.target.value)
-                      }
-                      className="h-8 rounded-lg bg-white"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Nama Lokasi
-                  </Label>
-                  <Input
-                    value={item.lokasi}
-                    onChange={(e) =>
-                      updateArrayField("acara", idx, "lokasi", e.target.value)
-                    }
-                    placeholder="Grand Ballroom Hotel XYZ"
-                    className="h-8 rounded-lg bg-white"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Alamat Lengkap
-                  </Label>
-                  <Textarea
-                    value={item.alamat_lengkap}
-                    onChange={(e) =>
-                      updateArrayField(
-                        "acara",
-                        idx,
-                        "alamat_lengkap",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="Jl. Contoh No. 123, Kota, Provinsi"
-                    className="min-h-[60px] rounded-lg bg-white resize-none text-xs"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Link Google Maps
-                  </Label>
-                  <Input
-                    value={item.link_maps}
-                    onChange={(e) =>
-                      updateArrayField(
-                        "acara",
-                        idx,
-                        "link_maps",
-                        e.target.value,
-                      )
-                    }
-                    placeholder="https://maps.google.com/..."
-                    className="h-8 rounded-lg bg-white"
-                  />
-                </div>
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full rounded-xl border-dashed border-[#D4AF97] text-[#D4AF97] hover:bg-[#F8F5F0]"
-              onClick={() =>
-                addArrayItem("acara", {
-                  tipe: "",
-                  tanggal: "",
-                  jam: "",
-                  lokasi: "",
-                  alamat_lengkap: "",
-                  link_maps: "",
-                })
-              }
-            >
-              <Plus className="size-4 mr-2" /> Tambah Acara
-            </Button>
           </div>
         </SectionCard>
 

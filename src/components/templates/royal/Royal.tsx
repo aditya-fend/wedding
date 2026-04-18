@@ -37,6 +37,15 @@ export default function Royal({ data, invitationId }: RoyalProps) {
   const brideName = data.mempelai_wanita?.nama?.split(" ")[0] || "Bride";
   const groomName = data.mempelai_pria?.nama?.split(" ")[0] || "Groom";
 
+  const weddingDateFull = data.wedding_date 
+    ? new Date(data.wedding_date).toLocaleDateString('id-ID', { 
+        weekday: 'long', 
+        day: 'numeric', 
+        month: 'long', 
+        year: 'numeric' 
+      })
+    : "";
+
   return (
     <RoyalMainLayout>
       <AnimatePresence mode="wait">
@@ -46,6 +55,7 @@ export default function Royal({ data, invitationId }: RoyalProps) {
             onOpen={handleOpenInvitation}
             brideName={brideName} 
             groomName={groomName} 
+            hero_image={data.hero_image}
           />
         ) : (
           <motion.div
@@ -70,11 +80,17 @@ export default function Royal({ data, invitationId }: RoyalProps) {
                 className="w-full h-full object-cover"
                />
                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-white" />
-               <div className="absolute bottom-10 left-0 w-full text-center px-4">
+               <div className="absolute bottom-100 left-0 w-full text-center px-4">
                   <p className="text-pink-400 tracking-[0.5em] text-[10px] uppercase mb-2">The Wedding Of</p>
                   <h2 className="text-5xl font-serif italic text-slate-800">
                     {groomName} & {brideName}
                   </h2>
+                  {weddingDateFull && (
+                    <div className="mt-4 flex flex-col items-center text-slate-500 font-serif italic text-sm tracking-widest">
+                      <div className="h-[1px] w-12 bg-pink-200 mb-3" />
+                      <p>{weddingDateFull}</p>
+                    </div>
+                  )}
                </div>
             </section>
 

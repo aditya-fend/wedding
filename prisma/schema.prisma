@@ -95,6 +95,7 @@ enum Presence {
   Hadir
   Tidak_Hadir
   Ragu_ragu
+  Belum_Konfirmasi
 }
 
 model GuestWish {

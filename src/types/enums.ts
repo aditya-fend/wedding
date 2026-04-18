@@ -13,4 +13,5 @@ export enum AttendanceStatus {
   HADIR = 'Hadir',
   TIDAK_HADIR = 'Tidak Hadir',
   RAGU_RAGU = 'Ragu-ragu',
+  BELUM_KONFIRMASI = 'Belum Konfirmasi',
 }

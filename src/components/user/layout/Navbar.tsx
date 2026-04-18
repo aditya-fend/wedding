@@ -13,14 +13,15 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   LayoutTemplate,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Template", href: "/dashboard/template", icon: LayoutTemplate },
-  { name: "Undangan Saya", href: "/dashboard/undangan", icon: Heart },
+  { name: "Undangan", href: "/dashboard/undangan", icon: Heart },
+  { name: "RSVP", href: "/dashboard/rsvp", icon: Users },
 ];
 
 export function Navbar() {

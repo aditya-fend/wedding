@@ -67,9 +67,9 @@ export function DownloadGuestDataButton({
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="icon"
-      className="rounded-xl h-10 w-10 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
+      className="rounded-xl h-10 w-full flex-1 text-slate-500 hover:text-blue-600 hover:bg-blue-50"
       onClick={handleDownload}
       disabled={loading}
       title="Download Data RSVP & Ucapan"
@@ -77,7 +77,9 @@ export function DownloadGuestDataButton({
       {loading ? (
         <Loader2 className="size-4 animate-spin" />
       ) : (
-        <Download className="size-4" />
+        <span className="flex">
+          <Download className="size-4" /> Download Data RSVP
+        </span>
       )}
     </Button>
   );

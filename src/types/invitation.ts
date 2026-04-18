@@ -54,6 +54,7 @@ export interface InvitationContent {
   dress_code?: string; // [cite: 74]
   dress_code_description?: string; // [cite: 74]
   hero_image?: string;
+  wedding_date?: string;
 }
 
 export interface GuestWish {

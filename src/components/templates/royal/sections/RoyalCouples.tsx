@@ -75,7 +75,7 @@ const RoyalCouples = ({ data }: RoyalCouplesProps) => {
             <div className="w-full h-full rounded-t-[11.5rem] rounded-b-[1.5rem] overflow-hidden bg-slate-100 shadow-inner">
               <motion.img 
                 style={{ scale: 1.2, y: yParallax }}
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop" 
+                src={data.mempelai_pria?.foto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop"} 
                 alt="Groom" 
                 className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
               />
@@ -140,7 +140,7 @@ const RoyalCouples = ({ data }: RoyalCouplesProps) => {
             <div className="w-full h-full rounded-t-[11.5rem] rounded-b-[1.5rem] overflow-hidden bg-slate-100 shadow-inner">
               <motion.img 
                 style={{ scale: 1.2, y: yParallax }}
-                src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop" 
+                src={data.mempelai_wanita?.foto || "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop"} 
                 alt="Bride" 
                 className="w-full h-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
               />

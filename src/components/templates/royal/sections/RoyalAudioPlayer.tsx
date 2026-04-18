@@ -31,7 +31,7 @@ const RoyalAudioPlayer = ({ isPlaying, setIsPlaying, musicUrl = "/horeg-made-wit
       <audio ref={audioRef} src={audioUrl} loop />
       
       {/* Tombol Kontrol Sticky (Diposisikan di atas tombol Gift) */}
-      <div className="fixed bottom-24 right-6 z-50">
+      <div className="fixed bottom-24 right-7 z-50">
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
