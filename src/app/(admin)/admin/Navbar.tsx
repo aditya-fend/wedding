@@ -11,6 +11,7 @@ import {
   Coins,
   LogOut,
   Shield,
+  Music,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -20,6 +21,7 @@ const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Kelola Pengguna", href: "/admin/pengguna", icon: Users },
   { name: "Kelola Token", href: "/admin/token", icon: Coins },
+  { name: "Tambah Musik", href: "/admin/add-music", icon: Music },
 ];
 
 export default function Navbar() {
@@ -29,7 +31,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      await fetch("/api/auth/logout", { method: "POST" });
       toast.success("Berhasil keluar!");
       router.push("/masuk");
       router.refresh();
@@ -81,7 +83,9 @@ export default function Navbar() {
 
           <div className="space-y-12 flex-grow">
             <div>
-              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-6 ml-4">Main Directory</p>
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-6 ml-4">
+                Main Directory
+              </p>
               <nav className="space-y-2">
                 {navigation.map((item) => {
                   const active = isActive(item.href);
@@ -93,14 +97,16 @@ export default function Navbar() {
                         "group flex items-center gap-4 px-4 py-4 transition-all duration-300 border-l-2",
                         active
                           ? "bg-cyan-500/5 text-cyan-400 border-cyan-500 shadow-[20px_0_40px_-15px_rgba(6,182,212,0.1)_inset]"
-                          : "text-slate-500 hover:text-white border-transparent hover:bg-white/[0.02]"
+                          : "text-slate-500 hover:text-white border-transparent hover:bg-white/[0.02]",
                       )}
                     >
                       <item.icon
                         size={16}
                         className={cn(
                           "transition-transform duration-300 group-hover:scale-110",
-                          active ? "text-cyan-400" : "text-slate-600 group-hover:text-white"
+                          active
+                            ? "text-cyan-400"
+                            : "text-slate-600 group-hover:text-white",
                         )}
                       />
                       <span className="text-[10px] font-black uppercase tracking-[0.3em]">
@@ -116,12 +122,17 @@ export default function Navbar() {
             </div>
 
             <div>
-              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-6 ml-4">System</p>
+              <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-6 ml-4">
+                System
+              </p>
               <button
                 onClick={handleLogout}
                 className="w-full group flex items-center gap-4 px-4 py-4 text-slate-500 hover:text-rose-500 hover:bg-rose-500/5 transition-all text-[10px] font-black uppercase tracking-[0.3em] border-l-2 border-transparent hover:border-rose-500"
               >
-                <LogOut size={16} className="text-slate-600 group-hover:text-rose-500 group-hover:translate-x-1 transition-all" />
+                <LogOut
+                  size={16}
+                  className="text-slate-600 group-hover:text-rose-500 group-hover:translate-x-1 transition-all"
+                />
                 Disconnect
               </button>
             </div>
@@ -161,7 +172,9 @@ export default function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
                       "flex items-center gap-4 py-6 border-b border-white/[0.03] transition-all",
-                      active ? "text-cyan-400" : "text-slate-500 hover:text-white"
+                      active
+                        ? "text-cyan-400"
+                        : "text-slate-500 hover:text-white",
                     )}
                   >
                     <item.icon size={18} />

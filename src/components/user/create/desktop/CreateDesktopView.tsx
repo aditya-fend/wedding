@@ -73,7 +73,7 @@ export default function CreateDesktopView({
 
   return (
 // h-[calc(100vh-5rem)] memastikan layout tidak melebihi layar setelah dikurangi navbar
-    <div className="grid grid-cols-2 h-[calc(100vh-5rem)] w-full overflow-hidden bg-[#F8F5F0]">
+    <div className="grid grid-cols-2 h-screen overflow-hidden bg-[#F8F5F0]">
       
       {/* AREA KIRI: FIXED WIDTH (450px) */}
       <div className="col-span-1 h-full shrink-0 border-r overflow-y-auto">
@@ -81,7 +81,7 @@ export default function CreateDesktopView({
       </div>
 
       {/* AREA KANAN: FLEX-1 (Mengambil sisa ruang) */}
-      <div className="col-span-2 h-full relative flex items-center justify-center p-10">
+      <div className="col-span-1 h-full relative flex items-center justify-center p-10 overflow-hidden">
         <LivePreview />
       </div>
 

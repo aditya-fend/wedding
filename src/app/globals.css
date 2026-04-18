@@ -100,6 +100,15 @@
   .card-premium {
     @apply bg-white border border-[#E5E0D8] rounded-2xl shadow-sm hover:shadow-md transition-all;
   }
+
+    .no-scrollbar {
+    -ms-overflow-style: none; /* IE & Edge lama */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
 }
 
 /* Button Styles */

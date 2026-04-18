@@ -1,64 +1,85 @@
-export const data = 
-    {
-  "mempelai_pria": {
-    "nama": "Aditya Pratama, S.Kom",
-    "ortu_ayah": "Bambang Heru",
-    "ortu_ibu": "Siti Aminah",
-    "instagram": "@aditya.fend"
+export const data = {
+  mempelai_pria: {
+    nama: "Aditya Pratama, S.Kom",
+    ortu_ayah: "Bambang Heru",
+    ortu_ibu: "Siti Aminah",
+    instagram: "@aditya.fend",
   },
-  "mempelai_wanita": {
-    "nama": "Aura Putri Kusuma, B.A",
-    "ortu_ayah": "Indra Kusuma",
-    "ortu_ibu": "Dewi Lestari",
-    "instagram": "@aurakusuma"
+  mempelai_wanita: {
+    nama: "Aura Putri Kusuma, B.A",
+    ortu_ayah: "Indra Kusuma",
+    ortu_ibu: "Dewi Lestari",
+    instagram: "@aurakusuma",
   },
-  "acara": [
+  acara: [
     {
-      "tipe": "Akad Nikah",
-      "tanggal": "Sabtu, 12 Desember 2026",
-      "jam": "08:00 - 10:00 WIB",
-      "lokasi": "Masjid Agung Jawa Tengah",
-      "alamat_lengkap": "Jl. Gajah Raya, Sambirejo, Kec. Gayamsari, Kota Semarang",
-      "link_maps": "https://maps.app.goo.gl/xxx"
+      tipe: "Akad Nikah",
+      tanggal: "Sabtu, 12 Desember 2026",
+      jam: "08:00 - 10:00 WIB",
+      lokasi: "Masjid Agung Jawa Tengah",
+      alamat_lengkap:
+        "Jl. Gajah Raya, Sambirejo, Kec. Gayamsari, Kota Semarang",
+      link_maps: "https://maps.app.goo.gl/xxx",
     },
     {
-      "tipe": "Resepsi",
-      "tanggal": "Sabtu, 12 Desember 2026",
-      "jam": "11:00 - 14:00 WIB",
-      "lokasi": "Grand Ballroom Hotel Mulia",
-      "alamat_lengkap": "Jl. Simpang Lima No. 1, Kota Semarang",
-      "link_maps": "https://maps.app.goo.gl/yyy"
-    }
+      tipe: "Resepsi",
+      tanggal: "Sabtu, 12 Desember 2026",
+      jam: "11:00 - 14:00 WIB",
+      lokasi: "Grand Ballroom Hotel Mulia",
+      alamat_lengkap: "Jl. Simpang Lima No. 1, Kota Semarang",
+      link_maps: "https://maps.app.goo.gl/yyy",
+    },
   ],
-  "love_story": [
+  love_story: [
     {
-      "tahun": "2022",
-      "cerita": "Pertama kali bertemu di sebuah workshop web development di Semarang.",
-      "foto": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622"
+      tahun: "2022",
+      cerita:
+        "Pertama kali bertemu di sebuah workshop web development di Semarang.",
+      foto: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
     },
     {
-      "tahun": "2024",
-      "cerita": "Setelah dua tahun berteman, kami memutuskan untuk memulai komitmen yang lebih serius.",
-      "foto": "https://images.unsplash.com/photo-1519741497674-611481863552"
-    }
+      tahun: "2024",
+      cerita:
+        "Setelah dua tahun berteman, kami memutuskan untuk memulai komitmen yang lebih serius.",
+      foto: "https://images.unsplash.com/photo-1519741497674-611481863552",
+    },
   ],
-  "gallery": [
+  gallery: [
     "https://images.unsplash.com/photo-1519225421980-715cb0215aed",
     "https://images.unsplash.com/photo-1583939003579-730e3918a45a",
-    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc"
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc",
   ],
-  "digital_envelope": [
+  digital_envelope: [
     {
-      "bank_name": "Bank BCA",
-      "account_number": "8901234567",
-      "account_holder": "Aditya Pratama"
+      bank_name: "Bank BCA",
+      account_number: "8901234567",
+      account_holder: "Aditya Pratama",
     },
     {
-      "bank_name": "Bank Mandiri",
-      "account_number": "123000987654",
-      "account_holder": "Aura Putri Kusuma"
-    }
+      bank_name: "Bank Mandiri",
+      account_number: "123000987654",
+      account_holder: "Aura Putri Kusuma",
+    },
   ],
-  "music_url": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-  "dress_code": "Formal - Monochrome Black & Gold"
-}
+  guest_wishes: [
+    {
+      name: "Rina & Dito",
+      message: "Semoga selalu sakinah, mawadah, warahmah.",
+    },
+    {
+      name: "Sarah",
+      message: "Doa terbaik untuk pernikahan kalian.",
+    },
+  ],
+  music_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+  rsvp_url: "https://undangdong.co.id/rsvp/12345",
+  rsvp_note: "Klik tombol RSVP untuk konfirmasi kehadiran Anda.",
+  countdown_date: "2026-12-12T08:00:00",
+  additional_info: "Pilih busana formal dengan sentuhan pink atau dusty rose.",
+  cover_title: "Detail Pernikahan Aditya & Aura",
+  cover_subtitle:
+    "Kami berharap kehadiran Anda memberi berkah pada hari bahagia kami.",
+  closing_message:
+    "Terima kasih atas doa dan dukungan Anda. Sampai jumpa di acara kami!",
+  dress_code: "Formal - Monochrome Black & Gold",
+};

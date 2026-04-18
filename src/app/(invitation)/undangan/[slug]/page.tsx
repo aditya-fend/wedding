@@ -17,13 +17,16 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
 
   if (!invitation) notFound();
 
-  // Content data is stored as JSON in Prisma, cast it to InvitationContent
   const data = invitation.contentData as unknown as InvitationContent;
 
-  return (
-    <PublicInvitationClient 
-      data={data} 
-      templateId={invitation.template?.id || "aura-dark"} 
-    />
-  );
+  // Normalize template name: "Nero Gold" → "NeroGold"
+  const normalizeTemplateName = (title: string) => {
+    return title.replace(/\s+/g, "");
+  };
+
+  const templateId = invitation.template?.title
+    ? normalizeTemplateName(invitation.template.title).toLowerCase()
+    : "pink";
+
+  return <PublicInvitationClient data={data} templateId={templateId} />;
 }

@@ -65,8 +65,18 @@ export default async function CreateInvitationPage() {
     love_story: [],
     gallery: [],
     digital_envelope: [],
-    dress_code: "Dark Bold Minimalism",
+    guest_wishes: [],
     music_url: musics[0]?.url || "",
+    rsvp_url: "",
+    rsvp_note: "Silakan konfirmasi kehadiran Anda melalui tombol RSVP di atas.",
+    countdown_date: "2026-12-12T08:00:00",
+    additional_info: "",
+    cover_title: "Undangan Untukmu",
+    cover_subtitle:
+      "Bersama keluarga, kami menantikan kehadiranmu di hari bahagia.",
+    closing_message:
+      "Terima kasih atas doa dan kehadiranmu. Sampai jumpa di hari istimewa kami!",
+    dress_code: "Dark Bold Minimalism",
   };
 
   // 6. Mapping data akhir
@@ -75,7 +85,7 @@ export default async function CreateInvitationPage() {
     : defaultContent;
 
   return (
-    <main className="h-screen w-full overflow-hidden bg-[#F8F5F0]">
+    <main className="h-auto w-full overflow-hidden bg-[#F8F5F0]">
       <CreateDesktopView
         invitationId={invitationData?.id || "guest-mode"}
         initialData={initialData}

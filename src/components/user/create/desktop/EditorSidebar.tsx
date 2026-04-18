@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useEditorStore } from "@/store/useEditorStore";
 import { InvitationContent } from "@/types/invitation";
 import { Label } from "@/components/ui/label";
@@ -8,12 +9,16 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Palette,
   Music,
@@ -26,7 +31,15 @@ import {
   Trash2,
   BookHeart,
   Wallet,
-  Shirt,
+  MailCheck,
+  MessageCircle,
+  Sparkles,
+  Flag,
+  Eye,
+  MousePointerClick,
+  Play,
+  Pause,
+  Search,
 } from "lucide-react";
 import { SectionCard } from "./SectionCard";
 import { Music as MusicType, Template } from "@/types";
@@ -46,9 +59,75 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
     setFormData,
   } = useEditorStore();
 
+  const [musicSearchQuery, setMusicSearchQuery] = useState("");
+  const [playingMusicId, setPlayingMusicId] = useState<string | null>(null);
+  const [galleryDragActive, setGalleryDragActive] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Handle music playback
+  useEffect(() => {
+    if (!audioRef.current) return;
+
+    const playingMusic = musics.find((m) => m.id === playingMusicId);
+
+    if (playingMusic && playingMusic.url) {
+      audioRef.current.src = playingMusic.url;
+      audioRef.current.play().catch(() => {
+        // Handle autoplay restrictions
+        setPlayingMusicId(null);
+      });
+    } else {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
+  }, [playingMusicId, musics]);
+
+  const handleGalleryDrag = (
+    event: React.DragEvent<HTMLDivElement>,
+    active: boolean,
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setGalleryDragActive(active);
+  };
+
+  const handleGalleryDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setGalleryDragActive(false);
+
+    const files = Array.from(event.dataTransfer.files || []);
+    const imageUrls = files
+      .filter((file) => file.type.startsWith("image/"))
+      .map((file) => URL.createObjectURL(file));
+
+    if (imageUrls.length > 0) {
+      setFormData({ gallery: [...(formData.gallery || []), ...imageUrls] });
+      return;
+    }
+
+    const textUrl = event.dataTransfer.getData("text/plain").trim();
+    if (textUrl) {
+      setFormData({ gallery: [...(formData.gallery || []), textUrl] });
+    }
+  };
+
+  // Compute selected objects
+  const selectedTemplate = templates.find(
+    (template) => template.title === activeTemplate,
+  );
+
+  const selectedMusic = musics.find((m) => m.url === formData.music_url);
+
+  // Filter music by search query
+  const filteredMusics = musics.filter((m) =>
+    m.title.toLowerCase().includes(musicSearchQuery.toLowerCase()),
+  );
+
   // ── Helper: Update nested object field (mempelai_pria, mempelai_wanita) ──
   const updateField = (parent: string, field: string, value: string) => {
-    const parentData = (formData as Record<string, unknown>)[parent] ?? {};
+    const parentData =
+      (formData as unknown as Record<string, unknown>)[parent] ?? {};
     setFormData({
       [parent]: { ...(parentData as Record<string, unknown>), [field]: value },
     });
@@ -108,48 +187,295 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
         </div>
 
         <div className="space-y-2">
-            <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
-              <Palette className="size-3 text-[#D4AF97]" /> Template
-            </Label>
-            {/* FIX: Pastikan activeTemplate membaca ID yang benar dari store */}
-            <Select value={activeTemplate} onValueChange={setActiveTemplate}>
-              <SelectTrigger className="h-10 rounded-xl bg-slate-50 border-slate-200 text-xs font-bold shadow-sm focus:ring-[#D4AF97]">
-                <SelectValue placeholder="Pilih Template" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                {templates.map((t) => (
-                  // FIX FATAL: value harus t.id, BUKAN t.title!
-                  <SelectItem key={t.id} value={t.title}> 
-                    {t.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
+            <Palette className="size-3 text-[#D4AF97]" /> Template
+          </Label>
 
-          <div className="space-y-2">
-            <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
-              <Music className="size-3 text-[#D4AF97]" /> Musik Latar
-            </Label>
-            <Select
-              value={formData.music_url}
-              onValueChange={(v) => setFormData({ music_url: v })}
-            >
-              <SelectTrigger className="h-10 rounded-xl bg-white border-slate-200 text-xs font-bold shadow-sm focus:ring-[#D4AF97]">
-                <SelectValue placeholder="Pilih Musik" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                {musics.map((m) => (
-                  <SelectItem key={m.id} value={m.url}>
-                    {m.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="group flex w-full items-center justify-between rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
+              >
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">
+                    Template Aktif
+                  </p>
+                  <h3 className="mt-2 text-sm font-semibold text-[#2C2C2C]">
+                    {selectedTemplate?.title ?? "Pilih Template"}
+                  </h3>
+                  <p className="mt-1 text-[11px] text-slate-500 line-clamp-2">
+                    {selectedTemplate?.description ??
+                      "Klik untuk memilih layout undangan."}
+                  </p>
+                </div>
+                <span className="rounded-full border border-[#D4AF97] bg-[#F8F5F0] px-3 py-2 text-[11px] font-bold text-[#2C2C2C]">
+                  Ubah
+                </span>
+              </button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-5xl rounded-[32px] p-6 sm:p-8">
+              <DialogHeader>
+                <DialogTitle>Pilih Template</DialogTitle>
+                <DialogDescription>
+                  Pilih template undangan yang ingin digunakan. Klik tombol
+                  &quot;Gunakan&quot; pada card yang sesuai untuk menyimpan
+                  pilihan.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 mt-6">
+                {templates.map((template) => {
+                  const isSelected = template.id === activeTemplate;
+
+                  return (
+                    <Card
+                      key={template.id}
+                      className={
+                        "group overflow-hidden rounded-[28px] border transition duration-300 " +
+                        (isSelected
+                          ? "border-[#D4AF97] shadow-lg"
+                          : "border-[#E5E0D8] hover:border-[#D4AF97] hover:shadow-xl")
+                      }
+                    >
+                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        {template.thumbnailUrl ? (
+                          <Image
+                            src={template.thumbnailUrl}
+                            alt={template.title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-[#D4AF97]/40">
+                            <LayoutDashboard className="size-12" />
+                          </div>
+                        )}
+                      </div>
+
+                      <CardContent className="space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-base font-semibold text-[#2C2C2C]">
+                              {template.title}
+                            </h3>
+                            <p className="mt-1 text-sm text-[#6B6B6B] line-clamp-2">
+                              {template.description ??
+                                "Template undangan digital eksklusif."}
+                            </p>
+                          </div>
+                          {isSelected ? (
+                            <span className="rounded-full bg-[#D4AF97]/20 px-2.5 py-1 text-[11px] font-semibold text-[#2C2C2C]">
+                              Dipilih
+                            </span>
+                          ) : null}
+                        </div>
+                      </CardContent>
+
+                      <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="w-full sm:w-auto"
+                        >
+                          <a
+                            href={template.previewUrl ?? "#"}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Eye className="size-4 mr-2" /> Preview
+                          </a>
+                        </Button>
+
+                        <DialogClose asChild>
+                          <Button
+                            size="sm"
+                            className="w-full sm:w-auto"
+                            onClick={() => {
+                              setActiveTemplate(template.title);
+                            }}
+                          >
+                            <MousePointerClick className="size-4 mr-2" />{" "}
+                            Gunakan
+                          </Button>
+                        </DialogClose>
+                      </CardFooter>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <DialogFooter className="justify-end">
+                <DialogClose asChild>
+                  <Button variant="ghost" size="sm">
+                    Tutup
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+        <div className="space-y-2">
+          <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
+            <Music className="size-3 text-[#D4AF97]" /> Musik Latar
+          </Label>
+
+          <Dialog>
+            <DialogTrigger asChild>
+              <button
+                type="button"
+                className="group flex w-full items-center justify-between rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
+              >
+                <div className="flex-1">
+                  <p className="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">
+                    Musik Aktif
+                  </p>
+                  <h3 className="mt-2 text-sm font-semibold text-[#2C2C2C]">
+                    {selectedMusic?.title ?? "Pilih Musik"}
+                  </h3>
+                  <p className="mt-1 text-[11px] text-slate-500 line-clamp-1">
+                    {selectedMusic?.artist || "Klik untuk memilih musik latar"}
+                  </p>
+                </div>
+                <span className="rounded-full border border-[#D4AF97] bg-[#F8F5F0] px-3 py-2 text-[11px] font-bold text-[#2C2C2C] ml-3">
+                  Ubah
+                </span>
+              </button>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-2xl rounded-[32px] p-6 sm:p-8">
+              <DialogHeader>
+                <DialogTitle>Pilih Musik Latar</DialogTitle>
+                <DialogDescription>
+                  Pilih musik yang cocok untuk undangan Anda. Tekan tombol play
+                  untuk preview.
+                </DialogDescription>
+              </DialogHeader>
+
+              {/* Search Input */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                <Input
+                  placeholder="Cari musik berdasarkan judul..."
+                  value={musicSearchQuery}
+                  onChange={(e) => setMusicSearchQuery(e.target.value)}
+                  className="pl-10 rounded-xl border-slate-200 bg-white"
+                />
+              </div>
+
+              {/* Music List */}
+              <div className="grid grid-cols-1 gap-3 max-h-96 overflow-y-auto rounded-xl border border-slate-100 p-4 bg-slate-50/30">
+                {filteredMusics.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-8 text-slate-400">
+                    <Music className="size-8 mb-2 opacity-30" />
+                    <p className="text-sm">Musik tidak ditemukan</p>
+                  </div>
+                ) : (
+                  filteredMusics.map((music) => {
+                    const isSelected = music.url === formData.music_url;
+                    const isPlaying = playingMusicId === music.id;
+
+                    return (
+                      <div
+                        key={music.id}
+                        className={`flex items-center gap-3 p-3 rounded-lg border-2 transition cursor-pointer ${
+                          isSelected
+                            ? "border-[#D4AF97] bg-[#D4AF97]/5"
+                            : "border-slate-200 hover:border-[#D4AF97] bg-white"
+                        }`}
+                        onClick={() => setFormData({ music_url: music.url })}
+                      >
+                        {/* Play Button */}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPlayingMusicId(isPlaying ? null : music.id);
+                          }}
+                          className="p-2 rounded-lg bg-[#D4AF97] text-white hover:bg-[#C39E86] transition shrink-0"
+                        >
+                          {isPlaying ? (
+                            <Pause className="size-4" />
+                          ) : (
+                            <Play className="size-4" />
+                          )}
+                        </button>
+
+                        {/* Music Info */}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-semibold text-[#2C2C2C] truncate">
+                            {music.title}
+                          </h4>
+                          <p className="text-xs text-slate-500 truncate">
+                            {music.artist || "Artist tidak tersedia"}
+                          </p>
+                        </div>
+
+                        {/* Selected Badge */}
+                        {isSelected && (
+                          <span className="px-2.5 py-0.5 rounded-full bg-[#D4AF97] text-white text-[10px] font-bold uppercase tracking-wider shrink-0">
+                            Dipilih
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              <DialogFooter className="justify-end">
+                <DialogClose asChild>
+                  <Button variant="ghost" size="sm">
+                    Tutup
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar no-scrollbar">
+        <SectionCard
+          title="Cover / Pembuka"
+          icon={Sparkles}
+          isActive={activeSection === "cover"}
+          onClick={() =>
+            setActiveSection(activeSection === "cover" ? "" : "cover")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Judul Cover
+              </Label>
+              <Input
+                value={formData.cover_title || ""}
+                onChange={(e) => setFormData({ cover_title: e.target.value })}
+                placeholder="Undangan Pernikahan Aditya & Aura"
+                className="rounded-xl bg-white"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Subtitel / Pembuka
+              </Label>
+              <Textarea
+                value={formData.cover_subtitle || ""}
+                onChange={(e) =>
+                  setFormData({ cover_subtitle: e.target.value })
+                }
+                placeholder="Kami mengundang Anda untuk hadir dalam acara pernikahan kami."
+                className="min-h-[80px] rounded-xl bg-white resize-none text-xs"
+              />
+            </div>
+          </div>
+        </SectionCard>
+
         <SectionCard
           title="Mempelai Pria"
           icon={User2}
@@ -301,6 +627,22 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           }
         >
           <div className="flex flex-col gap-6">
+            <div className="space-y-1.5 rounded-3xl border border-slate-200 bg-white p-4">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Tanggal Countdown
+              </Label>
+              <Input
+                type="datetime-local"
+                value={formData.countdown_date || ""}
+                onChange={(e) =>
+                  setFormData({ countdown_date: e.target.value })
+                }
+                className="h-10 rounded-xl bg-white"
+              />
+              <p className="text-[10px] text-slate-500">
+                Gunakan untuk menampilkan hitung mundur di template Pink.
+              </p>
+            </div>
             {formData.acara?.map((item, idx) => (
               <div
                 key={idx}
@@ -432,6 +774,40 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           </div>
         </SectionCard>
 
+        <SectionCard
+          title="RSVP / Konfirmasi Kehadiran"
+          icon={MailCheck}
+          isActive={activeSection === "rsvp"}
+          onClick={() =>
+            setActiveSection(activeSection === "rsvp" ? "" : "rsvp")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Catatan RSVP
+              </Label>
+              <Textarea
+                value={formData.rsvp_note || ""}
+                onChange={(e) => setFormData({ rsvp_note: e.target.value })}
+                placeholder="Silakan konfirmasi kehadiran Anda melalui tautan di bawah ini."
+                className="min-h-[100px] rounded-xl bg-white resize-none text-xs"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Link RSVP
+              </Label>
+              <Input
+                value={formData.rsvp_url || ""}
+                onChange={(e) => setFormData({ rsvp_url: e.target.value })}
+                placeholder="https://..."
+                className="h-10 rounded-xl bg-white"
+              />
+            </div>
+          </div>
+        </SectionCard>
+
         {/* ═══════════════════════════════════════════
             Section: Cerita Cinta (Love Story)
         ═══════════════════════════════════════════ */}
@@ -543,16 +919,35 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           }
         >
           <div className="flex flex-col gap-4">
+            <div
+              className={`rounded-3xl border border-dashed p-4 text-center transition ${
+                galleryDragActive
+                  ? "border-[#D4AF97] bg-[#ECFDF5]"
+                  : "border-slate-200 bg-white/90"
+              }`}
+              onDragOver={(e) => handleGalleryDrag(e, true)}
+              onDragLeave={(e) => handleGalleryDrag(e, false)}
+              onDrop={handleGalleryDrop}
+            >
+              <p className="text-sm font-semibold text-slate-600">
+                Tarik dan lepas gambar di sini untuk menambah foto.
+              </p>
+              <p className="text-[10px] text-slate-400">
+                Atau gunakan tombol tambah untuk memasukkan URL gambar.
+              </p>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {formData.gallery?.map((url, idx) => (
                 <div
                   key={idx}
                   className="aspect-square rounded-lg bg-slate-200 overflow-hidden relative group"
                 >
-                  <img
+                  <Image
                     src={url}
                     alt="Gallery"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
+                    unoptimized
                   />
                   <button
                     type="button"
@@ -585,6 +980,83 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             <p className="text-[10px] text-slate-400 text-center uppercase tracking-widest font-bold">
               Maksimal 12 Foto
             </p>
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          title="Ucapan & Doa"
+          icon={MessageCircle}
+          isActive={activeSection === "guest_wishes"}
+          onClick={() =>
+            setActiveSection(
+              activeSection === "guest_wishes" ? "" : "guest_wishes",
+            )
+          }
+        >
+          <div className="flex flex-col gap-4">
+            {formData.guest_wishes?.map((wish, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 relative group"
+              >
+                <button
+                  type="button"
+                  onClick={() => removeArrayItem("guest_wishes", idx)}
+                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Nama
+                  </Label>
+                  <Input
+                    value={wish.name}
+                    onChange={(e) =>
+                      updateArrayField(
+                        "guest_wishes",
+                        idx,
+                        "name",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Nama pengirim"
+                    className="h-8 rounded-lg bg-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Ucapan / Doa
+                  </Label>
+                  <Textarea
+                    value={wish.message}
+                    onChange={(e) =>
+                      updateArrayField(
+                        "guest_wishes",
+                        idx,
+                        "message",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Semoga kalian berbahagia selamanya..."
+                    className="min-h-[80px] rounded-lg bg-white resize-none text-xs"
+                  />
+                </div>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full rounded-xl border-dashed border-[#D4AF97] text-[#D4AF97] hover:bg-[#F8F5F0]"
+              onClick={() =>
+                addArrayItem("guest_wishes", {
+                  name: "",
+                  message: "",
+                })
+              }
+            >
+              <Plus className="size-4 mr-2" /> Tambah Ucapan
+            </Button>
           </div>
         </SectionCard>
 
@@ -709,11 +1181,11 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
         </SectionCard>
 
         {/* ═══════════════════════════════════════════
-            Section: Dress Code
+            Section: Dress Code / Informasi Tambahan
         ═══════════════════════════════════════════ */}
         <SectionCard
-          title="Dress Code"
-          icon={Shirt}
+          title="Dress Code / Tambahan"
+          icon={Flag}
           isActive={activeSection === "dress_code"}
           onClick={() =>
             setActiveSection(activeSection === "dress_code" ? "" : "dress_code")
@@ -729,6 +1201,44 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 onChange={(e) => setFormData({ dress_code: e.target.value })}
                 placeholder="Contoh: Pastel / Earth Tone / Hitam & Putih"
                 className="rounded-xl border-slate-200 bg-white"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Informasi Tambahan
+              </Label>
+              <Textarea
+                value={formData.additional_info || ""}
+                onChange={(e) =>
+                  setFormData({ additional_info: e.target.value })
+                }
+                placeholder="Contoh: Tamu diharap datang 30 menit sebelum acara."
+                className="min-h-[100px] rounded-xl bg-white resize-none text-xs"
+              />
+            </div>
+          </div>
+        </SectionCard>
+
+        <SectionCard
+          title="Penutup"
+          icon={Heart}
+          isActive={activeSection === "closing"}
+          onClick={() =>
+            setActiveSection(activeSection === "closing" ? "" : "closing")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Ucapan Terima Kasih
+              </Label>
+              <Textarea
+                value={formData.closing_message || ""}
+                onChange={(e) =>
+                  setFormData({ closing_message: e.target.value })
+                }
+                placeholder="Terima kasih atas doa dan kehadiranmu..."
+                className="min-h-[100px] rounded-xl bg-white resize-none text-xs"
               />
             </div>
           </div>
@@ -747,6 +1257,13 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           </span>
         </div>
       </div>
+
+      {/* AudioPlayer for music preview */}
+      <audio
+        ref={audioRef}
+        crossOrigin="anonymous"
+        onEnded={() => setPlayingMusicId(null)}
+      />
     </aside>
   );
 }

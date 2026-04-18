@@ -42,7 +42,7 @@ export function CreateInvitationModal({ totalTokens }: CreateInvitationModalProp
         toast.success("Berhasil! Token dikurangi 10.")
         setIsOpen(false)
         // Arahkan ke halaman editor dengan ID undangan yang baru dibuat
-        router.push(`/dashboard/create?id=${result.invitationId}`)
+        router.push(`/create?id=${result.invitationId}`)
       }
     } catch (error: unknown) {
       toast.error((error as Error).message || "Terjadi kesalahan")

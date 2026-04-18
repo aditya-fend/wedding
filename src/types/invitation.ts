@@ -1,4 +1,4 @@
-import { AttendanceStatus } from './enums';
+import { AttendanceStatus } from "./enums";
 
 export interface CoupleDetail {
   nama: string;
@@ -29,6 +29,11 @@ export interface DigitalEnvelope {
   qris_url?: string; // [cite: 72]
 }
 
+export interface GuestWishEntry {
+  name: string;
+  message: string;
+}
+
 // Representasi kolom 'contentData' di Prisma
 export interface InvitationContent {
   mempelai_pria: CoupleDetail;
@@ -37,7 +42,15 @@ export interface InvitationContent {
   love_story: LoveStory[];
   gallery: string[]; // [cite: 71]
   digital_envelope: DigitalEnvelope[];
+  guest_wishes: GuestWishEntry[];
   music_url?: string; // [cite: 73]
+  rsvp_url?: string;
+  rsvp_note?: string;
+  countdown_date?: string;
+  additional_info?: string;
+  cover_title?: string;
+  cover_subtitle?: string;
+  closing_message?: string;
   dress_code?: string; // [cite: 74]
 }
 

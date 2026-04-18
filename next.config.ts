@@ -6,16 +6,20 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'picsum.photos',
+        protocol: "https",
+        hostname: "picsum.photos",
       },
       {
-        protocol: 'https',
-        hostname: 'i.ibb.co',        // ← Tambahkan ini untuk QRIS
+        protocol: "https",
+        hostname: "i.ibb.co", // ← Tambahkan ini untuk QRIS
       },
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com', // cadangan kalau nanti butuh
+        protocol: "https",
+        hostname: "images.unsplash.com", // cadangan kalau nanti butuh
+      },
+      {
+        protocol: "https",
+        hostname: "imgs.search.brave.com", // untuk gambar gallery
       },
     ],
   },

@@ -7,7 +7,9 @@ interface PublicInvitationPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export default async function PublicInvitationPage({ params }: PublicInvitationPageProps) {
+export default async function PublicInvitationPage({
+  params,
+}: PublicInvitationPageProps) {
   const { slug } = await params;
 
   const invitation = await prisma.invitation.findUnique({
@@ -20,9 +22,9 @@ export default async function PublicInvitationPage({ params }: PublicInvitationP
   const data = invitation.contentData as unknown as InvitationContent;
 
   return (
-    <PublicInvitationClient 
-      data={data} 
-      templateId={invitation.template?.id || "aura-dark"} 
+    <PublicInvitationClient
+      data={data}
+      templateId={invitation.template?.id || "aura-dark"}
     />
   );
 }
