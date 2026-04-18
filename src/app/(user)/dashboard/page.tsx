@@ -129,7 +129,7 @@ export default async function DashboardPage() {
                       variant="outline"
                       className="flex-1 rounded-xl h-10 text-xs gap-2"
                     >
-                      <Link href={`/dashboard/edit/${item.id}`}>
+                      <Link href={`/edit/${item.id}`}>
                         <Settings2 className="size-3.5" /> Edit
                       </Link>
                     </Button>
