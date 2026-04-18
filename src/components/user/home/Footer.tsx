@@ -1,4 +1,5 @@
 // components/home/Footer.tsx
+import { Instagram, Youtube } from "lucide-react";
 import Link from "next/link";
 
 export default function Footer() {
@@ -9,7 +10,7 @@ export default function Footer() {
           {/* Column 1 - Brand */}
           <div>
             <div className="font-semibold text-3xl tracking-tighter text-[#2C2C2C] mb-4">
-              Undangan<span className="text-[#D4AF97]">Dong</span>
+              Undang<span className="text-[#D4AF97]">Dong</span>
             </div>
             <p className="text-[#6B6B6B] text-sm leading-relaxed max-w-xs">
               Platform undangan pernikahan digital modern untuk pasangan
@@ -96,9 +97,24 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex flex-col items-center mt-8">
-          <p className="text-xs text-[#6B6B6B]">© 2026 UndanganDong</p>
-          <p className="text-xs text-[#6B6B6B]">Semua hak dilindungi</p>
+        <div className="flex justify-between items-center mt-8">
+          <p className="text-xs text-[#6B6B6B]">
+            © 2026 UndangDong, Semua hak dilindungi
+          </p>
+          {/* <p className="text-xs text-[#6B6B6B]">
+            <Link
+              href="https://www.instagram.com/undanganku.id"
+              className="text-[#D4AF97] hover:underline"
+            >
+              <Instagram className="inline-block size-4 mx-2 text-[#D4AF97]" />
+            </Link>
+            <Link
+              href="https://www.instagram.com/undanganku.id"
+              className="text-[#D4AF97] hover:underline"
+            >
+              <Youtube className="inline-block size-4 mx-2 text-[#D4AF97]" />
+            </Link>
+          </p> */}
         </div>
       </div>
     </footer>

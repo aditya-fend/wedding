@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "imgs.search.brave.com", // untuk gambar gallery
       },
+      {
+        protocol: "https",
+        hostname: "kdilqeoxwrcndmiivujr.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
     ],
   },
 };

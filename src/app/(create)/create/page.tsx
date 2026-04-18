@@ -16,11 +16,7 @@ export default async function CreateInvitationPage() {
   // 3. Ambil data Master (Templates & Musics) - Tetap diambil untuk Dropdown
   const [templates, musics] = await Promise.all([
     prisma.template.findMany({
-      // Pesan error menunjukkan isActive tidak ada.
-      // Jika Anda ingin memfilter yang aktif, Anda harus menambahkannya dulu di schema.prisma.
-      // Untuk sekarang, kita hapus filter where-nya agar tidak error.
       orderBy: {
-        // Karena createdAt juga tidak ada di list error, kita gunakan 'id' atau 'title'
         id: "asc",
       },
     }),

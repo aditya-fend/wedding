@@ -13,6 +13,7 @@ import {
   Send,
 } from "lucide-react";
 import { CreateInvitationModal } from "@/components/user/dashboard/CreateInvitationModal";
+import { AddTokensModal } from "@/components/user/dashboard/AddTokensModal";
 import Link from "next/link";
 import { Invitation, Template } from "@prisma/client";
 import { InvitationContent } from "@/types/invitation";
@@ -76,12 +77,7 @@ export default async function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-3 shrink-0">
-          <div className="flex items-center gap-3 bg-white border border-[#E5E0D8] px-4 h-11 rounded-xl shadow-sm">
-            <Ticket className="size-4 text-[#D4AF97]" />
-            <span className="text-sm font-bold text-[#2C2C2C]">
-              {totalTokens}
-            </span>
-          </div>
+          <AddTokensModal currentTokens={totalTokens} totalTokens={totalTokens}/>
           <CreateInvitationModal totalTokens={totalTokens} />
         </div>
       </div>

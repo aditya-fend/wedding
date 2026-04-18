@@ -5,3 +5,13 @@ export async function getTemplates() {
     orderBy: { title: "asc" },
   });
 }
+
+export async function getTemplateCategories() {
+  const templates = await prisma.template.findMany({
+    select: { category: true },
+    distinct: ["category"],
+    orderBy: { category: "asc" },
+  });
+  
+  return templates.map((t) => t.category).filter(Boolean);
+}

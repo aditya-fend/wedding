@@ -21,6 +21,7 @@ const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Kelola Pengguna", href: "/admin/pengguna", icon: Users },
   { name: "Kelola Token", href: "/admin/token", icon: Coins },
+  { name: "Tambah Template", href: "/admin/add-template", icon: LayoutDashboard },
   { name: "Tambah Musik", href: "/admin/add-music", icon: Music },
 ];
 

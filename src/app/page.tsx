@@ -2,6 +2,7 @@
 import Navbar from "@/components/user/home/Navbar";
 import Hero from "@/components/user/home/Hero";
 import Features from "@/components/user/home/Features";
+import TemplateSection from "@/components/user/home/Template";
 import Pricing from "@/components/user/home/Pricing";
 import Testimonials from "@/components/user/home/Testimonials";
 import FinalCTA from "@/components/user/home/FinalCTA";
@@ -12,6 +13,7 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#F8F5F0]">
       <Navbar />
       <Hero />
+      <TemplateSection />
       <Features />
       <Pricing />
       <Testimonials />
