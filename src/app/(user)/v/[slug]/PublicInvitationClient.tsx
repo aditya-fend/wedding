@@ -15,7 +15,7 @@ interface Props {
   invitationId?: string;
 }
 
-export default function PublicInvitationClient({ data, templateId }: Props) {
+export default function PublicInvitationClient({ data, templateId, invitationId }: Props) {
   const [isDesktop, setIsDesktop] = React.useState(false);
 
   React.useEffect(() => {
