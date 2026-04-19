@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 export async function updateInvitationContent(
   invitationId: string,
   content: InvitationContent,
+  templateTitle?: string,
 ) {
   const supabase = await createServerSupabase();
   const {
@@ -17,7 +18,7 @@ export async function updateInvitationContent(
   if (!user) throw new Error("Unauthorized");
 
   try {
-    // 1. Validasi kepemilikan (hanya pemilik yang bisa update)
+    // 1. Validasi kepemilikan
     const existing = await prisma.invitation.findUnique({
       where: { id: invitationId },
       select: { userId: true },
@@ -27,15 +28,33 @@ export async function updateInvitationContent(
       throw new Error("Anda tidak memiliki akses untuk mengubah undangan ini.");
     }
 
-    // 2. Update data konten JSON
+    // 2. Siapkan data update
+    const updateData: any = {
+      contentData: content as any,
+    };
+
+    // Jika ada templateTitle, cari template yang sesuai di DB
+    if (templateTitle) {
+      const template = await prisma.template.findFirst({
+        where: {
+          title: {
+            equals: templateTitle,
+            mode: "insensitive",
+          },
+        },
+      });
+      if (template) {
+        updateData.templateId = template.id;
+      }
+    }
+
+    // 3. Update record undangan
     await prisma.invitation.update({
       where: { id: invitationId },
-      data: {
-        contentData: content as any, // Prisma perlu cast 'any' untuk field JSON
-      },
+      data: updateData,
     });
 
-    // 3. Refresh cache halaman dashboard dan preview
+    // 4. Refresh cache
     revalidatePath("/dashboard");
     revalidatePath(`/v/${invitationId}`);
 
@@ -138,9 +157,9 @@ export async function saveInvitation(id: string, content: InvitationContent) {
         contentData: content as any,
       },
     });
-    
+
     revalidatePath(`/preview/${updated.slug}`);
-    
+
     return { success: true, data: updated };
   } catch (error) {
     console.error("Save Error:", error);
@@ -151,7 +170,7 @@ export async function saveInvitation(id: string, content: InvitationContent) {
 export async function getInvitationById(id: string) {
   return await prisma.invitation.findUnique({
     where: { id },
-    include: { template: true }
+    include: { template: true },
   });
 }
 
@@ -171,7 +190,9 @@ export async function deleteInvitation(invitationId: string) {
     });
 
     if (!existing || existing.userId !== user.id) {
-      throw new Error("Anda tidak memiliki akses untuk menghapus undangan ini.");
+      throw new Error(
+        "Anda tidak memiliki akses untuk menghapus undangan ini.",
+      );
     }
 
     // 2. Hapus undangan

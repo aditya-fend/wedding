@@ -15,7 +15,11 @@ interface Props {
   invitationId?: string;
 }
 
-export default function PublicInvitationClient({ data, templateId, invitationId }: Props) {
+export default function PublicInvitationClient({
+  data,
+  templateId,
+  invitationId,
+}: Props) {
   const [isDesktop, setIsDesktop] = React.useState(false);
 
   React.useEffect(() => {
@@ -31,18 +35,18 @@ export default function PublicInvitationClient({ data, templateId, invitationId 
   };
 
   const renderTemplate = () => {
-    const key = normalizeTemplateName(templateId);
+    const key = normalizeTemplateName(templateId).toLowerCase();
 
     const Component = getTemplate[key] as TemplateComponent | undefined;
 
     if (!Component) {
-      const DefaultComponent = templateRegistry.pink;
-      return <DefaultComponent data={data} invitationId={invitationId} />;
+      const Fallback = templateRegistry.pink;
+      return <Fallback data={data} invitationId={invitationId} />;
     }
 
     return <Component data={data} invitationId={invitationId} />;
   };
-  
+
   if (isDesktop) {
     return (
       <div

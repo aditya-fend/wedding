@@ -14,6 +14,7 @@ interface CreateDesktopViewProps {
   musics: Music[];
   invitationId: string;
   initialData: InvitationContent;
+  initialTemplate: string;
   slug: string;
 }
 
@@ -22,8 +23,9 @@ export default function CreateDesktopView({
   musics,
   invitationId,
   initialData,
+  initialTemplate,
 }: CreateDesktopViewProps) {
-  const { formData, setFormData, setInvitationId, setIsSaving } =
+  const { formData, setFormData, setInvitationId, setIsSaving, activeTemplate, setActiveTemplate } =
     useEditorStore();
   const [isReady, setIsReady] = React.useState(true);
 
@@ -32,16 +34,17 @@ export default function CreateDesktopView({
     if (initialData) {
       setFormData(initialData);
       setInvitationId(invitationId);
+      setActiveTemplate(initialTemplate);
       setIsReady(true);
     }
-  }, [initialData, invitationId, setFormData, setInvitationId]);
+  }, [initialData, invitationId, initialTemplate, setFormData, setInvitationId, setActiveTemplate]);
 
   // 2. Logika Auto-save (Debounced)
   const debouncedSave = useDebouncedCallback(
-    async (data: InvitationContent) => {
+    async (data: InvitationContent, template: string) => {
       setIsSaving(true);
       try {
-        await updateInvitationContent(invitationId, data);
+        await updateInvitationContent(invitationId, data, template);
       } catch (error) {
         console.error("Auto-save failed:", error);
       } finally {
@@ -53,10 +56,10 @@ export default function CreateDesktopView({
 
   // 3. Monitor perubahan formData untuk memicu save
   React.useEffect(() => {
-    if (isReady && Object.keys(formData).length > 0) {
-      debouncedSave(formData);
+    if (isReady && (Object.keys(formData).length > 0 || activeTemplate)) {
+      debouncedSave(formData, activeTemplate);
     }
-  }, [formData, isReady, debouncedSave]);
+  }, [formData, activeTemplate, isReady, debouncedSave]);
 
   if (!isReady) {
     return (
@@ -72,9 +75,8 @@ export default function CreateDesktopView({
   }
 
   return (
-// h-[calc(100vh-5rem)] memastikan layout tidak melebihi layar setelah dikurangi navbar
+    // h-[calc(100vh-5rem)] memastikan layout tidak melebihi layar setelah dikurangi navbar
     <div className="grid grid-cols-2 h-screen overflow-hidden bg-[#F8F5F0]">
-      
       {/* AREA KIRI: FIXED WIDTH (450px) */}
       <div className="col-span-1 h-full shrink-0 border-r overflow-y-auto">
         <EditorSidebar templates={templates} musics={musics} />
@@ -84,7 +86,6 @@ export default function CreateDesktopView({
       <div className="col-span-1 h-full relative flex items-center justify-center p-10 overflow-hidden">
         <LivePreview />
       </div>
-
     </div>
   );
 }

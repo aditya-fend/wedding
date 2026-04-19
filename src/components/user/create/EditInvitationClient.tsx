@@ -11,6 +11,7 @@ interface EditInvitationClientProps {
   musics: Music[];
   invitationId: string;
   initialData: InvitationContent;
+  initialTemplate: string;
   slug: string;
 }
 
@@ -19,6 +20,7 @@ export default function EditInvitationClient({
   musics,
   invitationId,
   initialData,
+  initialTemplate,
   slug,
 }: EditInvitationClientProps) {
   const [isMobile, setIsMobile] = useState<boolean | null>(() => {
@@ -32,7 +34,7 @@ export default function EditInvitationClient({
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
-    
+
     if (isMobile === null) checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -42,10 +44,10 @@ export default function EditInvitationClient({
   if (isMobile === null) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-[#F8F5F0]">
-         <div className="animate-pulse flex flex-col items-center gap-3">
-            <div className="size-8 bg-slate-200 rounded-full" />
-            <div className="h-2 w-24 bg-slate-100 rounded" />
-         </div>
+        <div className="animate-pulse flex flex-col items-center gap-3">
+          <div className="size-8 bg-slate-200 rounded-full" />
+          <div className="h-2 w-24 bg-slate-100 rounded" />
+        </div>
       </div>
     );
   }
@@ -55,6 +57,7 @@ export default function EditInvitationClient({
       <CreateMobileView
         invitationId={invitationId}
         initialData={initialData}
+        initialTemplate={initialTemplate}
         templates={templates}
         musics={musics}
         slug={slug}
@@ -66,6 +69,7 @@ export default function EditInvitationClient({
     <CreateDesktopView
       invitationId={invitationId}
       initialData={initialData}
+      initialTemplate={initialTemplate}
       templates={templates}
       musics={musics}
       slug={slug}

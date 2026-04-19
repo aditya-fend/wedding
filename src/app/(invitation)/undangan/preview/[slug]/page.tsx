@@ -21,10 +21,19 @@ export default async function PublicInvitationPage({
 
   const data = invitation.contentData as unknown as InvitationContent;
 
+  const normalizeTemplateName = (title: string) => {
+    return title.replace(/\s+/g, "");
+  };
+
+  const templateId = invitation.template?.title
+    ? normalizeTemplateName(invitation.template.title).toLowerCase()
+    : "pink";
+
   return (
     <PublicInvitationClient
       data={data}
-      templateId={invitation.template?.id || "aura-dark"}
+      templateId={templateId}
+      invitationId={invitation.id}
     />
   );
 }

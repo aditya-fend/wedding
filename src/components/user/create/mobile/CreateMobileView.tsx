@@ -17,6 +17,7 @@ interface CreateMobileViewProps {
   musics: Music[];
   invitationId: string;
   initialData: InvitationContent;
+  initialTemplate: string;
   slug: string;
 }
 
@@ -25,8 +26,9 @@ export default function CreateMobileView({
   musics,
   invitationId,
   initialData,
+  initialTemplate,
 }: CreateMobileViewProps) {
-  const { formData, setFormData, setInvitationId, setIsSaving } =
+  const { formData, setFormData, setInvitationId, setIsSaving, activeTemplate, setActiveTemplate } =
     useEditorStore();
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
 
@@ -35,15 +37,16 @@ export default function CreateMobileView({
     if (initialData) {
       setFormData(initialData);
       setInvitationId(invitationId);
+      setActiveTemplate(initialTemplate);
     }
-  }, [initialData, invitationId, setFormData, setInvitationId]);
+  }, [initialData, invitationId, initialTemplate, setFormData, setInvitationId, setActiveTemplate]);
 
   // 2. Logika Auto-save (Debounced)
   const debouncedSave = useDebouncedCallback(
-    async (data: InvitationContent) => {
+    async (data: InvitationContent, template: string) => {
       setIsSaving(true);
       try {
-        await updateInvitationContent(invitationId, data);
+        await updateInvitationContent(invitationId, data, template);
       } catch (error) {
         console.error("Auto-save failed:", error);
       } finally {
@@ -54,10 +57,10 @@ export default function CreateMobileView({
   );
 
   React.useEffect(() => {
-    if (formData && Object.keys(formData).length > 0) {
-      debouncedSave(formData);
+    if (formData && (Object.keys(formData).length > 0 || activeTemplate)) {
+      debouncedSave(formData, activeTemplate);
     }
-  }, [formData, debouncedSave]);
+  }, [formData, activeTemplate, debouncedSave]);
 
   // Loading hanya jika data benar-benar belum ada sama sekali
   if (!formData || Object.keys(formData).length === 0) {
@@ -75,7 +78,6 @@ export default function CreateMobileView({
 
   return (
     <div className="flex flex-col h-screen bg-[#F8F5F0] overflow-hidden relative">
-      
       {/* Scrollable Editor Area */}
       <div className="flex-1 h-1 overflow-y-auto pb-24">
         <EditorSidebar templates={templates} musics={musics} />
@@ -104,35 +106,36 @@ export default function CreateMobileView({
           >
             {/* Modal Header */}
             <div className="flex items-center justify-between px-6 pb-6">
-               <div className="flex items-center gap-3">
-                  <div className="p-2 bg-white/20 rounded-xl text-white">
-                    <Eye size={18} />
-                  </div>
-                  <h3 className="text-white font-bold tracking-widest text-xs uppercase">Live Preview</h3>
-               </div>
-               <button 
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-xl text-white">
+                  <Eye size={18} />
+                </div>
+                <h3 className="text-white font-bold tracking-widest text-xs uppercase">
+                  Live Preview
+                </h3>
+              </div>
+              <button
                 onClick={() => setIsPreviewOpen(false)}
                 className="p-3 bg-white/10 hover:bg-white/20 rounded-2xl text-white transition-colors"
-               >
-                 <X size={20} />
-               </button>
+              >
+                <X size={20} />
+              </button>
             </div>
 
             {/* Simulator Container */}
             <div className="flex-1 overflow-hidden">
-               <LivePreview />
+              <LivePreview />
             </div>
 
             {/* Modal Bottom Tip */}
             <div className="p-6 text-center">
-               <p className="text-white/60 text-[10px] font-medium tracking-wide">
-                 Gulir ke atas/bawah pada simulasi ponsel untuk navigasi.
-               </p>
+              <p className="text-white/60 text-[10px] font-medium tracking-wide">
+                Gulir ke atas/bawah pada simulasi ponsel untuk navigasi.
+              </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
     </div>
   );
 }

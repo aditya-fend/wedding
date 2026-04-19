@@ -46,8 +46,18 @@ export default async function CreateInvitationPage() {
 
   // 5. Fallback Data (Guest Mode / Jika belum punya undangan)
   const defaultContent: InvitationContent = {
-    mempelai_pria: { nama: "Aditya", ortu_ayah: "Ayah", ortu_ibu: "Ibu", foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop" },
-    mempelai_wanita: { nama: "Aura", ortu_ayah: "Ayah", ortu_ibu: "Ibu", foto: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop" },
+    mempelai_pria: {
+      nama: "Aditya",
+      ortu_ayah: "Ayah",
+      ortu_ibu: "Ibu",
+      foto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop",
+    },
+    mempelai_wanita: {
+      nama: "Aura",
+      ortu_ayah: "Ayah",
+      ortu_ibu: "Ibu",
+      foto: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=500&auto=format&fit=crop",
+    },
     acara: [
       {
         tipe: "Akad Nikah",
@@ -77,7 +87,7 @@ export default async function CreateInvitationPage() {
 
   // 6. Mapping data akhir
   const initialData = invitationData
-    ? (invitationData.content as unknown as InvitationContent)
+    ? (invitationData.contentData as unknown as InvitationContent)
     : defaultContent;
 
   return (
@@ -85,6 +95,7 @@ export default async function CreateInvitationPage() {
       <EditInvitationClient
         invitationId={invitationData?.id || "guest-mode"}
         initialData={initialData}
+        initialTemplate={invitationData?.template?.title || "Pink"}
         templates={templates}
         musics={musics}
         slug={invitationData?.slug || "demo"}

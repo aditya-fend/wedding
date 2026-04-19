@@ -99,7 +99,7 @@ export function InvitationListTab({ invitations }: { invitations: InvitationWith
                         </Link>
                       </Button>
                       <Button asChild variant="secondary" className="flex-1 rounded-xl h-10 text-xs gap-2">
-                        <a href={`/v/${item.slug}`} target="_blank" rel="noopener noreferrer">
+                        <a href={`/undangan/preview/${item.slug}`} target="_blank" rel="noopener noreferrer">
                           <ExternalLink className="size-3.5" /> Preview
                         </a>
                       </Button>

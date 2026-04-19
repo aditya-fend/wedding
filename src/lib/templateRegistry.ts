@@ -10,16 +10,13 @@ export type TemplateComponent = React.ComponentType<{
   invitationId?: string;
 }>;
 
-export const templateRegistry = {
+// Gunakan keys dalam lowercase untuk kompatibilitas pencarian
+export const templateRegistry: Record<string, TemplateComponent> = {
   nerogold: NeroGold,
   auradark: AuraDark,
   pink: Pink,
   royal: Royal,
 };
 
-export const getTemplate: Record<string, TemplateComponent> = {
-  AuraDark,
-  NeroGold,
-  Pink,
-  Royal,
-};
+// getTemplate sekarang merujuk ke registry yang sama untuk konsistensi
+export const getTemplate = templateRegistry;
