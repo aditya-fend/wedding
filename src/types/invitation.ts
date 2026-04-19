@@ -51,10 +51,14 @@ export interface InvitationContent {
   cover_title?: string;
   cover_subtitle?: string;
   closing_message?: string;
-  dress_code?: string; // [cite: 74]
-  dress_code_description?: string; // [cite: 74]
-  hero_image?: string;
-  wedding_date?: string;
+  dress_code?: string;
+   dress_code_description?: string;
+   dress_code_color?: string; // fallback
+   dress_code_colors?: string[]; // New: support up to 3 colors
+   additional_info?: string;
+   additional_info_list?: string[]; // New: support list items
+   hero_image?: string;
+   wedding_date?: string;
 }
 
 export interface GuestWish {

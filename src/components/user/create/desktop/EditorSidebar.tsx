@@ -40,7 +40,10 @@ import {
   Play,
   Pause,
   Search,
+  MapPin,
+  Map as MapIconUI,
 } from "lucide-react";
+import MapPicker from "./MapPicker";
 import { SectionCard } from "./SectionCard";
 import { Music as MusicType, Template } from "@/types";
 
@@ -65,6 +68,9 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
   const [heroDragActive, setHeroDragActive] = useState(false);
   const [priaDragActive, setPriaDragActive] = useState(false);
   const [wanitaDragActive, setWanitaDragActive] = useState(false);
+  const [storyDragActive, setStoryDragActive] = useState<number | null>(null);
+  const [envelopeDragActive, setEnvelopeDragActive] = useState<number | null>(null);
+  const [isMapPickerOpen, setIsMapPickerOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Handle music playback
@@ -826,6 +832,241 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 Pilih tanggal lewat kalender untuk mengisi otomatis.
               </p>
             </div>
+
+            <div className="space-y-1.5 pt-2 border-t border-slate-50">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Nama Tempat Utama
+              </Label>
+              <Input
+                value={formData.acara?.[0]?.lokasi || ""}
+                onChange={(e) => {
+                  const newAcara = [...(formData.acara || [])];
+                  if (newAcara.length === 0) {
+                    newAcara.push({
+                      tipe: "Utama",
+                      lokasi: e.target.value,
+                      tanggal: formData.wedding_date || "",
+                      jam: "",
+                      alamat_lengkap: "",
+                      link_maps: "",
+                    });
+                  } else {
+                    newAcara[0] = { ...newAcara[0], lokasi: e.target.value };
+                  }
+                  setFormData({ acara: newAcara });
+                }}
+                placeholder="Contoh: Grand Ballroom / Kediaman"
+                className="h-10 rounded-xl bg-white"
+              />
+              <p className="text-[9px] text-slate-500 italic">
+                Saran: Isi dengan nama gedung, aula, atau nama tempat utama.
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Alamat Lengkap / Detail Lokasi
+              </Label>
+              <Textarea
+                value={formData.acara?.[0]?.alamat_lengkap || ""}
+                onChange={(e) => {
+                  const newAcara = [...(formData.acara || [])];
+                  if (newAcara.length === 0) {
+                    newAcara.push({
+                      tipe: "Utama",
+                      alamat_lengkap: e.target.value,
+                      tanggal: formData.wedding_date || "",
+                      jam: "",
+                      lokasi: "",
+                      link_maps: "",
+                    });
+                  } else {
+                    newAcara[0] = { ...newAcara[0], alamat_lengkap: e.target.value };
+                  }
+                  setFormData({ acara: newAcara });
+                }}
+                placeholder="Jl. Raya No. 123, RT 01/02, Desa..."
+                className="rounded-xl bg-white min-h-[80px] text-sm"
+              />
+              <p className="text-[10px] text-amber-600 font-medium bg-amber-50 p-2 rounded-lg border border-amber-100 mt-1">
+                ⚠️ Mohon lengkapi alamat jika hasil dari peta belum detail (tambahkan RT/RW atau keterangan patokan).
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Link Google Maps
+              </Label>
+              <div className="flex gap-2">
+                <Input
+                  value={formData.acara?.[0]?.link_maps || ""}
+                  onChange={(e) => {
+                    const newAcara = [...(formData.acara || [])];
+                    if (newAcara.length === 0) {
+                      newAcara.push({
+                        tipe: "Utama",
+                        link_maps: e.target.value,
+                        tanggal: formData.wedding_date || "",
+                        jam: "",
+                        alamat_lengkap: "",
+                        lokasi: "",
+                      });
+                    } else {
+                      newAcara[0] = {
+                        ...newAcara[0],
+                        link_maps: e.target.value,
+                      };
+                    }
+                    setFormData({ acara: newAcara });
+                  }}
+                  placeholder="https://maps.app.goo.gl/..."
+                  className="h-10 rounded-xl bg-white flex-1"
+                />
+                <Button
+                  type="button"
+                  size="icon"
+                  variant="outline"
+                  className="rounded-xl shrink-0"
+                  onClick={() => setIsMapPickerOpen(true)}
+                >
+                  <MapIconUI className="size-4" />
+                </Button>
+              </div>
+              <p className="text-[9px] text-slate-500 italic">
+                Buka Peta untuk memilih lokasi secara interaktif di maps.
+              </p>
+            </div>
+
+            <MapPicker 
+              isOpen={isMapPickerOpen}
+              onClose={() => setIsMapPickerOpen(false)}
+              onConfirm={({ address, link }) => {
+                const newAcara = [...(formData.acara || [])];
+                const updateData = { link_maps: link, alamat_lengkap: address };
+                
+                if (newAcara.length === 0) {
+                  newAcara.push({
+                    tipe: "Utama",
+                    tanggal: formData.wedding_date || "",
+                    jam: "",
+                    lokasi: "", // Biarkan user mengisi manual
+                    ...updateData
+                  });
+                } else {
+                  newAcara[0] = { ...newAcara[0], ...updateData };
+                }
+                
+                setFormData({ acara: newAcara });
+                setIsMapPickerOpen(false);
+              }}
+            />
+          </div>
+        </SectionCard>
+        
+        {/* ═══════════════════════════════════════════
+            Section: Detail Acara
+        ═══════════════════════════════════════════ */}
+        <SectionCard
+          title="Detail Acara"
+          icon={CalendarDays}
+          isActive={activeSection === "event_details"}
+          onClick={() =>
+            setActiveSection(
+              activeSection === "event_details" ? "" : "event_details",
+            )
+          }
+        >
+          <div className="flex flex-col gap-6">
+            {formData.acara?.map((event, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col gap-3 p-4 rounded-xl border border-slate-100 bg-slate-50/50 relative group"
+              >
+                {/* Delete button */}
+                <button
+                  type="button"
+                  onClick={() => removeArrayItem("acara", idx)}
+                  className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Nama Acara
+                  </Label>
+                  <Input
+                    value={event.tipe}
+                    onChange={(e) =>
+                      updateArrayField("acara", idx, "tipe", e.target.value)
+                    }
+                    placeholder="Contoh: Akad Nikah / Resepsi"
+                    className="h-8 rounded-lg bg-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Jam Acara
+                  </Label>
+                  <Input
+                    value={event.jam}
+                    onChange={(e) =>
+                      updateArrayField("acara", idx, "jam", e.target.value)
+                    }
+                    placeholder="Contoh: 08:00 - 10:00 WIB"
+                    className="h-8 rounded-lg bg-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Nama Tempat
+                  </Label>
+                  <Input
+                    value={event.lokasi}
+                    onChange={(e) =>
+                      updateArrayField("acara", idx, "lokasi", e.target.value)
+                    }
+                    placeholder="Contoh: Gedung Serbaguna"
+                    className="h-8 rounded-lg bg-white"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                    Alamat Lengkap
+                  </Label>
+                  <Textarea
+                    value={event.alamat_lengkap}
+                    onChange={(e) =>
+                      updateArrayField(
+                        "acara",
+                        idx,
+                        "alamat_lengkap",
+                        e.target.value,
+                      )
+                    }
+                    placeholder="Jl. Raya No. 123..."
+                    className="min-h-[60px] rounded-lg bg-white resize-none text-xs"
+                  />
+                </div>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full rounded-xl border-dashed border-[#D4AF97] text-[#D4AF97] hover:bg-[#F8F5F0]"
+              onClick={() =>
+                addArrayItem("acara", {
+                  tipe: "",
+                  jam: "",
+                  lokasi: "",
+                  alamat_lengkap: "",
+                  tanggal: formData.wedding_date || "",
+                  link_maps: "",
+                })
+              }
+            >
+              <Plus className="size-4 mr-2" /> Tambah Sesi Acara
+            </Button>
           </div>
         </SectionCard>
 
@@ -895,8 +1136,66 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    URL Foto (Opsional)
+                    Foto Cerita
                   </Label>
+                  <div
+                    className={`group relative aspect-video cursor-pointer overflow-hidden rounded-xl border-2 border-dashed transition-all ${
+                      storyDragActive === idx
+                        ? "border-[#D4AF97] bg-[#ECFDF5]"
+                        : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                    }`}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setStoryDragActive(idx);
+                    }}
+                    onDragLeave={() => setStoryDragActive(null)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setStoryDragActive(null);
+                      const file = e.dataTransfer.files?.[0];
+                      if (file && file.type.startsWith("image/")) {
+                        const url = URL.createObjectURL(file);
+                        updateArrayField("love_story", idx, "foto", url);
+                      }
+                    }}
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = "image/*";
+                      input.onchange = (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (file) {
+                          const url = URL.createObjectURL(file);
+                          updateArrayField("love_story", idx, "foto", url);
+                        }
+                      };
+                      input.click();
+                    }}
+                  >
+                    {story.foto ? (
+                      <>
+                        <Image
+                          src={story.foto}
+                          alt="Story Preview"
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                            <ImageIcon size={14} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex h-full flex-col items-center justify-center gap-1 text-slate-400">
+                        <ImageIcon size={20} className="opacity-40" />
+                        <p className="text-[9px] font-bold uppercase tracking-wider">
+                          Drop atau Klik Foto
+                        </p>
+                      </div>
+                    )}
+                  </div>
                   <Input
                     value={story.foto || ""}
                     onChange={(e) =>
@@ -907,8 +1206,8 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                         e.target.value,
                       )
                     }
-                    placeholder="https://example.com/foto.jpg"
-                    className="h-8 rounded-lg bg-white"
+                    placeholder="Atau URL gambar..."
+                    className="h-8 rounded-lg bg-white text-[10px]"
                   />
                 </div>
               </div>
@@ -956,7 +1255,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 Tarik dan lepas gambar di sini untuk menambah foto.
               </p>
               <p className="text-[10px] text-slate-400">
-                Atau gunakan tombol tambah untuk memasukkan URL gambar.
+                Gambar akan muncul otomatis di galeri undangan.
               </p>
             </div>
             <div className="grid grid-cols-3 gap-2">
@@ -989,12 +1288,22 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 type="button"
                 className="aspect-square rounded-lg border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 hover:border-[#D4AF97] hover:text-[#D4AF97] transition-colors"
                 onClick={() => {
-                  const url = prompt("Masukkan URL foto:");
-                  if (url) {
-                    setFormData({
-                      gallery: [...(formData.gallery || []), url],
-                    });
-                  }
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.multiple = true;
+                  input.onchange = (e) => {
+                    const files = Array.from(
+                      (e.target as HTMLInputElement).files || [],
+                    );
+                    const urls = files.map((file) => URL.createObjectURL(file));
+                    if (urls.length > 0) {
+                      setFormData({
+                        gallery: [...(formData.gallery || []), ...urls],
+                      });
+                    }
+                  };
+                  input.click();
                 }}
               >
                 <Plus size={20} />
@@ -1092,8 +1401,76 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 </div>
                 <div className="space-y-1.5">
                   <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    URL QRIS (Opsional)
+                    QRIS (Opsional)
                   </Label>
+                  <div
+                    className={`group relative aspect-square w-full max-w-[120px] mx-auto cursor-pointer overflow-hidden rounded-xl border-2 border-dashed transition-all ${
+                      envelopeDragActive === idx
+                        ? "border-[#D4AF97] bg-[#ECFDF5]"
+                        : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                    }`}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setEnvelopeDragActive(idx);
+                    }}
+                    onDragLeave={() => setEnvelopeDragActive(null)}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      setEnvelopeDragActive(null);
+                      const file = e.dataTransfer.files?.[0];
+                      if (file && file.type.startsWith("image/")) {
+                        const url = URL.createObjectURL(file);
+                        updateArrayField(
+                          "digital_envelope",
+                          idx,
+                          "qris_url",
+                          url,
+                        );
+                      }
+                    }}
+                    onClick={() => {
+                      const input = document.createElement("input");
+                      input.type = "file";
+                      input.accept = "image/*";
+                      input.onchange = (e) => {
+                        const file = (e.target as HTMLInputElement).files?.[0];
+                        if (file) {
+                          const url = URL.createObjectURL(file);
+                          updateArrayField(
+                            "digital_envelope",
+                            idx,
+                            "qris_url",
+                            url,
+                          );
+                        }
+                      };
+                      input.click();
+                    }}
+                  >
+                    {envelope.qris_url ? (
+                      <>
+                        <Image
+                          src={envelope.qris_url}
+                          alt="QRIS Preview"
+                          fill
+                          className="object-cover"
+                          unoptimized
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                            <ImageIcon size={14} />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex h-full flex-col items-center justify-center gap-1 text-slate-400">
+                        <ImageIcon size={20} className="opacity-40" />
+                        <p className="text-[8px] font-bold uppercase tracking-wider text-center px-2">
+                          Drop atau Klik QRIS
+                        </p>
+                      </div>
+                    )}
+                  </div>
                   <Input
                     value={envelope.qris_url || ""}
                     onChange={(e) =>
@@ -1104,8 +1481,8 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                         e.target.value,
                       )
                     }
-                    placeholder="https://example.com/qris.png"
-                    className="h-8 rounded-lg bg-white"
+                    placeholder="Atau URL QRIS..."
+                    className="h-8 rounded-lg bg-white text-[10px]"
                   />
                 </div>
               </div>
@@ -1140,29 +1517,162 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
           }
         >
           <div className="flex flex-col gap-4">
+            {/* Dress Code Preset */}
             <div className="space-y-1.5">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Warna / Tema Pakaian
+                Preset Dress Code
               </Label>
-              <Input
-                value={formData.dress_code || ""}
+              <select
+                value={formData.dress_code || "Formal"}
                 onChange={(e) => setFormData({ dress_code: e.target.value })}
-                placeholder="Contoh: Pastel / Earth Tone / Hitam & Putih"
-                className="rounded-xl border-slate-200 bg-white"
-              />
+                className="w-full h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs text-slate-700 outline-none focus:border-[#D4AF97] transition-all appearance-none"
+              >
+                <option value="Formal">Formal</option>
+                <option value="Semi Formal">Semi Formal</option>
+                <option value="Batik">Batik</option>
+                <option value="Casual">Casual</option>
+                <option value="Traditional">Traditional</option>
+                <option value="Custom">Custom</option>
+              </select>
             </div>
+
+            {/* Color Palette (Max 3) */}
+            <div className="space-y-2">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Warna Dress Code (Maks 3)
+              </Label>
+              <div className="flex flex-wrap gap-3">
+                {formData.dress_code_colors?.map((color, idx) => (
+                  <div
+                    key={idx}
+                    className="flex flex-col gap-1.5 flex-1 min-w-[100px]"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="color"
+                        value={color}
+                        onChange={(e) => {
+                          const newColors = [
+                            ...(formData.dress_code_colors || []),
+                          ];
+                          newColors[idx] = e.target.value;
+                          setFormData({ dress_code_colors: newColors });
+                        }}
+                        className="w-10 h-10 p-1 rounded-xl cursor-pointer border-slate-200"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newColors = [
+                            ...(formData.dress_code_colors || []),
+                          ];
+                          newColors.splice(idx, 1);
+                          setFormData({ dress_code_colors: newColors });
+                        }}
+                        className="p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100"
+                      >
+                        <Trash2 size={12} />
+                      </button>
+                    </div>
+                    <Input
+                      value={color}
+                      onChange={(e) => {
+                        const newColors = [
+                          ...(formData.dress_code_colors || []),
+                        ];
+                        newColors[idx] = e.target.value;
+                        setFormData({ dress_code_colors: newColors });
+                      }}
+                      className="h-8 text-[10px] uppercase font-mono rounded-lg bg-white"
+                    />
+                  </div>
+                ))}
+                {(formData.dress_code_colors?.length || 0) < 3 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        dress_code_colors: [
+                          ...(formData.dress_code_colors || []),
+                          "#FFFFFF",
+                        ],
+                      });
+                    }}
+                    className="w-10 h-10 rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center text-slate-400 hover:border-[#D4AF97] hover:text-[#D4AF97]"
+                  >
+                    <Plus size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Additional Notes */}
             <div className="space-y-1.5">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Informasi Tambahan
+                Catatan Dress Code
               </Label>
               <Textarea
-                value={formData.additional_info || ""}
+                value={formData.dress_code_description || ""}
                 onChange={(e) =>
-                  setFormData({ additional_info: e.target.value })
+                  setFormData({ dress_code_description: e.target.value })
                 }
-                placeholder="Contoh: Tamu diharap datang 30 menit sebelum acara."
-                className="min-h-[100px] rounded-xl bg-white resize-none text-xs"
+                placeholder="Misal: Tamu pria menggunakan batik lengan panjang..."
+                className="min-h-[80px] rounded-xl bg-white resize-none text-xs"
               />
+            </div>
+
+            {/* Additional Info List */}
+            <div className="space-y-1.5 pt-2 border-t border-slate-100">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Informasi Tambahan (List)
+              </Label>
+              <div className="flex flex-col gap-2">
+                {formData.additional_info_list?.map((item, idx) => (
+                  <div key={idx} className="flex gap-2">
+                    <Input
+                      value={item}
+                      onChange={(e) => {
+                        const newList = [
+                          ...(formData.additional_info_list || []),
+                        ];
+                        newList[idx] = e.target.value;
+                        setFormData({ additional_info_list: newList });
+                      }}
+                      placeholder={`Info item #${idx + 1}`}
+                      className="h-8 text-xs rounded-lg bg-white"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const newList = [
+                          ...(formData.additional_info_list || []),
+                        ];
+                        newList.splice(idx, 1);
+                        setFormData({ additional_info_list: newList });
+                      }}
+                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-500"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setFormData({
+                      additional_info_list: [
+                        ...(formData.additional_info_list || []),
+                        "",
+                      ],
+                    });
+                  }}
+                  className="text-[10px] text-[#D4AF97] self-start h-7 hover:bg-transparent"
+                >
+                  <Plus size={12} className="mr-1" /> Tambah Item Info
+                </Button>
+              </div>
             </div>
           </div>
         </SectionCard>

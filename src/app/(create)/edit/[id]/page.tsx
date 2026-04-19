@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import CreateDesktopView from "@/components/user/create/desktop/CreateDesktopView";
+import EditInvitationClient from "@/components/user/create/EditInvitationClient";
 import { InvitationContent } from "@/types/invitation";
 
 interface EditInvitationPageProps {
@@ -36,7 +36,7 @@ export default async function EditInvitationPage({ params }: EditInvitationPageP
 
   return (
     <main className="h-screen w-full overflow-hidden">
-      <CreateDesktopView
+      <EditInvitationClient
         invitationId={invitation.id}
         initialData={initialData}
         templates={templates}

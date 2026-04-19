@@ -19,6 +19,7 @@ export type SectionId =
   | "mempelai_pria"
   | "mempelai_wanita"
   | "acara"
+  | "event_details"
   | "rsvp"
   | "love_story"
   | "gallery"

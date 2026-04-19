@@ -33,12 +33,14 @@ const RoyalClosing = ({ data }: RoyalClosingProps) => {
         className="space-y-6"
       >
         <p className="font-serif italic text-slate-500 leading-relaxed px-4">
-          "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami."
+          &quot;{data.closing_message || "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami."}&quot;
         </p>
 
         <div className="pt-8">
           <p className="text-[10px] tracking-[0.4em] text-pink-400 uppercase font-bold mb-4">Kami yang berbahagia,</p>
-          <h2 className="text-4xl font-serif italic text-slate-800">Aurora & Julian</h2>
+          <h2 className="text-4xl font-serif italic text-slate-800">
+            {data.mempelai_wanita?.nama?.split(" ")[0] || "Aurora"} & {data.mempelai_pria?.nama?.split(" ")[0] || "Julian"}
+          </h2>
           <p className="text-[10px] tracking-[0.2em] text-slate-400 mt-4 italic">Beserta seluruh keluarga besar</p>
         </div>
       </motion.div>

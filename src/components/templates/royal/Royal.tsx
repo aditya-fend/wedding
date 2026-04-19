@@ -96,13 +96,13 @@ export default function Royal({ data, invitationId }: RoyalProps) {
 
             {/* Rangkaian Konten Undangan */}
             <RoyalCouples data={data} />
-            <RoyalCountdown data={data} />
-            <RoyalStory data={data} />
             <RoyalEvent data={data} />
+            <RoyalCountdown data={data} />
+            <RoyalLocation data={data} />
             <RoyalEventDetails data={data} />
             <RoyalGallery data={data} />
+            <RoyalStory data={data} />
             <RoyalDressCode data={data} />
-            <RoyalLocation data={data} />
             <RoyalWishes data={data} invitationId={invitationId} />
             <RoyalRSVP data={data} invitationId={invitationId} />
             <RoyalClosing data={data} /> {/* Penutup Puitis */}

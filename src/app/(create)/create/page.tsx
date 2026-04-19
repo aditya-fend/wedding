@@ -1,6 +1,6 @@
 import { createServerSupabase } from "@/lib/supabase/server"; // Sesuaikan path ini
 import { prisma } from "@/lib/prisma";
-import CreateDesktopView from "@/components/user/create/desktop/CreateDesktopView";
+import EditInvitationClient from "@/components/user/create/EditInvitationClient";
 import { InvitationContent } from "@/types/invitation";
 
 export default async function CreateInvitationPage() {
@@ -82,7 +82,7 @@ export default async function CreateInvitationPage() {
 
   return (
     <main className="h-auto w-full overflow-hidden bg-[#F8F5F0]">
-      <CreateDesktopView
+      <EditInvitationClient
         invitationId={invitationData?.id || "guest-mode"}
         initialData={initialData}
         templates={templates}

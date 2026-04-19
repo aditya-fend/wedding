@@ -9,7 +9,7 @@ interface RoyalCountdownProps {
 }
 
 const RoyalCountdown = ({ data }: RoyalCountdownProps) => {
-  const countdownDate = data.countdown_date || data.acara?.[0]?.tanggal || new Date().toISOString();
+  const countdownDate = data.wedding_date || data.countdown_date || data.acara?.[0]?.tanggal || new Date().toISOString();
   const targetDate = new Date(countdownDate).getTime();
   const [timeLeft, setTimeLeft] = useState({
     days: 0, hours: 0, minutes: 0, seconds: 0

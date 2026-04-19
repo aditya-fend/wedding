@@ -10,7 +10,10 @@ interface RoyalLocationProps {
 
 const RoyalLocation = ({ data }: RoyalLocationProps) => {
   const primaryEvent = data.acara?.[0];
-  const gmapsLink = primaryEvent?.link_maps || "https://maps.app.goo.gl/randomLinkContoh";
+  const gmapsLink = primaryEvent?.link_maps || 
+    (primaryEvent?.alamat_lengkap 
+      ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(primaryEvent.alamat_lengkap + " " + primaryEvent.lokasi)}`
+      : "https://www.google.com/maps");
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -83,7 +86,7 @@ const RoyalLocation = ({ data }: RoyalLocationProps) => {
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center space-x-2 bg-slate-800 text-white px-8 py-3 rounded-full text-[10px] tracking-[0.2em] shadow-xl"
           >
-            <span>PETUNJUK JALAN</span>
+            <span>Buka Google Maps</span>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>

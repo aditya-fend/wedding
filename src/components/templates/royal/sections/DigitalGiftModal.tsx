@@ -11,8 +11,16 @@ interface ModalProps {
 }
 
 const DigitalGiftModal = ({ isOpen, onClose, data }: ModalProps) => {
+  const [copiedIndex, setCopiedIndex] = React.useState<number | null>(null);
+
+  const handleCopy = (text: string, index: number) => {
+    navigator.clipboard.writeText(text);
+    setCopiedIndex(index);
+    setTimeout(() => setCopiedIndex(null), 2000);
+  };
+
   return (
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
       {/* Overlay */}
       <motion.div 
         initial={{ opacity: 0 }}
@@ -57,7 +65,20 @@ const DigitalGiftModal = ({ isOpen, onClose, data }: ModalProps) => {
                   <p className="text-[10px] text-pink-400 font-bold tracking-widest uppercase mb-1">{envelope.bank_name}</p>
                   <p className="text-lg font-mono text-slate-700">{envelope.account_number}</p>
                   <p className="text-[11px] text-slate-500 italic mt-1">a.n {envelope.account_holder}</p>
-                  <button className="mt-3 text-[9px] text-pink-500 font-bold border-b border-pink-200 uppercase tracking-tighter">Salin Rekening</button>
+                  <button 
+                    onClick={() => handleCopy(envelope.account_number, idx)}
+                    className="mt-3 text-[9px] text-pink-500 font-bold border-b border-pink-200 uppercase tracking-tighter hover:text-pink-600 transition-colors"
+                  >
+                    {copiedIndex === idx ? "Berhasil Tersalin!" : "Salin Rekening"}
+                  </button>
+                  {envelope.qris_url && (
+                    <div className="mt-4 pt-4 border-t border-pink-50">
+                      <div className="w-32 h-32 mx-auto bg-white border border-pink-50 rounded-lg flex items-center justify-center mb-2">
+                        <img src={envelope.qris_url} alt="QRIS" className="w-24 h-24 object-contain" />
+                      </div>
+                      <p className="text-[10px] text-slate-400 italic font-medium">Scan QRIS untuk berdonasi</p>
+                    </div>
+                  )}
                 </div>
               ))
             ) : (
