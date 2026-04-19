@@ -5,6 +5,7 @@ export interface CoupleDetail {
   ortu_ayah: string;
   ortu_ibu: string;
   instagram?: string; // [cite: 68, 69]
+  foto: string
 }
 
 export interface EventDetail {
@@ -47,7 +48,6 @@ export interface InvitationContent {
   rsvp_url?: string;
   rsvp_note?: string;
   countdown_date?: string;
-  additional_info?: string;
   cover_title?: string;
   cover_subtitle?: string;
   closing_message?: string;
