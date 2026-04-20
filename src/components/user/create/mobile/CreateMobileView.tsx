@@ -155,10 +155,10 @@ export default function CreateMobileView({
             className="fixed inset-0 z-[200] backdrop-blur-2xl flex flex-col pt-safe"
           >
             {/* Header Modal */}
-            <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
+            <div className="flex items-center justify-between px-6 py-6">
               <button
                 onClick={() => setIsPreviewOpen(false)}
-                className="size-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl text-white transition-all active:scale-90"
+                className="size-11 flex items-center justify-center bg-black/50 hover:bg-white/20 rounded-2xl text-white transition-all active:scale-90"
               >
                 <X size={20} />
               </button>
