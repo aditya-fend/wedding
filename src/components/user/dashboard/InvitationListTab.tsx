@@ -143,7 +143,7 @@ export function InvitationListTab({
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="secondary" size="icon" className="p-4">
-                          <MoreHorizontal className="w-5 h-5 text-[#2C2C2C]" />
+                          <MoreHorizontal size={20} className="text-[#2C2C2C]" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
