@@ -39,11 +39,6 @@ export default function PublicInvitationClient({
 
     const Component = getTemplate[key] as TemplateComponent | undefined;
 
-    if (!Component) {
-      const Fallback = templateRegistry.royal;
-      return <Fallback data={data} invitationId={invitationId} />;
-    }
-
     return <Component data={data} invitationId={invitationId} />;
   };
 

@@ -25,9 +25,8 @@ export default async function PublicInvitationPage({
     return title.replace(/\s+/g, "");
   };
 
-  const templateId = invitation.template?.title
-    ? normalizeTemplateName(invitation.template.title).toLowerCase()
-    : "Royal";
+  const templateId = normalizeTemplateName(invitation.template.title).toLowerCase()
+
 
   return (
     <PublicInvitationClient

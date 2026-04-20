@@ -8,8 +8,9 @@ import { EditorSidebar } from "../desktop/EditorSidebar";
 import { LivePreview } from "../desktop/LivePreview";
 import { InvitationContent } from "@/types/invitation";
 import { Music, Template } from "@prisma/client";
-import { Play, X, Eye, Sparkles, Loader2 } from "lucide-react";
+import { Play, X, Eye, Sparkles, Loader2, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 interface CreateMobileViewProps {
   templates: Template[];
@@ -40,7 +41,7 @@ export default function CreateMobileView({
 
   // 1. Sinkronisasi Awal (Hanya dijalankan sekali saat mount)
   React.useEffect(() => {
-    if (initialData && !hasData ) {
+    if (initialData && !hasData) {
       setFormData(initialData);
       setInvitationId(invitationId);
       setActiveTemplate(initialTemplate);
@@ -72,10 +73,7 @@ export default function CreateMobileView({
 
   // Trigger Save ketika data atau template berubah
   React.useEffect(() => {
-    if (
-      formData &&
-      (Object.keys(formData).length > 0 || activeTemplate)
-    ) {
+    if (formData && (Object.keys(formData).length > 0 || activeTemplate)) {
       debouncedSave(formData, activeTemplate);
     }
   }, [formData, activeTemplate, debouncedSave]);
@@ -112,23 +110,9 @@ export default function CreateMobileView({
 
   return (
     <div className="flex flex-col max-h-screen bg-[#F8F5F0] overflow-hidden relative">
-      {/* ── TOP STATUS BAR (Optional) ── */}
-      <div className="h-1 w-full bg-slate-100 overflow-hidden shrink-0">
-        <AnimatePresence>
-          {useEditorStore.getState().isSaving && (
-            <motion.div
-              initial={{ x: "-100%" }}
-              animate={{ x: "0%" }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-              className="h-full w-full bg-gradient-to-r from-transparent via-[#D4AF97] to-transparent"
-            />
-          )}
-        </AnimatePresence>
-      </div>
 
       {/* ── SCROLLABLE EDITOR AREA ── */}
-      <div className="flex-1 pt-14 overflow-y-auto no-scrollbar min-h-0 bg-[#F8F5F0]">
+      <div className="flex-1 overflow-y-auto no-scrollbar min-h-0 bg-[#F8F5F0] pt-16">
         <EditorSidebar templates={templates} musics={musics} />
       </div>
 

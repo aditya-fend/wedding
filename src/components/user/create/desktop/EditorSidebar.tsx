@@ -183,7 +183,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
 
   return (
     <aside
-      className="flex flex-col h-full w-full shrink-0 border-r border-[#E5E0D8]"
+      className="flex flex-col h-full w-full shrink-0"
       style={{ backgroundColor: "var(--color-background, #F8F5F0)" }}
     >
       {/* ── HEADER & GLOBAL SETTINGS ── */}
@@ -218,7 +218,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
               </button>
             </DialogTrigger>
 
-            <DialogContent className="max-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-[32px] p-6 sm:p-8 no-scrollbar">
+            <DialogContent className="max-w-3xl lg:min-w-5xl w-[95vw] max-h-[90vh] overflow-y-auto rounded-[32px] p-6 sm:p-8 no-scrollbar">
               <DialogHeader>
                 <DialogTitle>Pilih Template</DialogTitle>
                 <DialogDescription>

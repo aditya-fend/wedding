@@ -8,6 +8,7 @@ import { EditorSidebar } from "./EditorSidebar";
 import { LivePreview } from "./LivePreview";
 import { InvitationContent } from "@/types/invitation";
 import { Music, Template } from "@prisma/client";
+import Link from "next/link";
 
 interface CreateDesktopViewProps {
   templates: Template[];
@@ -25,8 +26,14 @@ export default function CreateDesktopView({
   initialData,
   initialTemplate,
 }: CreateDesktopViewProps) {
-  const { formData, setFormData, setInvitationId, setIsSaving, activeTemplate, setActiveTemplate } =
-    useEditorStore();
+  const {
+    formData,
+    setFormData,
+    setInvitationId,
+    setIsSaving,
+    activeTemplate,
+    setActiveTemplate,
+  } = useEditorStore();
   const [isReady, setIsReady] = React.useState(true);
 
   // 1. Inisialisasi Store dengan data dari Server (Prisma)
@@ -37,7 +44,14 @@ export default function CreateDesktopView({
       setActiveTemplate(initialTemplate);
       setIsReady(true);
     }
-  }, [initialData, invitationId, initialTemplate, setFormData, setInvitationId, setActiveTemplate]);
+  }, [
+    initialData,
+    invitationId,
+    initialTemplate,
+    setFormData,
+    setInvitationId,
+    setActiveTemplate,
+  ]);
 
   // 2. Logika Auto-save (Debounced)
   const debouncedSave = useDebouncedCallback(
@@ -78,7 +92,7 @@ export default function CreateDesktopView({
     // h-[calc(100vh-5rem)] memastikan layout tidak melebihi layar setelah dikurangi navbar
     <div className="grid grid-cols-2 h-screen overflow-hidden bg-[#F8F5F0]">
       {/* AREA KIRI: FIXED WIDTH (450px) */}
-      <div className="col-span-1 h-full shrink-0 border-r overflow-y-auto">
+      <div className="col-span-1 h-full shrink-0 overflow-y-auto">
         <EditorSidebar templates={templates} musics={musics} />
       </div>
 
