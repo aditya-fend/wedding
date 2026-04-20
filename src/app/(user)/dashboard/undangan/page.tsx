@@ -63,7 +63,7 @@ export default async function UndanganPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4 shrink-0 animate-in slide-in-from-right-4 duration-700 delay-300">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0 animate-in slide-in-from-right-4 duration-700 delay-300">
           <AddTokensModal
             currentTokens={totalTokens}
             totalTokens={totalTokens}
