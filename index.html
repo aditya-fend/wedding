@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Undangan pernikahan</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Styles -->
+    <style>
+        :root {
+            --color-maroon: #3d0c13;
+            --color-maroon-dark: #2b080d;
+            --color-gold: #D4AF37;
+            --color-gold-light: #F3E5AB;
+            --color-ivory: #FFFFF0;
+            --color-white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-maroon-dark);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body.locked {
+            overflow: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-maroon-dark);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Scroll Container */
+        .scroll-container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scroll-container {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Sections */
+        .snap-section {
+            width: 100vw;
+            height: 100vh;
+            scroll-snap-align: start;
+            scroll-snap-stop: always;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .scroll-auto-mobile {
+                height: auto;
+                min-height: 100vh;
+                padding-top: 60px;
+                padding-bottom: 60px;
+            }
+        }
+
+        /* Backgrounds */
+        .bg-texture {
+            background-color: var(--color-maroon);
+            background-image: url('assets/velvet_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .bg-cover {
+            background-color: var(--color-maroon-dark);
+            background-image: url('assets/velvet_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* Overlays */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        .dark-overlay {
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .light-overlay {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* Content Container */
+        .content {
+            position: relative;
+            z-index: 2;
+            max-width: 480px;
+            width: 100%;
+        }
+
+        /* Utilities */
+        .flex-col-center {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flex-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .max-w-sm {
+            max-width: 24rem;
+        }
+
+        .max-w-md {
+            max-width: 28rem;
+        }
+
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .py-12 {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem;
+        }
+
+        .mt-2 {
+            margin-top: 0.5rem;
+        }
+
+        .mt-3 {
+            margin-top: 0.75rem;
+        }
+
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .mt-6 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-8 {
+            margin-top: 2rem;
+        }
+
+        .mt-12 {
+            margin-top: 3rem;
+        }
+
+        .mb-1 {
+            margin-bottom: 0.25rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+
+        .mb-3 {
+            margin-bottom: 0.75rem;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .gap-2 {
+            gap: 0.5rem;
+        }
+
+        .gap-4 {
+            gap: 1rem;
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        .overflow-hidden {
+            overflow: hidden;
+        }
+
+        /* Colors & Typography */
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .font-sans {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .gold-text {
+            color: var(--color-gold);
+        }
+
+        .ivory-text {
+            color: var(--color-ivory);
+        }
+
+        .white-text {
+            color: var(--color-white);
+        }
+
+        .text-xs {
+            font-size: 0.75rem;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .text-lg {
+            font-size: 1.125rem;
+        }
+
+        .text-xl {
+            font-size: 1.25rem;
+        }
+
+        .text-2xl {
+            font-size: 1.5rem;
+        }
+
+        .text-3xl {
+            font-size: 1.875rem;
+        }
+
+        .text-4xl {
+            font-size: 2.25rem;
+        }
+
+        .tracking-widest {
+            letter-spacing: 0.1em;
+        }
+
+        .tracking-wide {
+            letter-spacing: 0.05em;
+        }
+
+        .leading-relaxed {
+            line-height: 1.625;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .italic {
+            font-style: italic;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .opacity-50 {
+            opacity: 0.5;
+        }
+
+        .opacity-70 {
+            opacity: 0.7;
+        }
+
+        .opacity-80 {
+            opacity: 0.8;
+        }
+
+        .opacity-90 {
+            opacity: 0.9;
+        }
+
+        /* Title Specifics */
+        .title-large {
+            font-size: 3rem;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 400;
+        }
+
+        @media (min-width: 768px) {
+            .main-title {
+                font-size: 4.5rem;
+            }
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .zoom-in {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .zoom-in.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .delay-1 {
+            transition-delay: 0.2s;
+        }
+
+        .delay-2 {
+            transition-delay: 0.4s;
+        }
+
+        .delay-3 {
+            transition-delay: 0.6s;
+        }
+
+        .delay-4 {
+            transition-delay: 0.8s;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: transparent;
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.875rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-gold);
+            color: var(--color-maroon-dark);
+        }
+
+        .btn-outline {
+            display: inline-block;
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(212, 175, 55, 0.1);
+        }
+
+        .gold-border {
+            border: 1px solid var(--color-gold);
+        }
+
+        .hover-gold:hover {
+            background-color: var(--color-gold);
+            color: #fff;
+            border-color: var(--color-gold);
+        }
+
+        /* Images & Placeholders */
+        .img-placeholder {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px dashed rgba(212, 175, 55, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .round {
+            border-radius: 50%;
+        }
+
+        .square {
+            aspect-ratio: 1/1;
+            width: 100%;
+        }
+
+        /* Profile Elements */
+        .profile-img-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto;
+        }
+
+        .gold-border-ring {
+            border: 2px solid var(--color-gold);
+        }
+
+        .profile-img-container .img-placeholder {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Glass Effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            border-radius: 8px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Countdown */
+        .time-box {
+            width: 65px;
+            height: 75px;
+        }
+
+        /* Event Cards */
+        .card-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+        }
+
+        /* Gallery Grid */
+        .grid-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .grid-item.span-2 {
+            grid-column: span 2;
+            aspect-ratio: 16/9;
+        }
+
+        /* Timeline */
+        .timeline-line {
+            position: absolute;
+            left: 4px;
+            top: 10px;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--color-gold), rgba(212, 175, 55, 0.1));
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background-color: var(--color-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        /* Form Elements */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 4px;
+            color: var(--color-ivory);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-gold);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .dark-option {
+            background-color: var(--color-maroon-dark);
+            color: var(--color-ivory);
+        }
+
+        /* Floating Buttons */
+        .floating-btn {
+            position: fixed;
+            z-index: 999;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .floating-btn.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+        }
+
+        .music-btn {
+            bottom: 20px;
+            left: 20px;
+            background-color: var(--color-gold);
+            color: var(--color-maroon-dark);
+            font-size: 1.2rem;
+            animation: spin 4s linear infinite;
+        }
+
+        .music-btn.paused {
+            animation: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: var(--color-gold);
+            border: 1px solid var(--color-gold);
+        }
+
+        .wa-btn {
+            bottom: 20px;
+            right: 20px;
+            background-color: #25D366;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .top-btn {
+            bottom: 75px;
+            right: 20px;
+            background-color: rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--color-gold);
+            color: var(--color-gold);
+            font-size: 1.2rem;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="locked">
+    <!-- Loading Screen -->
+    <div id="loading" class="loading-screen flex-col-center">
+        <h1 class="font-serif gold-text animate-pulse title-large">R & J</h1>
+        <p class="font-sans white-text text-sm mt-4 tracking-widest">MEMUAT...</p>
+    </div>
+
+    <!-- Floating Buttons -->
+    <button id="music-btn" class="floating-btn music-btn hidden">
+        <i class="fas fa-music"></i>
+    </button>
+
+    <a href="https://wa.me/6281234567890" target="_blank" class="floating-btn wa-btn hidden">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <button id="top-btn" class="floating-btn top-btn hidden">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Audio Element (Placeholder Music) -->
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="scroll-container" id="scroll-container">
+
+        <!-- 1. Cover Opening -->
+        <section id="cover" class="snap-section bg-cover">
+            <div class="overlay"></div>
+            <div class="content flex-col-center text-center">
+                <p class="sub-title font-sans ivory-text fade-up tracking-widest mb-4">THE WEDDING OF</p>
+                <h1 class="main-title gold-text font-serif zoom-in">Romeo<br>&<br>Juliet</h1>
+                <p class="date-subtitle font-sans ivory-text fade-up delay-1 mt-6 tracking-widest">20 . 12 . 2026</p>
+                <button id="open-invitation" class="btn-primary font-sans fade-up delay-2 mt-8">
+                    <i class="fas fa-envelope-open mr-2"></i> Buka Undangan
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. Quote -->
+        <section id="quote" class="snap-section bg-texture parallax">
+            <div class="overlay"></div>
+            <div class="content flex-col-center text-center px-6">
+                <i class="fas fa-quote-left gold-text text-4xl fade-up mb-6 opacity-80"></i>
+                <p class="quote-text font-serif ivory-text fade-up delay-1 leading-relaxed text-lg italic">
+                    "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu
+                    sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa
+                    kasih dan sayang."
+                </p>
+                <p class="quote-source gold-text font-sans fade-up delay-2 mt-6 tracking-widest text-sm">- QS. Ar-Rum:
+                    21 -</p>
+            </div>
+        </section>
+
+        <!-- 3. Mempelai Pria -->
+        <section id="groom" class="snap-section bg-texture">
+            <div class="overlay light-overlay"></div>
+            <div class="content flex-col-center text-center px-6">
+                <div class="profile-img-container zoom-in gold-border-ring p-1">
+                    <div class="img-placeholder round">Foto Pria</div>
+                </div>
+                <h2 class="name-title gold-text font-serif fade-up delay-1 mt-6 text-3xl">Romeo Montague</h2>
+                <p class="parents-text ivory-text font-sans fade-up delay-2 mt-3 text-sm leading-relaxed opacity-90">
+                    Putra Pertama dari<br>Bapak Montague & Ibu Montague
+                </p>
+                <a href="#" class="ig-link gold-text font-sans fade-up delay-3 mt-4 text-sm tracking-wide">
+                    <i class="fab fa-instagram mr-1"></i> @romeo_m
+                </a>
+            </div>
+        </section>
+
+        <!-- 4. Mempelai Wanita -->
+        <section id="bride" class="snap-section bg-texture">
+            <div class="overlay light-overlay"></div>
+            <div class="content flex-col-center text-center px-6">
+                <div class="profile-img-container zoom-in gold-border-ring p-1">
+                    <div class="img-placeholder round">Foto Wanita</div>
+                </div>
+                <h2 class="name-title gold-text font-serif fade-up delay-1 mt-6 text-3xl">Juliet Capulet</h2>
+                <p class="parents-text ivory-text font-sans fade-up delay-2 mt-3 text-sm leading-relaxed opacity-90">
+                    Putri Kedua dari<br>Bapak Capulet & Ibu Capulet
+                </p>
+                <a href="#" class="ig-link gold-text font-sans fade-up delay-3 mt-4 text-sm tracking-wide">
+                    <i class="fab fa-instagram mr-1"></i> @juliet_c
+                </a>
+            </div>
+        </section>
+
+        <!-- 5. Save The Date -->
+        <section id="date" class="snap-section bg-cover text-center">
+            <div class="overlay dark-overlay"></div>
+            <div class="content flex-col-center px-6">
+                <h2 class="section-title gold-text font-serif fade-up text-3xl mb-2">Save The Date</h2>
+                <p class="ivory-text font-sans fade-up delay-1 mb-8 opacity-80 text-sm">Kami menantikan kehadiran Anda
+                </p>
+
+                <div class="countdown flex-row fade-up delay-2 gap-4">
+                    <div class="time-box flex-col-center glass-effect">
+                        <span id="days" class="time-num font-serif gold-text text-3xl">00</span>
+                        <span class="time-label font-sans ivory-text text-xs uppercase tracking-widest mt-1">Hari</span>
+                    </div>
+                    <div class="time-box flex-col-center glass-effect">
+                        <span id="hours" class="time-num font-serif gold-text text-3xl">00</span>
+                        <span class="time-label font-sans ivory-text text-xs uppercase tracking-widest mt-1">Jam</span>
+                    </div>
+                    <div class="time-box flex-col-center glass-effect">
+                        <span id="minutes" class="time-num font-serif gold-text text-3xl">00</span>
+                        <span
+                            class="time-label font-sans ivory-text text-xs uppercase tracking-widest mt-1">Menit</span>
+                    </div>
+                    <div class="time-box flex-col-center glass-effect">
+                        <span id="seconds" class="time-num font-serif gold-text text-3xl">00</span>
+                        <span
+                            class="time-label font-sans ivory-text text-xs uppercase tracking-widest mt-1">Detik</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Detail Acara -->
+        <section id="event" class="snap-section bg-texture">
+            <div class="overlay"></div>
+            <div class="content flex-col-center w-full px-6">
+                <h2 class="section-title gold-text font-serif fade-up text-3xl mb-8">Detail Acara</h2>
+
+                <div class="event-card fade-up delay-1 glass-effect w-full max-w-sm p-6 mb-4 relative overflow-hidden">
+                    <div class="card-accent"></div>
+                    <h3 class="event-type font-serif gold-text text-xl mb-4 text-center">Akad Nikah</h3>
+                    <div class="event-detail font-sans ivory-text text-sm mb-2 flex items-center">
+                        <i class="far fa-calendar-alt w-6 text-center gold-text"></i>
+                        <span>Minggu, 20 Desember 2026</span>
+                    </div>
+                    <div class="event-detail font-sans ivory-text text-sm mb-2 flex items-center">
+                        <i class="far fa-clock w-6 text-center gold-text"></i>
+                        <span>08.00 - 10.00 WIB</span>
+                    </div>
+                    <div class="event-detail font-sans ivory-text text-sm flex items-start">
+                        <i class="fas fa-map-marker-alt w-6 text-center gold-text mt-1"></i>
+                        <span>Masjid Raya Indah<br><span class="opacity-70 text-xs">Jl. Kebahagiaan No. 1,
+                                Jakarta</span></span>
+                    </div>
+                </div>
+
+                <div class="event-card fade-up delay-2 glass-effect w-full max-w-sm p-6 relative overflow-hidden">
+                    <div class="card-accent"></div>
+                    <h3 class="event-type font-serif gold-text text-xl mb-4 text-center">Resepsi</h3>
+                    <div class="event-detail font-sans ivory-text text-sm mb-2 flex items-center">
+                        <i class="far fa-calendar-alt w-6 text-center gold-text"></i>
+                        <span>Minggu, 20 Desember 2026</span>
+                    </div>
+                    <div class="event-detail font-sans ivory-text text-sm mb-2 flex items-center">
+                        <i class="far fa-clock w-6 text-center gold-text"></i>
+                        <span>11.00 - 14.00 WIB</span>
+                    </div>
+                    <div class="event-detail font-sans ivory-text text-sm flex items-start">
+                        <i class="fas fa-map-marker-alt w-6 text-center gold-text mt-1"></i>
+                        <span>Grand Ballroom Hotel Mewah<br><span class="opacity-70 text-xs">Jl. Kemewahan No. 99,
+                                Jakarta</span></span>
+                    </div>
+                </div>
+
+                <a href="#" class="btn-outline font-sans fade-up delay-3 mt-8">
+                    <i class="fas fa-map-marked-alt mr-2"></i> Buka Google Maps
+                </a>
+            </div>
+        </section>
+
+        <!-- 7. Galeri Foto -->
+        <section id="gallery" class="snap-section bg-texture">
+            <div class="overlay dark-overlay"></div>
+            <div class="content flex-col-center w-full px-4">
+                <h2 class="section-title gold-text font-serif fade-up text-3xl mb-6">Momen Indah</h2>
+                <div class="grid-gallery fade-up delay-1 w-full max-w-md">
+                    <!-- Photo grid items -->
+                    <div class="grid-item img-placeholder square span-2">Foto Utama (Landscape)</div>
+                    <div class="grid-item img-placeholder square">Foto 2</div>
+                    <div class="grid-item img-placeholder square">Foto 3</div>
+                    <div class="grid-item img-placeholder square">Foto 4</div>
+                    <div class="grid-item img-placeholder square">Foto 5</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. Love Story / Timeline -->
+        <section id="story" class="snap-section bg-texture">
+            <div class="overlay"></div>
+            <div class="content flex-col-center w-full px-6 relative">
+                <h2 class="section-title gold-text font-serif fade-up text-3xl mb-8">Perjalanan Cinta</h2>
+
+                <div class="timeline w-full max-w-sm relative">
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-item fade-up delay-1 mb-8 pl-8 relative">
+                        <div class="timeline-dot"></div>
+                        <h4 class="gold-text font-serif text-lg">Pertemuan Pertama</h4>
+                        <p class="ivory-text font-sans text-xs tracking-widest mt-1 opacity-80">JANUARI 2024</p>
+                        <p class="ivory-text font-sans text-sm mt-2 leading-relaxed opacity-90">Bertemu secara tak
+                            sengaja di sebuah kedai kopi favorit. Senyum pertama yang menjadi awal dari segalanya.</p>
+                    </div>
+
+                    <div class="timeline-item fade-up delay-2 mb-8 pl-8 relative">
+                        <div class="timeline-dot"></div>
+                        <h4 class="gold-text font-serif text-lg">Menjalin Kasih</h4>
+                        <p class="ivory-text font-sans text-xs tracking-widest mt-1 opacity-80">JUNI 2024</p>
+                        <p class="ivory-text font-sans text-sm mt-2 leading-relaxed opacity-90">Mulai merajut kisah
+                            indah bersama, saling mengenal dan memahami perbedaan untuk menjadi satu.</p>
+                    </div>
+
+                    <div class="timeline-item fade-up delay-3 pl-8 relative">
+                        <div class="timeline-dot"></div>
+                        <h4 class="gold-text font-serif text-lg">Lamaran</h4>
+                        <p class="ivory-text font-sans text-xs tracking-widest mt-1 opacity-80">AGUSTUS 2026</p>
+                        <p class="ivory-text font-sans text-sm mt-2 leading-relaxed opacity-90">Sebuah komitmen suci
+                            diikat dengan restu kedua orang tua untuk melangkah ke jenjang pernikahan yang abadi.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. RSVP & Gift -->
+        <section id="rsvp" class="snap-section bg-texture scroll-auto-mobile">
+            <div class="overlay"></div>
+            <div class="content flex-col-center w-full px-6 py-12 h-auto">
+                <h2 class="section-title gold-text font-serif fade-up text-3xl mb-6 text-center">RSVP & Wedding Gift
+                </h2>
+
+                <!-- RSVP Form -->
+                <div class="rsvp-box w-full max-w-sm fade-up delay-1 glass-effect p-6 mb-8 rounded-lg">
+                    <h3 class="gold-text font-serif text-lg mb-4 text-center">Konfirmasi Kehadiran</h3>
+                    <form class="flex-col w-full gap-4">
+                        <input type="text" placeholder="Nama Lengkap Anda" class="form-input font-sans text-sm"
+                            required>
+                        <select class="form-input font-sans text-sm bg-transparent" required>
+                            <option value="" disabled selected class="dark-option">Apakah Anda akan hadir?</option>
+                            <option value="Hadir" class="dark-option">Ya, Saya Hadir</option>
+                            <option value="Tidak Hadir" class="dark-option">Maaf, Tidak Bisa Hadir</option>
+                        </select>
+                        <select class="form-input font-sans text-sm bg-transparent">
+                            <option value="1" class="dark-option">1 Orang</option>
+                            <option value="2" class="dark-option">2 Orang</option>
+                        </select>
+                        <textarea placeholder="Tulis Pesan & Doa untuk Mempelai" class="form-input font-sans text-sm"
+                            rows="3"></textarea>
+                        <button type="submit" class="btn-primary w-full mt-2 font-sans text-sm">Kirim
+                            Konfirmasi</button>
+                    </form>
+                </div>
+
+                <!-- Gift -->
+                <div class="gift-box w-full max-w-sm fade-up delay-2 glass-effect p-6 rounded-lg text-center">
+                    <h3 class="gold-text font-serif text-lg mb-2">Kirim Hadiah</h3>
+                    <p class="ivory-text font-sans text-xs mb-6 opacity-80">Bagi keluarga dan sahabat yang ingin
+                        memberikan tanda kasih, dapat mengirimkan melalui:</p>
+
+                    <div class="bank-card border border-gold/30 p-4 rounded mb-4">
+                        <p class="gold-text font-serif font-bold text-xl mb-1">BCA</p>
+                        <p class="ivory-text font-sans text-xl tracking-widest mb-1" id="rek-bca">1234 5678 90</p>
+                        <p class="ivory-text font-sans text-xs opacity-80 mb-3">a.n. Romeo Montague</p>
+                        <button class="copy-btn font-sans text-xs py-1 px-3 rounded gold-border gold-text hover-gold"
+                            onclick="copyRek('rek-bca')">
+                            <i class="far fa-copy mr-1"></i> Salin Rekening
+                        </button>
+                    </div>
+
+                    <div class="qris-box mt-6">
+                        <p class="gold-text font-serif text-sm mb-3">Scan QRIS</p>
+                        <div class="img-placeholder square mx-auto rounded"
+                            style="width:150px;height:150px; line-height: 150px;">QRIS Image</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. Closing -->
+        <section id="closing" class="snap-section bg-cover text-center">
+            <div class="overlay"></div>
+            <div class="content flex-col-center px-6">
+                <p class="ivory-text font-sans fade-up delay-1 leading-relaxed opacity-90 text-sm">
+                    Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan
+                    memberikan doa restu.
+                </p>
+                <p class="ivory-text font-sans fade-up delay-2 mt-8 text-sm tracking-widest uppercase">Kami yang
+                    berbahagia,</p>
+                <h1 class="main-title gold-text font-serif mt-4 zoom-in delay-3"
+                    style="font-size: 3.5rem; line-height: 1;">Romeo<br>&<br>Juliet</h1>
+                <p class="gold-text font-serif fade-up delay-4 mt-12 text-2xl">Terima Kasih</p>
+                <p class="ivory-text font-sans opacity-50 text-xs mt-12 tracking-widest">CREATED WITH LOVE BY ME</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Loading Screen
+            setTimeout(() => {
+                const loadingScreen = document.getElementById('loading');
+                loadingScreen.classList.add('hidden');
+                // Wait for transition to end before removing
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 1000);
+            }, 1500);
+
+            // 2. Open Invitation & Audio
+            const btnOpen = document.getElementById('open-invitation');
+            const audio = document.getElementById('bg-music');
+            const musicBtn = document.getElementById('music-btn');
+            const waBtn = document.querySelector('.wa-btn');
+            const scrollContainer = document.getElementById('scroll-container');
+
+            btnOpen.addEventListener('click', () => {
+                // Unlock scroll
+                document.body.classList.remove('locked');
+
+                // Scroll to next section (Quote)
+                const quoteSection = document.getElementById('quote');
+                quoteSection.scrollIntoView({ behavior: 'smooth' });
+
+                // Play audio
+                audio.play().catch(e => console.log("Audio play failed. User interaction might be required.", e));
+
+                // Show floating buttons
+                musicBtn.classList.remove('hidden');
+                waBtn.classList.remove('hidden');
+            });
+
+            // 3. Music Control
+            musicBtn.addEventListener('click', () => {
+                if (audio.paused) {
+                    audio.play();
+                    musicBtn.classList.remove('paused');
+                    musicBtn.innerHTML = '<i class="fas fa-music"></i>';
+                } else {
+                    audio.pause();
+                    musicBtn.classList.add('paused');
+                    musicBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                }
+            });
+
+            // 4. Scroll Animations (Intersection Observer)
+            const observerOptions = {
+                root: scrollContainer,
+                rootMargin: '0px',
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            const animatedElements = document.querySelectorAll('.fade-up, .zoom-in');
+            animatedElements.forEach(el => observer.observe(el));
+
+            // 5. Back to Top Button
+            const topBtn = document.getElementById('top-btn');
+
+            scrollContainer.addEventListener('scroll', () => {
+                if (scrollContainer.scrollTop > window.innerHeight * 1.2) {
+                    topBtn.classList.remove('hidden');
+                } else {
+                    topBtn.classList.add('hidden');
+                }
+            });
+
+            topBtn.addEventListener('click', () => {
+                scrollContainer.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 6. Countdown Timer
+            // Setting target date
+            const targetDate = new Date("Dec 20, 2026 08:00:00").getTime();
+
+            const updateCountdown = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(updateCountdown);
+                    document.getElementById("days").innerText = "00";
+                    document.getElementById("hours").innerText = "00";
+                    document.getElementById("minutes").innerText = "00";
+                    document.getElementById("seconds").innerText = "00";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerText = days.toString().padStart(2, '0');
+                document.getElementById("hours").innerText = hours.toString().padStart(2, '0');
+                document.getElementById("minutes").innerText = minutes.toString().padStart(2, '0');
+                document.getElementById("seconds").innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        });
+
+        // 7. Copy Rekening Function
+        function copyRek(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Nomor rekening berhasil disalin: " + text);
+            }).catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+            });
+        }
+    </script>
+</body>
+
+</html>

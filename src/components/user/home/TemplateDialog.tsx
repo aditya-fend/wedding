@@ -30,8 +30,8 @@ import { cn } from "@/lib/utils";
 export function TemplateCard({ template }: { template: Template & { thumbnailLabel?: string } }) {
   return (
     <Card className="group overflow-hidden rounded-2xl border-[#E5E0D8] bg-white shadow-sm transition-all duration-300 hover:shadow-md">
-      {/* Thumbnail: Tinggi dikurangi dari h-44 ke h-36 agar lebih kompak */}
-      <div className="relative h-36 overflow-hidden">
+      {/* Thumbnail: Diubah menjadi aspect-square agar berbentuk persegi */}
+      <div className="relative aspect-square overflow-hidden bg-[#FDFCFB]">
         {template.thumbnailUrl ? (
           <Image
             src={template.thumbnailUrl}
@@ -40,7 +40,7 @@ export function TemplateCard({ template }: { template: Template & { thumbnailLab
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-[#FDFCFB] px-4 text-center">
+          <div className="flex h-full items-center justify-center px-4 text-center">
             <p className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF97] opacity-60">
               No Preview
             </p>

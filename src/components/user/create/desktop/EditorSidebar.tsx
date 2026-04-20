@@ -242,7 +242,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                           : "border-[#E5E0D8] hover:border-[#D4AF97] hover:shadow-xl")
                       }
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                      <div className="relative aspect-square overflow-hidden bg-slate-100">
                         {template.thumbnailUrl ? (
                           <Image
                             src={template.thumbnailUrl}
@@ -277,31 +277,31 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                         </div>
                       </CardContent>
 
-                      <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <CardFooter className="flex gap-2 p-4 pt-0">
                         <Button
                           variant="outline"
                           size="sm"
                           asChild
-                          className="w-full sm:w-auto"
+                          className="flex-1 h-8 rounded-lg text-[11px] border-[#E5E0D8]"
                         >
                           <a
                             href={template.previewUrl ?? "#"}
                             target="_blank"
                             rel="noreferrer"
                           >
-                            <Eye className="size-4 mr-2" /> Preview
+                            <Eye className="size-3 mr-1.5" /> Preview
                           </a>
                         </Button>
 
                         <DialogClose asChild>
                           <Button
                             size="sm"
-                            className="w-full sm:w-auto"
+                            className="flex-1 h-8 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]"
                             onClick={() => {
                               setActiveTemplate(template.title);
                             }}
                           >
-                            <MousePointerClick className="size-4 mr-2" />{" "}
+                            <MousePointerClick className="size-3 mr-1.5" />{" "}
                             Gunakan
                           </Button>
                         </DialogClose>
