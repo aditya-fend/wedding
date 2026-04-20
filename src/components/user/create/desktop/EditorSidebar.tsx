@@ -440,6 +440,97 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             </DialogContent>
           </Dialog>
         </div>
+        
+                {/* ═══════════════════════════════════════════
+            Section: Cover / Pembuka
+        ═══════════════════════════════════════════ */}
+        <SectionCard
+          title="Cover / Pembuka"
+          icon={Sparkles}
+          isActive={activeSection === "cover"}
+          onClick={() =>
+            setActiveSection(activeSection === "cover" ? "" : "cover")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-3">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Hero Image / Foto Utama
+              </Label>
+
+              <div
+                className={`group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
+                  heroDragActive
+                    ? "border-[#D4AF97] bg-[#ECFDF5]"
+                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(true);
+                }}
+                onDragLeave={() => setHeroDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const url = URL.createObjectURL(file);
+                    setFormData({ hero_image: url });
+                  }
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setFormData({ hero_image: url });
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                {formData.hero_image ? (
+                  <>
+                    <Image
+                      src={formData.hero_image}
+                      alt="Hero Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                        <ImageIcon size={16} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                    <ImageIcon size={24} className="opacity-40" />
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Drop atau Klik Foto
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <Input
+                  value={formData.hero_image || ""}
+                  onChange={(e) => setFormData({ hero_image: e.target.value })}
+                  placeholder="Atau masukkan URL gambar..."
+                  className="rounded-xl bg-white text-xs pl-8"
+                />
+                <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+
         {/* ═══════════════════════════════════════════
             Section: Mempelai Pria
         ═══════════════════════════════════════════ */}
@@ -704,95 +795,6 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 placeholder="@username"
                 className="rounded-xl bg-white"
               />
-            </div>
-          </div>
-        </SectionCard>
-
-        {/* ═══════════════════════════════════════════
-            Section: Cover / Pembuka
-        ═══════════════════════════════════════════ */}
-        <SectionCard
-          title="Cover / Pembuka"
-          icon={Sparkles}
-          isActive={activeSection === "cover"}
-          onClick={() =>
-            setActiveSection(activeSection === "cover" ? "" : "cover")
-          }
-        >
-          <div className="flex flex-col gap-4">
-            <div className="space-y-3">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Hero Image / Foto Utama
-              </Label>
-
-              <div
-                className={`group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
-                  heroDragActive
-                    ? "border-[#D4AF97] bg-[#ECFDF5]"
-                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
-                }`}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setHeroDragActive(true);
-                }}
-                onDragLeave={() => setHeroDragActive(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setHeroDragActive(false);
-                  const file = e.dataTransfer.files?.[0];
-                  if (file && file.type.startsWith("image/")) {
-                    const url = URL.createObjectURL(file);
-                    setFormData({ hero_image: url });
-                  }
-                }}
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/*";
-                  input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) {
-                      const url = URL.createObjectURL(file);
-                      setFormData({ hero_image: url });
-                    }
-                  };
-                  input.click();
-                }}
-              >
-                {formData.hero_image ? (
-                  <>
-                    <Image
-                      src={formData.hero_image}
-                      alt="Hero Preview"
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
-                        <ImageIcon size={16} />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
-                    <ImageIcon size={24} className="opacity-40" />
-                    <p className="text-[10px] font-bold uppercase tracking-wider">
-                      Drop atau Klik Foto
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="relative">
-                <Input
-                  value={formData.hero_image || ""}
-                  onChange={(e) => setFormData({ hero_image: e.target.value })}
-                  placeholder="Atau masukkan URL gambar..."
-                  className="rounded-xl bg-white text-xs pl-8"
-                />
-                <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
-              </div>
             </div>
           </div>
         </SectionCard>

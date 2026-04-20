@@ -37,7 +37,7 @@ export default async function EditInvitationPage({
   const initialData = invitation.contentData as unknown as InvitationContent;
 
   return (
-    <main className="h-screen w-full overflow-hidden">
+    <main className="max-h-screen w-full overflow-hidden">
       <EditInvitationClient
         invitationId={invitation.id}
         initialData={initialData}

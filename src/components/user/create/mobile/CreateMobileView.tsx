@@ -117,14 +117,13 @@ export default function CreateMobileView({
       </div>
 
       {/* ── FLOATING ACTION BUTTON ── */}
-      <div className="absolute bottom-14 right-6 z-[100] pointer-events-none">
+      <div className="absolute bottom-6 right-6 z-[100] pointer-events-none">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsPreviewOpen(true)}
           className="pointer-events-auto group relative size-16 flex items-center justify-center rounded-full bg-[#2C2C2C] text-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-[3px] border-white overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF97]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <Play size={24} className="fill-white ml-1 relative z-10" />
         </motion.button>
       </div>
@@ -139,7 +138,7 @@ export default function CreateMobileView({
             className="fixed inset-0 z-[200] backdrop-blur-2xl flex flex-col pt-safe"
           >
             {/* Header Modal */}
-            <div className="flex items-center justify-between px-6 py-6">
+            <div className="absolute z-[101] top-0 left-0 flex items-center justify-between px-6 py-6">
               <button
                 onClick={() => setIsPreviewOpen(false)}
                 className="size-11 flex items-center justify-center bg-black/50 hover:bg-white/20 rounded-2xl text-white transition-all active:scale-90"

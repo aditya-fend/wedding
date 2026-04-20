@@ -28,7 +28,8 @@ import {
   Eye,
   Share2,
   Trash2,
-  Globe
+  Globe,
+  Menu
 } from "lucide-react";
 import Link from "next/link";
 import { DeleteInvitationButton } from "./DeleteInvitationButton";
@@ -115,7 +116,7 @@ export function InvitationListTab({ invitations }: { invitations: InvitationWith
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost">
-                          <MoreHorizontal className="size-4" />
+                          <Menu className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-52 rounded-2xl border-[#F0EDE6] p-2 shadow-xl shadow-[#D4AF97]/5">

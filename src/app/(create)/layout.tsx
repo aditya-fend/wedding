@@ -10,7 +10,7 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex min-h-screen bg-[#F8F5F0]">
+    <div className="flex max-h-screen bg-[#F8F5F0]">
       {/* Sidebar tetap di posisi fixed */}
       <Navbar />
 
