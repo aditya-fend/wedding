@@ -22,8 +22,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Search, 
   Download, 
-  Plus, 
-  Trash2, 
   Users,
   CheckCircle2,
   XCircle,
@@ -38,7 +36,7 @@ import {
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
 import { deleteGuest, updateGuestStatus } from "@/lib/actions/guestWish";
-import { Presence } from "@prisma/client";
+import { Invitation, Presence } from "@prisma/client";
 import { toast } from "sonner";
 import { AddGuestModal } from "./AddGuestModal";
 
@@ -55,7 +53,7 @@ interface Guest {
   invitationId: string;
 }
 
-export function RSVPManagementTab({ guests, invitations }: { guests: Guest[], invitations: any[] }) {
+export function RSVPManagementTab({ guests, invitations }: { guests: Guest[], invitations: Invitation[] }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [invitationFilter, setInvitationFilter] = useState<string>("ALL");
@@ -197,7 +195,7 @@ export function RSVPManagementTab({ guests, invitations }: { guests: Guest[], in
                     <div className="flex flex-col">
                       <span className="font-bold text-[#2C2C2C]">{guest.guestName}</span>
                       {guest.message && (
-                        <span className="text-xs text-[#6B6B6B] line-clamp-1 italic">"{guest.message}"</span>
+                        <span className="text-xs text-[#6B6B6B] line-clamp-1 italic">&quot;{guest.message}&quot;</span>
                       )}
                     </div>
                   </TableCell>

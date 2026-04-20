@@ -36,7 +36,7 @@ export function Navbar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    router.push("/masuk");
+    router.push("/login");
   };
 
   const closeMobileMenu = () => {
@@ -60,10 +60,16 @@ export function Navbar() {
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => (isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true))}
+          onClick={() =>
+            isMobileOpen ? closeMobileMenu() : setIsMobileOpen(true)
+          }
           className="text-[#2C2C2C] hover:bg-[#FDFCFB]"
         >
-          {isMobileOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          {isMobileOpen ? (
+            <X className="size-5" />
+          ) : (
+            <Menu className="size-5" />
+          )}
         </Button>
       </header>
 
@@ -123,22 +129,31 @@ export function Navbar() {
         )}
       >
         {/* Branding Section */}
-        <div className={cn(
-          "flex p-4 justify-start items-center h-24 transition-all duration-500",
-        )}>
+        <div
+          className={cn(
+            "flex p-4 justify-start items-center h-24 transition-all duration-500",
+          )}
+        >
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="text-[#9B9B9B] hover:text-[#D4AF97] hover:bg-[#FDFCFB] rounded-xl shrink-0"
-            >
-            {isCollapsed ? <PanelLeftOpen className="size-5" /> : <PanelLeftClose className="size-5" />}
-          </Button>
-            {!isCollapsed && (
-              <Link href="/dashboard" className="font-bold text-xl tracking-tighter text-[#2C2C2C] animate-in fade-in duration-700">
-                Undang<span className="text-[#D4AF97]">Dong</span>
-              </Link>
+          >
+            {isCollapsed ? (
+              <PanelLeftOpen className="size-5" />
+            ) : (
+              <PanelLeftClose className="size-5" />
             )}
+          </Button>
+          {!isCollapsed && (
+            <Link
+              href="/dashboard"
+              className="font-bold text-xl tracking-tighter text-[#2C2C2C] animate-in fade-in duration-700"
+            >
+              Undang<span className="text-[#D4AF97]">Dong</span>
+            </Link>
+          )}
         </div>
 
         {/* Navigation Section */}
@@ -157,7 +172,12 @@ export function Navbar() {
                 )}
               >
                 <div className="w-12 flex items-center justify-center shrink-0">
-                  <link.icon className={cn("size-5 transition-transform duration-300", isActive ? "scale-110" : "group-hover:scale-110")} />
+                  <link.icon
+                    className={cn(
+                      "size-5 transition-transform duration-300",
+                      isActive ? "scale-110" : "group-hover:scale-110",
+                    )}
+                  />
                 </div>
                 {!isCollapsed && (
                   <span className="font-bold text-[13px] tracking-tight animate-in fade-in slide-in-from-left-2 duration-500">
@@ -165,7 +185,7 @@ export function Navbar() {
                   </span>
                 )}
                 {isActive && (
-                   <div className="absolute left-0 w-1 h-5 bg-[#D4AF97] rounded-r-full" />
+                  <div className="absolute left-0 w-1 h-5 bg-[#D4AF97] rounded-r-full" />
                 )}
               </Link>
             );
@@ -182,7 +202,9 @@ export function Navbar() {
               <LogOut className="size-5 transition-transform group-hover:-translate-x-1" />
             </div>
             {!isCollapsed && (
-              <span className="font-bold text-[13px] tracking-tight">Keluar Akun</span>
+              <span className="font-bold text-[13px] tracking-tight">
+                Keluar Akun
+              </span>
             )}
           </button>
         </div>

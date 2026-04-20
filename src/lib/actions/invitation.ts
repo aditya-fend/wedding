@@ -5,20 +5,19 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { InvitationContent } from "@/types/invitation";
 import { revalidatePath } from "next/cache";
 
+import { Prisma } from "@prisma/client";
+
 export async function updateInvitationContent(
   invitationId: string,
   content: InvitationContent,
   templateTitle?: string,
 ) {
   const supabase = await createServerSupabase();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error("Unauthorized");
 
   try {
-    // 1. Validasi kepemilikan
     const existing = await prisma.invitation.findUnique({
       where: { id: invitationId },
       select: { userId: true },
@@ -28,40 +27,33 @@ export async function updateInvitationContent(
       throw new Error("Anda tidak memiliki akses untuk mengubah undangan ini.");
     }
 
-    // 2. Siapkan data update
-    const updateData: any = {
-      contentData: content as any,
+    // FIX: Gunakan tipe UpdateInput dari Prisma
+    const updateData: Prisma.InvitationUpdateInput = {
+      contentData: content as unknown as Prisma.InputJsonValue,
     };
 
-    // Jika ada templateTitle, cari template yang sesuai di DB
     if (templateTitle) {
       const template = await prisma.template.findFirst({
-        where: {
-          title: {
-            equals: templateTitle,
-            mode: "insensitive",
-          },
-        },
+        where: { title: { equals: templateTitle, mode: "insensitive" } },
       });
       if (template) {
-        updateData.templateId = template.id;
+        updateData.template = { connect: { id: template.id } };
       }
     }
 
-    // 3. Update record undangan
     await prisma.invitation.update({
       where: { id: invitationId },
       data: updateData,
     });
 
-    // 4. Refresh cache
     revalidatePath("/dashboard");
     revalidatePath(`/v/${invitationId}`);
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Gagal menyimpan konten.";
     console.error("Update Error:", error);
-    throw new Error(error.message || "Gagal menyimpan konten.");
+    throw new Error(message);
   }
 }
 
@@ -97,12 +89,10 @@ export async function createInitialInvitation(formData: {
     );
   }
 
-  try {
+try {
     const result = await prisma.$transaction(async (tx) => {
-      // A. Ambil template default
       let defaultTemplate = await tx.template.findFirst();
 
-      // Jika template benar-benar kosong di DB, buat satu agar tidak error
       if (!defaultTemplate) {
         defaultTemplate = await tx.template.create({
           data: {
@@ -113,39 +103,32 @@ export async function createInitialInvitation(formData: {
         });
       }
 
-      // B. Kurangi saldo token (Menggunakan atomik decrement)
       await tx.user.update({
         where: { id: user.id },
         data: { tokens: { decrement: 10 } },
       });
 
-      // C. Buat record undangan
       return await tx.invitation.create({
         data: {
           title: formData.title,
           slug: formData.slug,
-          user: {
-            connect: { id: user.id },
-          },
-          template: {
-            connect: { id: defaultTemplate.id },
-          },
+          userId: user.id, // Cara koneksi yang lebih ringkas
+          templateId: defaultTemplate.id,
         },
       });
     });
 
     revalidatePath("/dashboard");
     return { success: true, invitationId: result.id };
-  } catch (error: any) {
-    // Menangkap error spesifik prisma jika ada race condition
-    if (error.code === "P2002") {
-      throw new Error(
-        "URL baru saja diambil oleh pengguna lain. Coba URL lain.",
-      );
+  } catch (error: unknown) {
+    // FIX: Tangkap error prisma secara spesifik tanpa 'any'
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === "P2002") {
+        throw new Error("URL baru saja diambil oleh pengguna lain.");
+      }
     }
-    throw new Error(
-      error.message || "Terjadi kesalahan saat membuat undangan.",
-    );
+    const message = error instanceof Error ? error.message : "Terjadi kesalahan.";
+    throw new Error(message);
   }
 }
 
@@ -154,7 +137,7 @@ export async function saveInvitation(id: string, content: InvitationContent) {
     const updated = await prisma.invitation.update({
       where: { id },
       data: {
-        contentData: content as any,
+        contentData: content as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -204,8 +187,8 @@ export async function deleteInvitation(invitationId: string) {
     revalidatePath("/dashboard");
 
     return { success: true };
-  } catch (error: any) {
-    console.error("Delete Error:", error);
-    throw new Error(error.message || "Gagal menghapus undangan.");
+} catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Gagal menghapus.";
+    throw new Error(message);
   }
 }

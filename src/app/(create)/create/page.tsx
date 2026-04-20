@@ -2,6 +2,7 @@ import { createServerSupabase } from "@/lib/supabase/server"; // Sesuaikan path 
 import { prisma } from "@/lib/prisma";
 import EditInvitationClient from "@/components/user/create/EditInvitationClient";
 import { InvitationContent } from "@/types/invitation";
+import { Prisma } from "@prisma/client";
 
 export default async function CreateInvitationPage() {
   // 1. Ambil Session User dari Supabase
@@ -10,8 +11,12 @@ export default async function CreateInvitationPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  type InvitationWithTemplate = Prisma.InvitationGetPayload<{
+  include: { template: true };
+}>;
+
   // 2. Inisialisasi variabel untuk menampung data
-  let invitationData: any = null;
+  let invitationData: InvitationWithTemplate = null;
 
   // 3. Ambil data Master (Templates & Musics) - Tetap diambil untuk Dropdown
   const [templates, musics] = await Promise.all([

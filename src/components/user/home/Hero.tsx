@@ -24,18 +24,21 @@ export default function Hero() {
           {/* Headline */}
           <h1 className="text-[2.75rem] leading-[1.1] md:text-7xl lg:text-8xl font-bold tracking-tight text-[#2C2C2C] mb-8 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-150">
             Abadikan momen <br className="hidden sm:block" />
-            <span className="text-[#D4AF97] italic font-serif font-medium">bahagia</span> Anda dengan elegan
+            <span className="text-[#D4AF97] italic font-serif font-medium">
+              bahagia
+            </span>{" "}
+            Anda dengan elegan
           </h1>
 
           {/* Subheadline */}
           <p className="text-base md:text-xl text-[#6B6B6B] max-w-2xl mx-auto mb-12 leading-relaxed px-2 md:px-0 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-            Solusi undangan digital modern dengan sistem RSVP otomatis, 
+            Solusi undangan digital modern dengan sistem RSVP otomatis,
             integrasi kado digital, dan manajemen tamu dalam satu genggaman.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-in fade-in slide-in-from-bottom-10 duration-1000 delay-500">
-            <Link href="/daftar" className="w-full sm:w-auto">
+            <Link href="/register" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="bg-[#D4AF97] hover:bg-[#B99575] text-white text-base md:text-lg px-10 py-7 rounded-2xl font-bold w-full flex items-center justify-center gap-3 group shadow-xl shadow-[#D4AF97]/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -58,16 +61,16 @@ export default function Hero() {
 
           {/* Trust Signals */}
           <div className="mt-16 pt-8 border-t border-[#E5E0D8]/50 flex flex-wrap justify-center items-center gap-x-10 gap-y-4 animate-in fade-in duration-1000 delay-700">
-            {[
-              "Coba Gratis",
-              "RSVP & Angpao Digital",
-              "Aktif Selamanya",
-            ].map((text) => (
-              <div key={text} className="flex items-center gap-2.5">
-                <CheckCircle2 className="w-5 h-5 text-[#D4AF97]" />
-                <span className="text-sm font-semibold text-[#2C2C2C]/80 tracking-tight">{text}</span>
-              </div>
-            ))}
+            {["Coba Gratis", "RSVP & Angpao Digital", "Aktif Selamanya"].map(
+              (text) => (
+                <div key={text} className="flex items-center gap-2.5">
+                  <CheckCircle2 className="w-5 h-5 text-[#D4AF97]" />
+                  <span className="text-sm font-semibold text-[#2C2C2C]/80 tracking-tight">
+                    {text}
+                  </span>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </div>

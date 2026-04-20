@@ -19,7 +19,7 @@ import { LogIn, KeyRound, Mail, Loader2, ChevronLeft } from "lucide-react";
 import { getUserRole } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 
-export default function MasukPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -73,11 +73,13 @@ export default function MasukPage() {
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center p-4">
-      <div className="w-full max-w-[400px] space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        
+      <div className="w-full max-w-100 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-block font-bold text-2xl tracking-tighter text-[#2C2C2C]">
+          <Link
+            href="/"
+            className="inline-block font-bold text-2xl tracking-tighter text-[#2C2C2C]"
+          >
             Undang<span className="text-[#D4AF97]">Dong</span>
           </Link>
           <p className="text-[#9B9B9B] text-[10px] font-bold uppercase tracking-[0.2em]">
@@ -85,13 +87,14 @@ export default function MasukPage() {
           </p>
         </div>
 
-        <Card className="border-[#F0EDE6] shadow-xl shadow-[#D4AF97]/5 rounded-[2rem] overflow-hidden bg-white">
+        <Card className="border-[#F0EDE6] shadow-xl shadow-[#D4AF97]/5 rounded-4xl overflow-hidden bg-white">
           <CardHeader className="bg-[#FDFCFB] border-b border-[#F0EDE6] p-6 md:p-8 text-center space-y-2">
             <CardTitle className="text-xl md:text-2xl font-bold text-[#2C2C2C] tracking-tight">
               Selamat Datang
             </CardTitle>
-            <CardDescription className="text-xs md:text-sm text-[#6B6B6B] leading-relaxed">
-              Masuk untuk melanjutkan pengaturan dan pantau undangan digital Anda.
+            <CardDescription className="text-xs md:text-sm text-muted-foreground leading-relaxed">
+              login untuk melanjutkan pengaturan dan pantau undangan digital
+              Anda.
             </CardDescription>
           </CardHeader>
 
@@ -99,7 +102,10 @@ export default function MasukPage() {
             <form onSubmit={handleLogin} className="space-y-4">
               {/* Input Email */}
               <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]">
+                <Label
+                  htmlFor="email"
+                  className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]"
+                >
                   Alamat Email
                 </Label>
                 <div className="relative group">
@@ -120,10 +126,16 @@ export default function MasukPage() {
               {/* Input Password */}
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]">
+                  <Label
+                    htmlFor="password"
+                    className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]"
+                  >
                     Kata Sandi
                   </Label>
-                  <Link href="/lupa-password" className="text-[10px] font-bold text-[#D4AF97] uppercase tracking-tighter hover:underline">
+                  <Link
+                    href="/lupa-password"
+                    className="text-[10px] font-bold text-[#D4AF97] uppercase tracking-tighter hover:underline"
+                  >
                     Lupa sandi?
                   </Link>
                 </div>
@@ -148,7 +160,7 @@ export default function MasukPage() {
                 disabled={loading}
                 className={cn(
                   "w-full h-12 bg-[#D4AF97] hover:bg-[#B99575] text-white font-bold rounded-xl text-sm transition-all mt-2 shadow-lg shadow-[#D4AF97]/10",
-                  "flex items-center justify-center gap-2"
+                  "flex items-center justify-center gap-2",
                 )}
               >
                 {loading ? (
@@ -159,7 +171,7 @@ export default function MasukPage() {
                 ) : (
                   <>
                     <LogIn className="size-4" />
-                    Masuk Sekarang
+                    login Sekarang
                   </>
                 )}
               </Button>
@@ -177,8 +189,11 @@ export default function MasukPage() {
             <div className="text-center">
               <p className="text-xs text-[#9B9B9B] font-medium">
                 Belum memiliki akun?{" "}
-                <Link href="/daftar" className="text-[#D4AF97] font-bold hover:underline italic">
-                  Daftar di sini
+                <Link
+                  href="/register"
+                  className="text-[#D4AF97] font-bold hover:underline italic"
+                >
+                  register di sini
                 </Link>
               </p>
             </div>
@@ -187,7 +202,10 @@ export default function MasukPage() {
 
         {/* Back Link & Copyright */}
         <div className="flex flex-col items-center gap-4">
-          <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#9B9B9B] hover:text-[#2C2C2C] flex items-center transition-colors">
+          <Link
+            href="/"
+            className="text-[10px] font-bold uppercase tracking-widest text-[#9B9B9B] hover:text-[#2C2C2C] flex items-center transition-colors"
+          >
             <ChevronLeft className="size-3 mr-1" /> Kembali ke Beranda
           </Link>
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">

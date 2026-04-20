@@ -18,7 +18,7 @@ export default async function DashboardPage() {
           <Sparkles className="size-8 text-[#D4AF97] opacity-20" />
         </div>
         <p className="text-sm font-bold text-[#9B9B9B] uppercase tracking-[0.2em]">Sesi Berakhir</p>
-        <p className="text-[#6B6B6B] text-center max-w-xs">Silakan login kembali untuk mengakses dashboard eksklusif Anda.</p>
+        <p className="text-muted-foreground text-center max-w-xs">Silakan login kembali untuk mengakses dashboard eksklusif Anda.</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
           <h1 className="text-4xl font-black text-[#2C2C2C] tracking-tighter lg:text-5xl">
             Halo, {userName}.
           </h1>
-          <p className="text-[#6B6B6B] font-medium text-sm lg:text-base max-w-md leading-relaxed">
+          <p className="text-muted-foreground font-medium text-sm lg:text-base max-w-md leading-relaxed">
             Kelola momen berharga Anda. Berikut adalah ringkasan performa undangan digital Anda saat ini.
           </p>
         </div>
@@ -71,20 +71,9 @@ export default async function DashboardPage() {
       </section>
 
       {/* Main Content Area */}
-      <section className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300 ease-[cubic-bezier(0.4,0,0.2,1)]">
+      <section className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300 ease-in-out">
         <OverviewTab stats={stats} />
       </section>
-
-      {/* Optional: Footer Divider */}
-      <footer className="pt-12 border-t border-[#F0EDE6] flex flex-col md:flex-row items-center justify-between gap-4">
-        <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-          &copy; 2026 UndangDong UI Pattern v2.0
-        </p>
-        <div className="flex gap-6">
-          <button className="text-[10px] font-bold text-[#9B9B9B] hover:text-[#D4AF97] uppercase tracking-widest transition-colors">Bantuan</button>
-          <button className="text-[10px] font-bold text-[#9B9B9B] hover:text-[#D4AF97] uppercase tracking-widest transition-colors">Panduan Token</button>
-        </div>
-      </footer>
     </main>
   );
 }

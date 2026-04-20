@@ -18,7 +18,7 @@ export default async function AdminLayout({
   const session = cookieStore.get('user_session')?.value;
 
   if (!session) {
-    redirect('/masuk');
+    redirect('/login');
   }
 
   const user = await prisma.user.findUnique({

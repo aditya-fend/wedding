@@ -18,6 +18,18 @@ import {
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 
+interface PhotonFeature {
+  properties: {
+    osm_id?: number;
+    name?: string;
+    city?: string;
+    country?: string;
+  };
+  geometry: {
+    coordinates: [number, number]; // [lng, lat]
+  };
+}
+
 // Interface
 interface MapPickerProps {
   isOpen: boolean;
@@ -131,7 +143,7 @@ export default function MapPicker({
           `https://photon.komoot.io/api?q=${encodeURIComponent(debouncedSearch)}&limit=5`,
         );
         const data = await res.json();
-        const formatted = (data.features || []).map((f: any) => ({
+        const formatted = (data.features || []).map((f: PhotonFeature) => ({
           place_id: f.properties.osm_id?.toString() || Math.random().toString(),
           display_name: [
             f.properties.name,

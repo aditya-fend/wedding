@@ -44,7 +44,7 @@ export function DeleteInvitationButton({ id, title }: DeleteInvitationButtonProp
       <DialogTrigger asChild>
         <Button
           variant="destructive"
-          className="flex-1 rounded-xl h-10 text-xs gap-2 py-2"
+          className="flex-1 rounded-xl h-10 text-xs gap-2 py-2 w-full"
         >
           <Trash className="size-3.5" /> Hapus
         </Button>

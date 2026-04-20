@@ -18,13 +18,17 @@ export default async function UndanganPage() {
         <div className="p-4 rounded-full bg-[#FDFCFB] border border-[#F0EDE6]">
           <Sparkles className="size-8 text-[#D4AF97] opacity-20" />
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Akses Terbatas</p>
-        <p className="text-[#6B6B6B] text-sm">Silakan login untuk mengelola koleksi undangan Anda.</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">
+          Akses Terbatas
+        </p>
+        <p className="text-muted-foreground text-sm">
+          Silakan login untuk mengelola koleksi undangan Anda.
+        </p>
       </div>
     );
   }
 
-  // Fetch data user (tokens) dan daftar undangan secara paralel
+  // Fetch data user (tokens) dan register undangan secara paralel
   const [dbData, invitations] = await Promise.all([
     prisma.user.findUnique({
       where: { id: user.id },
@@ -53,13 +57,16 @@ export default async function UndanganPage() {
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-[#D4AF97]">
             <Library className="size-4" />
-            <span className="text-[10px] font-black uppercase tracking-[0.4em]">Collection</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em]">
+              Collection
+            </span>
           </div>
           <h1 className="text-4xl font-black text-[#2C2C2C] tracking-tighter">
             Undangan Saya
           </h1>
-          <p className="text-[#6B6B6B] font-medium text-sm lg:text-base max-w-md leading-relaxed">
-            Pusat kendali untuk semua karya digital Anda. Pantau status dan kelola detail setiap acara di sini.
+          <p className="text-muted-foreground font-medium text-sm lg:text-base max-w-md leading-relaxed">
+            Pusat kendali untuk semua karya digital Anda. Pantau status dan
+            kelola detail setiap acara di sini.
           </p>
         </div>
 
@@ -73,19 +80,19 @@ export default async function UndanganPage() {
       </section>
 
       {/* List Section Area */}
-      <section className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-500 ease-[cubic-bezier(0.4,0,0.2,1)]">
+      <section className="animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-500 ease-in-out">
         <div className="relative">
           {/* Subtle background glow for the list area */}
           <div className="absolute inset-0 bg-[#D4AF97]/5 blur-[100px] -z-10 rounded-full opacity-30 pointer-events-none" />
-          
-          <InvitationListTab invitations={invitations as any} />
-          
+
+          <InvitationListTab invitations={invitations} />
+
           {invitations.length > 0 && (
             <div className="mt-6 flex items-center justify-between px-2">
               <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-                Menampilkan {invitations.length} Undangan Terdaftar
+                Menampilkan {invitations.length} Undangan Terregister
               </p>
-              <div className="h-px flex-1 mx-6 bg-gradient-to-r from-[#F0EDE6] to-transparent" />
+              <div className="h-px flex-1 mx-6 bg-linear-to-r from-[#F0EDE6] to-transparent" />
             </div>
           )}
         </div>

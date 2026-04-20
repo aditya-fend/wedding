@@ -43,13 +43,17 @@ import {
   MapPin,
   Map as MapIconUI,
 } from "lucide-react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { SectionCard } from "./SectionCard";
 import { Music as MusicType, Template } from "@/types";
 
-const MapPicker = dynamic(() => import('./MapPicker'), { 
+const MapPicker = dynamic(() => import("./MapPicker"), {
   ssr: false,
-  loading: () => <div className="h-full w-full bg-slate-100 animate-pulse flex items-center justify-center">Memuat Peta...</div>
+  loading: () => (
+    <div className="h-full w-full bg-slate-100 animate-pulse flex items-center justify-center">
+      Memuat Peta...
+    </div>
+  ),
 });
 
 interface SidebarProps {
@@ -242,7 +246,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                           : "border-[#E5E0D8] hover:border-[#D4AF97] hover:shadow-xl")
                       }
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                      <div className="relative aspect-square overflow-hidden bg-slate-100">
                         {template.thumbnailUrl ? (
                           <Image
                             src={template.thumbnailUrl}
@@ -258,7 +262,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                         )}
                       </div>
 
-                      <CardContent className="space-y-3">
+                      <CardContent className="flex-1 space-y-3">
                         <div className="flex items-start justify-between gap-3">
                           <div>
                             <h3 className="text-base font-semibold text-[#2C2C2C]">
@@ -310,14 +314,6 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                   );
                 })}
               </div>
-
-              <DialogFooter className="justify-end">
-                <DialogClose asChild>
-                  <Button variant="ghost" size="sm">
-                    Tutup
-                  </Button>
-                </DialogClose>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
@@ -788,7 +784,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 <Input
                   value={formData.hero_image || ""}
                   onChange={(e) => setFormData({ hero_image: e.target.value })}
-                  placeholder="Atau masukkan URL gambar..."
+                  placeholder="Atau loginkan URL gambar..."
                   className="rounded-xl bg-white text-xs pl-8"
                 />
                 <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />

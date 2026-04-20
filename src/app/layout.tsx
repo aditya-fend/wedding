@@ -13,7 +13,8 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "UndanganKu - Undangan Pernikahan Digital Indonesia",
-  description: "Buat undangan pernikahan digital yang elegan dan mudah dalam hitungan menit",
+  description:
+    "Buat undangan pernikahan digital yang elegan dan mudah dalam hitungan menit",
   icons: {
     icon: "/favicon.ico",
   },
@@ -25,14 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
-      <body className={`${poppins.variable} antialiased bg-[#F8F5F0]`}>
+    <html lang="id" suppressHydrationWarning>
+      <body
+        className={`${poppins.variable} antialiased bg-[#F8F5F0]`}
+      >
         {children}
-        <Toaster 
-          position="top-center" 
-          richColors 
-          closeButton 
-        />
+
+        <Toaster position="top-center" richColors closeButton />
       </body>
     </html>
   );

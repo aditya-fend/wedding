@@ -135,9 +135,6 @@ export function InvitationListTab({ invitations }: { invitations: InvitationWith
                         
                         <DropdownMenuSeparator className="bg-[#F0EDE6] my-1" />
                         
-                        <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] px-3 py-2">
-                          Distribusi & Data
-                        </DropdownMenuLabel>
                         <div className="p-1 space-y-1">
                            {/* Kita bungkus modal dalam div/custom item agar trigger tetap elegan */}
                           <div className="flex items-center gap-2 w-full px-2 py-2 text-xs font-bold text-[#2C2C2C] hover:bg-[#FDFCFB] hover:text-[#D4AF97] rounded-xl transition-all cursor-pointer">

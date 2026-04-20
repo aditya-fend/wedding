@@ -206,7 +206,7 @@ export default function AddTemplatePage() {
           </div>
         </div>
         <div className="rounded-3xl bg-[#F8F5F0] px-4 py-3 text-sm text-muted-foreground">
-          Masukkan informasi dasar, lalu simpan untuk menambahkan template baru.
+          loginkan informasi dasar, lalu simpan untuk menambahkan template baru.
         </div>
       </div>
 

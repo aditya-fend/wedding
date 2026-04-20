@@ -14,7 +14,6 @@ import {
   Music,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 
 const navigation = [
@@ -34,7 +33,7 @@ export default function Navbar() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       toast.success("Berhasil keluar!");
-      router.push("/masuk");
+      router.push("/login");
       router.refresh();
     } catch (e) {
       toast.error("Gagal keluar.");
@@ -66,7 +65,7 @@ export default function Navbar() {
 
       {/* Desktop Sidebar Navbar */}
       <div className="hidden md:fixed md:inset-y-0 md:flex md:w-72 md:flex-col z-50 transition-all duration-500">
-        <div className="flex flex-col flex-grow bg-slate-950 border-r border-white/5 overflow-y-auto pt-10 px-8">
+        <div className="flex flex-col grow bg-slate-950 border-r border-white/5 overflow-y-auto pt-10 px-8">
           <div className="flex items-center gap-4 mb-16 group">
             <div className="relative">
               <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-20 group-hover:opacity-40 transition-opacity" />
@@ -82,7 +81,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="space-y-12 flex-grow">
+          <div className="space-y-12 grow">
             <div>
               <p className="text-[9px] font-black text-slate-600 uppercase tracking-[0.4em] mb-6 ml-4">
                 Main Directory
@@ -98,7 +97,7 @@ export default function Navbar() {
                         "group flex items-center gap-4 px-4 py-4 transition-all duration-300 border-l-2",
                         active
                           ? "bg-cyan-500/5 text-cyan-400 border-cyan-500 shadow-[20px_0_40px_-15px_rgba(6,182,212,0.1)_inset]"
-                          : "text-slate-500 hover:text-white border-transparent hover:bg-white/[0.02]",
+                          : "text-slate-500 hover:text-white border-transparent hover:bg-white/2",
                       )}
                     >
                       <item.icon
@@ -172,7 +171,7 @@ export default function Navbar() {
                     href={item.href}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
-                      "flex items-center gap-4 py-6 border-b border-white/[0.03] transition-all",
+                      "flex items-center gap-4 py-6 border-b border-white/3 transition-all",
                       active
                         ? "text-cyan-400"
                         : "text-slate-500 hover:text-white",

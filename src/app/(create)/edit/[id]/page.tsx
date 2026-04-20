@@ -7,7 +7,9 @@ interface EditInvitationPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function EditInvitationPage({ params }: EditInvitationPageProps) {
+export default async function EditInvitationPage({
+  params,
+}: EditInvitationPageProps) {
   // 1. Ambil ID dari params (Next.js 15+ menggunakan await params)
   const { id } = await params;
 
@@ -25,7 +27,7 @@ export default async function EditInvitationPage({ params }: EditInvitationPageP
     notFound();
   }
 
-  // 4. Ambil semua daftar template dan musik untuk dikirim ke EditorSidebar
+  // 4. Ambil semua register template dan musik untuk dikirim ke EditorSidebar
   const [templates, musics] = await Promise.all([
     prisma.template.findMany(),
     prisma.music.findMany(),

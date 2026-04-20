@@ -17,10 +17,13 @@ async function loadTokens(): Promise<TokenRecord[]> {
   try {
     const content = await readFile(tokenFile, "utf8");
     return JSON.parse(content) as TokenRecord[];
-  } catch (error: any) {
-    if (error?.code === "ENOENT") {
+  } catch (error: unknown) {
+    const err = error as NodeJS.ErrnoException;
+    
+    if (err.code === "ENOENT") {
       return [];
     }
+    
     throw error;
   }
 }

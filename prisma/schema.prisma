@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url dihapus sepenuhnya (sudah dipindah ke prisma.config.ts)
 }
 
 enum Role {
@@ -34,15 +33,12 @@ model User {
   status     UserStatus @default(pending)
   createdAt  DateTime   @default(now())
   
-  // Ubah baris ini:
-  tokens     Int        @default(0) // Menyimpan jumlah saldo token sebagai angka
+  tokens     Int        @default(0)
   package    PackageType @default(BASIC)
   
-  // Relations
   invitations Invitation[]
 }
 
-// 3.3. Template [cite: 48]
 model Template {
   id           String   @id @default(cuid())
   title        String
@@ -54,7 +50,6 @@ model Template {
   isActive     Boolean  @default(true)
   createdAt    DateTime @default(now())
   
-  // Tambahan relasi musik (opsional, jika template punya musik default)
   defaultMusicId String?
   
   invitations  Invitation[]
@@ -64,33 +59,27 @@ model Music {
   id        String   @id @default(cuid())
   title     String
   artist    String?
-  url       String   // URL dari Supabase Storage
+  url       String   
   category  String? 
   createdAt DateTime @default(now())
-}// 3.4. Undangan (Invitation) [cite: 58]
-model Invitation {
-  id          String   @id @default(cuid()) // [cite: 60]
-  title       String   // [cite: 64]
-  slug        String   @unique // [cite: 65]
-  isActive    Boolean  @default(true) // [cite: 66]
-  viewsCount  Int      @default(0) // [cite: 75]
-  createdAt   DateTime @default(now()) // [cite: 76]
-
-  /** * Content Data disimpan dalam format JSON untuk fleksibilitas [cite: 67]
-   * Mencakup: mempelai_pria, mempelai_wanita, acara, love_story, gallery, 
-   * digital_envelope, music_url, dan dress_code. [cite: 68, 69, 70, 71, 72, 73, 74]
-   */
-  contentData Json? // [cite: 67]
-
-  // Relations
-  userId      String   // [cite: 62]
-  user        User     @relation(fields: [userId], references: [id])
-  templateId  String   // [cite: 63]
-  template    Template @relation(fields: [templateId], references: [id])
-  guestWishes GuestWish[] // [cite: 81]
 }
 
-// 3.5. Guest Wishes (Ucapan) [cite: 77]
+model Invitation {
+  id          String   @id @default(cuid())
+  title       String   
+  slug        String   @unique 
+  isActive    Boolean  @default(true) 
+  viewsCount  Int      @default(0) 
+  createdAt   DateTime @default(now()) 
+
+  contentData Json? 
+  userId      String   
+  user        User     @relation(fields: [userId], references: [id])
+  templateId  String   
+  template    Template @relation(fields: [templateId], references: [id])
+  guestWishes GuestWish[] 
+}
+
 enum Presence {
   Hadir
   Tidak_Hadir
@@ -99,14 +88,13 @@ enum Presence {
 }
 
 model GuestWish {
-  id           String   @id @default(cuid()) // [cite: 79]
-  guestName    String   // [cite: 82]
-  message      String   @db.Text // [cite: 83]
-  isPresent    Presence // [cite: 84]
+  id           String   @id @default(cuid())
+  guestName    String   
+  message      String   @db.Text 
+  isPresent    Presence 
   guestCount   Int      @default(1)
-  createdAt    DateTime @default(now()) // [cite: 85]
+  createdAt    DateTime @default(now()) 
 
-  // Relations
-  invitationId String   // [cite: 81]
+  invitationId String   
   invitation   Invitation @relation(fields: [invitationId], references: [id])
 }

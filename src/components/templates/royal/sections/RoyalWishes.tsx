@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { InvitationContent } from '@/types/invitation';
-import { saveGuestWish } from '@/lib/actions/guestWish';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { InvitationContent } from "@/types/invitation";
+import { saveGuestWish } from "@/lib/actions/guestWish";
 
 interface RoyalWishesProps {
   data: InvitationContent;
@@ -9,53 +9,75 @@ interface RoyalWishesProps {
 }
 
 const RoyalWishes = ({ data, invitationId }: RoyalWishesProps) => {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'submitted'>('idle');
+  const [status, setStatus] = useState<"idle" | "submitting" | "submitted">(
+    "idle",
+  );
   const [formData, setFormData] = useState({
-    name: '',
-    message: ''
+    name: "",
+    message: "",
   });
 
   const handleSubmit = async () => {
     if (!invitationId || !formData.name || !formData.message) return;
-    
-    setStatus('submitting');
-    
+
+    setStatus("submitting");
+
     const result = await saveGuestWish({
       invitationId,
       guestName: formData.name,
       message: formData.message,
-      isPresent: 'Hadir', // Default for wishes
-      guestCount: 1
+      isPresent: "Hadir", // Default for wishes
+      guestCount: 1,
     });
 
     if (result.success) {
-      setStatus('submitted');
-      setFormData({ name: '', message: '' });
+      setStatus("submitted");
+      setFormData({ name: "", message: "" });
     } else {
-      setStatus('idle');
-      alert('Gagal mengirim ucapan. Silakan coba lagi.');
+      setStatus("idle");
+      alert("Gagal mengirim ucapan. Silakan coba lagi.");
     }
   };
 
-  const displayWishes = (data.guest_wishes && data.guest_wishes.length > 0) 
-    ? data.guest_wishes.map(w => ({ name: w.name, message: w.message, time: "Baru saja" }))
-    : [
-        { name: "Alfian Nur Hidayat", message: "Selamat menempuh hidup baru Aurora dan Julian! Semoga menjadi keluarga yang sakinah dan penuh berkat.", time: "2 jam yang lalu" },
-        { name: "Sari Putri", message: "Barakallah! Cantik sekali undangannya. Semoga lancar sampai hari H ya!", time: "5 jam yang lalu" },
-        { name: "Robertus", message: "Happy wedding! Wish you both a lifetime of love and happiness.", time: "1 hari yang lalu" },
-      ];
+  const displayWishes =
+    data.guest_wishes && data.guest_wishes.length > 0
+      ? data.guest_wishes.map((w) => ({
+          name: w.name,
+          message: w.message,
+          time: "Baru saja",
+        }))
+      : [
+          {
+            name: "Alfian Nur Hidayat",
+            message:
+              "Selamat menempuh hidup baru Aurora dan Julian! Semoga menjadi keluarga yang sakinah dan penuh berkat.",
+            time: "2 jam yang lalu",
+          },
+          {
+            name: "Sari Putri",
+            message:
+              "Barakallah! Cantik sekali undangannya. Semoga lancar sampai hari H ya!",
+            time: "5 jam yang lalu",
+          },
+          {
+            name: "Robertus",
+            message:
+              "Happy wedding! Wish you both a lifetime of love and happiness.",
+            time: "1 hari yang lalu",
+          },
+        ];
 
   return (
     <section className="py-20 px-8 bg-[#fffafa] relative overflow-hidden">
       <div className="text-center mb-12">
-        <motion.span 
+        <motion.span
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           className="text-pink-400 tracking-[0.4em] text-[10px] uppercase font-bold"
         >
           Guest Book
         </motion.span>
-        <motion.h2 
+        <motion.h2
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           className="text-3xl font-serif italic text-slate-800 mt-2"
@@ -65,38 +87,40 @@ const RoyalWishes = ({ data, invitationId }: RoyalWishesProps) => {
       </div>
 
       {/* Form Singkat Kirim Ucapan */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         className="mb-12 bg-white p-6 rounded-[2rem] shadow-sm border border-pink-50"
       >
         <div className="space-y-4">
-          <input 
+          <input
             type="text"
             placeholder="Nama Anda"
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full text-xs font-serif bg-pink-50/30 border border-pink-100 rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-pink-200"
           />
-          <textarea 
+          <textarea
             placeholder="Tuliskan ucapan manis Anda..."
             value={formData.message}
-            onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, message: e.target.value })
+            }
             className="w-full text-xs font-serif italic bg-transparent border-none focus:ring-0 text-slate-600 resize-none h-20"
           />
         </div>
         <div className="flex justify-end mt-2">
-          <button 
+          <button
             onClick={handleSubmit}
-            disabled={status === 'submitting'}
+            disabled={status === "submitting"}
             className="text-[9px] tracking-[0.2em] bg-pink-400 text-white px-4 py-2 rounded-full shadow-md shadow-pink-100 disabled:bg-pink-200"
           >
-            {status === 'submitting' ? 'MENGIRIM...' : 'KIRIM UCAPAN'}
+            {status === "submitting" ? "MENGIRIM..." : "KIRIM UCAPAN"}
           </button>
         </div>
       </motion.div>
 
-      {/* Daftar Ucapan */}
+      {/* register Ucapan */}
       <div className="space-y-6 max-h-[400px] overflow-y-auto scrollbar-hide pr-2">
         {displayWishes.map((wish, index) => (
           <motion.div
@@ -107,7 +131,9 @@ const RoyalWishes = ({ data, invitationId }: RoyalWishesProps) => {
             transition={{ delay: index * 0.1 }}
             className="bg-white/60 backdrop-blur-sm p-5 rounded-2xl border-l-4 border-pink-200 shadow-sm"
           >
-            <h4 className="text-sm font-serif text-slate-800 font-bold">{wish.name}</h4>
+            <h4 className="text-sm font-serif text-slate-800 font-bold">
+              {wish.name}
+            </h4>
             <p className="text-[11px] text-slate-500 mt-2 leading-relaxed italic">
               "{wish.message}"
             </p>
@@ -119,13 +145,13 @@ const RoyalWishes = ({ data, invitationId }: RoyalWishesProps) => {
       </div>
 
       {/* Ornamen Floating */}
-      <motion.div 
+      <motion.div
         animate={{ rotate: [0, 10, 0], y: [0, -5, 0] }}
         transition={{ duration: 5, repeat: Infinity }}
         className="absolute top-10 -right-10 opacity-10 pointer-events-none"
       >
-        <img 
-          src="https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=200&auto=format&fit=crop" 
+        <img
+          src="https://images.unsplash.com/photo-1533616688419-b7a585564566?q=80&w=200&auto=format&fit=crop"
           className="w-32 h-32 object-contain"
           alt="floral"
         />

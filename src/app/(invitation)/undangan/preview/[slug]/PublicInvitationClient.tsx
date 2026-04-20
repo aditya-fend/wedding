@@ -5,7 +5,6 @@ import { MobileDeviceEmulator } from "react-mobile-emulator";
 import {
   getTemplate,
   TemplateComponent,
-  templateRegistry,
 } from "@/lib/templateRegistry";
 import { InvitationContent } from "@/types/invitation";
 

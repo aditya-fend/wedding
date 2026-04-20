@@ -20,35 +20,38 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Fitur", href: "#fitur" },
     { name: "Template", href: "#template" },
+    { name: "Fitur", href: "#fitur" },
     { name: "Harga", href: "#harga" },
     { name: "Testimoni", href: "#testimoni" },
   ];
 
   return (
-    <nav 
+    <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
-        scrolled 
-          ? "bg-white/80 backdrop-blur-lg border-[#E5E0D8] py-3" 
-          : "bg-transparent border-transparent py-5"
+        scrolled
+          ? "bg-white/80 backdrop-blur-lg border-[#E5E0D8] py-3"
+          : "bg-transparent border-transparent py-5",
       )}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5 group">
           <span className="font-bold text-xl tracking-tighter text-[#2C2C2C]">
-            Undang<span className="text-[#D4AF97] group-hover:text-[#B99575] transition-colors">Dong</span>
+            Undang
+            <span className="text-[#D4AF97] group-hover:text-[#B99575] transition-colors">
+              Dong
+            </span>
           </span>
         </Link>
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a 
+            <a
               key={link.name}
-              href={link.href} 
+              href={link.href}
               className="text-sm font-medium text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
             >
               {link.name}
@@ -58,7 +61,7 @@ export default function Navbar() {
 
         {/* Auth Buttons - Desktop */}
         <div className="hidden lg:flex items-center gap-3">
-          <Link href="/masuk">
+          <Link href="/login">
             <Button
               variant="ghost"
               className="text-[#2C2C2C] hover:bg-[#F0EDE6] rounded-xl px-5"
@@ -66,9 +69,9 @@ export default function Navbar() {
               Masuk
             </Button>
           </Link>
-          <Link href="/daftar">
+          <Link href="/register">
             <Button className="bg-[#D4AF97] hover:bg-[#B99575] text-white shadow-md shadow-[#D4AF97]/20 rounded-xl px-6">
-              Daftar Gratis
+              Daftar
             </Button>
           </Link>
         </div>
@@ -84,33 +87,38 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu Overlay */}
-      <div 
+      <div
         className={cn(
           "absolute top-full left-0 right-0 bg-white border-b border-[#E5E0D8] p-6 lg:hidden transition-all duration-300 origin-top",
-          isOpen ? "opacity-100 scale-y-100 visible" : "opacity-0 scale-y-95 invisible"
+          isOpen
+            ? "opacity-100 scale-y-100 visible"
+            : "opacity-0 scale-y-95 invisible",
         )}
       >
         <div className="flex flex-col gap-5">
           {navLinks.map((link) => (
-            <a 
+            <a
               key={link.name}
-              href={link.href} 
+              href={link.href}
               onClick={() => setIsOpen(false)}
               className="text-base font-medium text-[#2C2C2C] py-2 border-b border-[#F0EDE6]/50 last:border-0"
             >
               {link.name}
             </a>
           ))}
-          
+
           <div className="flex flex-col gap-3 pt-2">
-            <Link href="/masuk" onClick={() => setIsOpen(false)}>
-              <Button variant="outline" className="w-full h-12 border-[#D4AF97] text-[#2C2C2C] rounded-xl">
-                Masuk
+            <Link href="/login" onClick={() => setIsOpen(false)}>
+              <Button
+                variant="outline"
+                className="w-full h-12 border-[#D4AF97] text-[#2C2C2C] rounded-xl"
+              >
+                login
               </Button>
             </Link>
-            <Link href="/daftar" onClick={() => setIsOpen(false)}>
+            <Link href="/register" onClick={() => setIsOpen(false)}>
               <Button className="w-full h-12 bg-[#D4AF97] hover:bg-[#B99575] text-white rounded-xl">
-                Daftar Sekarang
+                register Sekarang
               </Button>
             </Link>
           </div>

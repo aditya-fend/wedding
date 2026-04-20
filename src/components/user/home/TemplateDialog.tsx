@@ -27,7 +27,11 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Template } from "@/types/invitation";
 import { cn } from "@/lib/utils";
 
-export function TemplateCard({ template }: { template: Template & { thumbnailLabel?: string } }) {
+export function TemplateCard({
+  template,
+}: {
+  template: Template & { thumbnailLabel?: string };
+}) {
   return (
     <Card className="group overflow-hidden rounded-2xl border-[#E5E0D8] bg-white shadow-sm transition-all duration-300 hover:shadow-md">
       {/* Thumbnail: Tinggi dikurangi dari h-44 ke h-36 agar lebih kompak */}
@@ -64,13 +68,21 @@ export function TemplateCard({ template }: { template: Template & { thumbnailLab
       </CardContent>
 
       <CardFooter className="flex gap-2 p-4 pt-3">
-        <Button variant="outline" size="sm" asChild className="h-8 flex-1 rounded-lg text-[11px] border-[#E5E0D8]">
+        <Button
+          variant="outline"
+          size="sm"
+          asChild
+          className="h-8 flex-1 rounded-lg text-[11px] border-[#E5E0D8]"
+        >
           <Link href={template.previewUrl || "#"}>
             <Eye className="mr-1.5 size-3" /> Preview
           </Link>
         </Button>
-        <Button size="sm" className="h-8 flex-1 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]">
-          <Link href="/masuk">Pilih</Link>
+        <Button
+          size="sm"
+          className="h-8 flex-1 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]"
+        >
+          <Link href="/login">Pilih</Link>
         </Button>
       </CardFooter>
     </Card>
@@ -91,8 +103,13 @@ export function TemplateDialog({ templates }: { templates: Template[] }) {
   const filteredTemplates = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
     return templates.filter((t) => {
-      const mCat = selectedCategory === "Semua Kategori" || t.category === selectedCategory;
-      const mQue = !query || t.title.toLowerCase().includes(query) || t.category.toLowerCase().includes(query);
+      const mCat =
+        selectedCategory === "Semua Kategori" ||
+        t.category === selectedCategory;
+      const mQue =
+        !query ||
+        t.title.toLowerCase().includes(query) ||
+        t.category.toLowerCase().includes(query);
       return mCat && mQue;
     });
   }, [searchQuery, selectedCategory, templates]);
@@ -100,15 +117,20 @@ export function TemplateDialog({ templates }: { templates: Template[] }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="h-10 px-6 rounded-xl border-[#D4AF97] text-[#2C2C2C] text-sm">
+        <Button
+          variant="outline"
+          className="h-10 px-6 rounded-xl border-[#D4AF97] text-[#2C2C2C] text-sm"
+        >
           Lihat Semua Template
         </Button>
       </DialogTrigger>
-      
+
       {/* Dialog Content: max-w-5xl (lebih ramping) dan max-h-screen */}
       <DialogContent className="md:min-w-4xl lg:min-w-5xl max-h-[90vh] overflow-hidden flex flex-col p-0 rounded-2xl border-none">
         <DialogHeader className="p-6 pb-0">
-          <DialogTitle className="text-xl font-bold text-[#2C2C2C]">Katalog Template</DialogTitle>
+          <DialogTitle className="text-xl font-bold text-[#2C2C2C]">
+            Katalog Template
+          </DialogTitle>
           <DialogDescription className="text-xs text-[#6B6B6B]">
             Pilih desain yang paling menggambarkan momen bahagia Anda.
           </DialogDescription>
@@ -131,7 +153,9 @@ export function TemplateDialog({ templates }: { templates: Template[] }) {
             </SelectTrigger>
             <SelectContent>
               {categories.map((c) => (
-                <SelectItem key={c} value={c} className="text-xs">{c}</SelectItem>
+                <SelectItem key={c} value={c} className="text-xs">
+                  {c}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -141,10 +165,14 @@ export function TemplateDialog({ templates }: { templates: Template[] }) {
         <div className="flex-1 overflow-y-auto p-6 pt-4 no-scrollbar">
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredTemplates.length > 0 ? (
-              filteredTemplates.map((t) => <TemplateCard key={t.id} template={t} />)
+              filteredTemplates.map((t) => (
+                <TemplateCard key={t.id} template={t} />
+              ))
             ) : (
               <div className="col-span-full py-20 text-center rounded-2xl border border-dashed border-[#E5E0D8] bg-[#FDFCFB]">
-                <p className="text-xs text-[#6B6B6B]">Template tidak ditemukan.</p>
+                <p className="text-xs text-[#6B6B6B]">
+                  Template tidak ditemukan.
+                </p>
               </div>
             )}
           </div>
@@ -152,7 +180,13 @@ export function TemplateDialog({ templates }: { templates: Template[] }) {
 
         <DialogFooter className="p-4 border-t border-[#F0EDE6] bg-[#FDFCFB]/50">
           <DialogClose asChild>
-            <Button variant="ghost" size="sm" className="text-xs hover:bg-[#F0EDE6]">Tutup</Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-xs hover:bg-[#F0EDE6]"
+            >
+              Tutup
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

@@ -43,7 +43,7 @@ export function LivePreview() {
         {/* Emulator Wrapper */}
         <div className="drop-shadow-[0_35px_60px_-15px_rgba(0,0,0,0.15)] flex items-center justify-center h-screen w-full overflow-hidden transform transition-all duration-700 hover:scale-[1.02]">
           <MobileDeviceEmulator 
-            scale={0.7} 
+            scale={0.6} 
             deviceType="galaxyS21"
           >
             <div className="w-full h-full overflow-hidden overflow-y-auto no-scrollbar bg-white">
