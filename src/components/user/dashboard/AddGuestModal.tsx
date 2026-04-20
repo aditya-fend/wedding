@@ -7,7 +7,8 @@ import {
   DialogHeader, 
   DialogTitle, 
   DialogTrigger,
-  DialogFooter
+  DialogFooter,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +20,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, UserPlus, Users, Info } from "lucide-react";
 import { saveGuestWish } from "@/lib/actions/guestWish";
 import { toast } from "sonner";
 
@@ -34,7 +35,6 @@ export function AddGuestModal({ invitations }: { invitations: any[] }) {
     isPresent: "Belum_Konfirmasi",
   });
 
-  // Ensure invitationId is set if invitations load after initial mount (as insurance)
   React.useEffect(() => {
     if (invitations?.length > 0 && !formData.invitationId) {
       setFormData(prev => ({ ...prev, invitationId: invitations[0].id }));
@@ -76,84 +76,127 @@ export function AddGuestModal({ invitations }: { invitations: any[] }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="rounded-xl gap-2 bg-[#D4AF97] hover:bg-[#C49B83] text-white">
-          <Plus className="size-4" /> Tamu Baru
+        <Button className="rounded-2xl h-11 px-6 bg-[#D4AF97] hover:bg-[#B99575] text-white font-bold shadow-lg shadow-[#D4AF97]/20 transition-all active:scale-[0.98] gap-2">
+          <Plus className="size-4" /> 
+          <span className="tracking-tight">Tamu Baru</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] rounded-2xl">
-        <DialogHeader>
-          <DialogTitle>Tambah Tamu Manual</DialogTitle>
+      
+      <DialogContent className="sm:max-w-[440px] rounded-[2.5rem] border-[#F0EDE6] p-8 overflow-hidden">
+        {/* Background Decoration */}
+        <div className="absolute -top-12 -right-12 size-32 bg-[#FDFCFB] border border-[#F0EDE6] rounded-full opacity-50 z-0" />
+
+        <DialogHeader className="relative z-10 space-y-3">
+          <div className="bg-[#FDFCFB] w-fit p-3 rounded-2xl border border-[#F0EDE6] mb-2 shadow-sm">
+            <UserPlus className="size-5 text-[#D4AF97]" />
+          </div>
+          <DialogTitle className="text-2xl font-black text-[#2C2C2C] tracking-tighter">
+            Tambah Tamu
+          </DialogTitle>
+          <DialogDescription className="text-xs font-medium text-[#6B6B6B] leading-relaxed">
+            Masukkan detail tamu secara manual untuk pencatatan RSVP internal Anda.
+          </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="invitation">Pilih Undangan</Label>
-            <Select 
-              value={formData.invitationId} 
-              onValueChange={(val) => setFormData({ ...formData, invitationId: val })}
-            >
-              <SelectTrigger id="invitation" className="rounded-xl border-[#E5E0D8]">
-                <SelectValue placeholder="Pilih Undangan" />
-              </SelectTrigger>
-              <SelectContent>
-                {invitations.map((inv) => (
-                  <SelectItem key={inv.id} value={inv.id}>{inv.title}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="name">Nama Tamu</Label>
-            <Input 
-              id="name" 
-              placeholder="Masukkan nama lengkap" 
-              className="rounded-xl border-[#E5E0D8]" 
-              value={formData.guestName}
-              onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="relative z-10 space-y-6 mt-6">
+          <div className="space-y-5">
+            {/* Pilih Undangan */}
             <div className="space-y-2">
-              <Label htmlFor="count">Jumlah Tamu</Label>
-              <Input 
-                id="count" 
-                type="number" 
-                min="1"
-                className="rounded-xl border-[#E5E0D8]" 
-                value={formData.guestCount}
-                onChange={(e) => setFormData({ ...formData, guestCount: parseInt(e.target.value) })}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="status">Status Awal</Label>
+              <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] ml-1">
+                Kaitkan ke Undangan
+              </Label>
               <Select 
-                value={formData.isPresent} 
-                onValueChange={(val) => setFormData({ ...formData, isPresent: val })}
+                value={formData.invitationId} 
+                onValueChange={(val) => setFormData({ ...formData, invitationId: val })}
               >
-                <SelectTrigger id="status" className="rounded-xl border-[#E5E0D8]">
-                  <SelectValue placeholder="Pilih Status" />
+                <SelectTrigger className="h-12 rounded-2xl border-[#F0EDE6] bg-[#FDFCFB]/30 font-bold focus:ring-[#D4AF97]/10 transition-all">
+                  <SelectValue placeholder="Pilih Undangan" />
                 </SelectTrigger>
-                <SelectContent className="z-101">
-                  <SelectItem value="Hadir">Hadir</SelectItem>
-                  <SelectItem value="Tidak_Hadir">Tidak Hadir</SelectItem>
-                  <SelectItem value="Ragu_ragu">Ragu-ragu</SelectItem>
-                  <SelectItem value="Belum_Konfirmasi">Belum Jawab</SelectItem>
+                <SelectContent className="rounded-2xl border-[#F0EDE6] p-1 shadow-xl">
+                  {invitations.map((inv) => (
+                    <SelectItem key={inv.id} value={inv.id} className="rounded-xl py-2.5 font-medium cursor-pointer focus:bg-[#FDFCFB] focus:text-[#D4AF97]">
+                      {inv.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Nama Tamu */}
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] ml-1">
+                Identitas Tamu
+              </Label>
+              <Input 
+                id="name" 
+                placeholder="Masukkan nama lengkap tamu" 
+                className="h-12 rounded-2xl border-[#F0EDE6] bg-[#FDFCFB]/30 pl-5 font-bold focus:border-[#D4AF97] focus:ring-[#D4AF97]/10 transition-all" 
+                value={formData.guestName}
+                onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
+                required
+              />
+            </div>
+
+            {/* Grid Stats */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="count" className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] ml-1 flex items-center gap-1.5">
+                  <Users className="size-3 text-[#D4AF97]" /> Pax
+                </Label>
+                <Input 
+                  id="count" 
+                  type="number" 
+                  min="1"
+                  className="h-12 rounded-2xl border-[#F0EDE6] bg-[#FDFCFB]/30 pl-5 font-bold focus:border-[#D4AF97] transition-all" 
+                  value={formData.guestCount}
+                  onChange={(e) => setFormData({ ...formData, guestCount: parseInt(e.target.value) })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] ml-1">
+                  Status
+                </Label>
+                <Select 
+                  value={formData.isPresent} 
+                  onValueChange={(val) => setFormData({ ...formData, isPresent: val })}
+                >
+                  <SelectTrigger className="h-12 rounded-2xl border-[#F0EDE6] bg-[#FDFCFB]/30 font-bold focus:ring-[#D4AF97]/10 transition-all">
+                    <SelectValue placeholder="Pilih Status" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-2xl border-[#F0EDE6] p-1 shadow-xl">
+                    <SelectItem value="Hadir" className="rounded-xl focus:text-emerald-600 focus:bg-emerald-50 font-bold">Hadir</SelectItem>
+                    <SelectItem value="Tidak_Hadir" className="rounded-xl focus:text-rose-600 focus:bg-rose-50 font-bold">Tidak Hadir</SelectItem>
+                    <SelectItem value="Ragu_ragu" className="rounded-xl focus:text-amber-600 focus:bg-amber-50 font-bold">Ragu-ragu</SelectItem>
+                    <SelectItem value="Belum_Konfirmasi" className="rounded-xl font-bold">Belum Jawab</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
           </div>
 
-          <DialogFooter className="pt-4">
+          {/* Info Note */}
+          <div className="bg-[#FDFCFB] border border-[#F0EDE6] rounded-2xl p-4 flex items-start gap-3">
+            <Info className="size-4 text-[#D4AF97] mt-0.5 shrink-0" />
+            <p className="text-[10px] text-[#9B9B9B] font-medium leading-normal italic">
+              Data ini akan dicatat sebagai input internal. Pesan ucapan otomatis diatur sebagai "Ditambahkan manual oleh pemilik".
+            </p>
+          </div>
+
+          <DialogFooter className="pt-2">
             <Button 
               type="submit" 
-              className="w-full rounded-xl bg-[#2C2C2C] hover:bg-black text-white"
+              className="w-full h-12 bg-[#2C2C2C] hover:bg-black text-white rounded-2xl font-bold transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-2 active:scale-[0.98]"
               disabled={loading}
             >
-              {loading ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-              Simpan Data Tamu
+              {loading ? (
+                <Loader2 className="size-5 animate-spin" />
+              ) : (
+                <>
+                  <Plus className="size-4" />
+                  <span className="text-sm tracking-tight">Simpan Data Tamu</span>
+                </>
+              )}
             </Button>
           </DialogFooter>
         </form>

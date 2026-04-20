@@ -1,6 +1,7 @@
 // components/home/Testimonials.tsx
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 const testimonials = [
   {
@@ -25,47 +26,53 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section id="testimoni" className="py-24 bg-[#F8F5F0] border-t border-[#E5E0D8]">
+    <section id="testimoni" className="py-16 md:py-20 bg-[#FDFCFB] border-t border-[#F0EDE6]">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <span className="text-[#D4AF97] text-sm font-medium tracking-widest">APA KATA MEREKA</span>
-          <h2 className="text-4xl md:text-5xl font-semibold text-[#2C2C2C] mt-4 tracking-tight">
-            Cerita dari pasangan yang<br className="hidden md:block" /> sudah menggunakan UndanganKu
+        <div className="text-center mb-12">
+          <p className="text-[#D4AF97] text-[10px] font-bold tracking-[0.3em] uppercase">
+            Testimoni Pasangan
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#2C2C2C] mt-3 tracking-tight">
+            Cerita Bahagia Mereka
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="card-premium p-8 flex flex-col h-full">
-              <div className="flex gap-1 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {testimonials.map((t, index) => (
+            <Card key={index} className="border-[#E5E0D8] bg-white p-6 rounded-2xl shadow-sm flex flex-col h-full hover:shadow-md transition-shadow">
+              <div className="flex gap-0.5 mb-4">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-[#D4AF97] text-[#D4AF97]" />
+                  <Star key={i} className="size-3 fill-[#D4AF97] text-[#D4AF97]" />
                 ))}
               </div>
 
               <CardContent className="flex-1 p-0">
-                <p className="text-[#2C2C2C] leading-relaxed italic mb-8">
-                  “{testimonial.message}”
+                <p className="text-[#2C2C2C] text-[13px] leading-relaxed italic mb-6">
+                  “{t.message}”
                 </p>
               </CardContent>
 
-              <div className="flex items-center gap-4 pt-6 border-t border-[#E5E0D8]">
-                <img 
-                  src={testimonial.avatar} 
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover border border-[#E5E0D8]"
-                />
+              <div className="flex items-center gap-3 pt-5 border-t border-[#F0EDE6]">
+                <div className="relative size-10 rounded-full overflow-hidden border border-[#E5E0D8]">
+                  <img 
+                    src={t.avatar} 
+                    alt={t.name}
+                    className="object-cover size-full"
+                  />
+                </div>
                 <div>
-                  <p className="font-medium text-[#2C2C2C]">{testimonial.name}</p>
-                  <p className="text-sm text-[#6B6B6B]">{testimonial.date}</p>
+                  <p className="text-xs font-bold text-[#2C2C2C]">{t.name}</p>
+                  <p className="text-[10px] text-[#9B9B9B] font-medium">{t.date}</p>
                 </div>
               </div>
             </Card>
           ))}
         </div>
 
-        <div className="text-center mt-12 text-sm text-[#6B6B6B]">
-          Bergabunglah dengan ribuan pasangan Indonesia yang telah mempercayai kami
+        <div className="text-center mt-10">
+          <p className="text-[10px] text-[#9B9B9B] font-bold uppercase tracking-[0.2em] opacity-70">
+            Trusted by 2,000+ Happy Couples
+          </p>
         </div>
       </div>
     </section>

@@ -3,131 +3,114 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@custom-variant dark (&:is(.dark *)); /* tetap disimpan untuk kompatibilitas */
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: #F8F5F0;        /* Soft cream - nyaman di mata */
-  --color-foreground: #2C2C2C;        /* Dark gray - mudah dibaca */
-  
+  /* Colors - Tetap sesuai identitas visual Anda */
+  --color-background: #F8F5F0;
+  --color-foreground: #2C2C2C;
   --color-card: #FFFFFF;
   --color-card-foreground: #2C2C2C;
-  
   --color-popover: #FFFFFF;
   --color-popover-foreground: #2C2C2C;
-
-  /* Primary = Elegant Gold */
   --color-primary: #D4AF97;
   --color-primary-foreground: #2C2C2C;
-
   --color-secondary: #F0EDE6;
   --color-secondary-foreground: #2C2C2C;
-
   --color-muted: #F0EDE6;
   --color-muted-foreground: #6B6B6B;
-
   --color-accent: #D4AF97;
   --color-accent-foreground: #2C2C2C;
-
   --color-destructive: #B95C5C;
   --color-border: #E5E0D8;
   --color-input: #F8F5F0;
   --color-ring: #D4AF97;
 
-  --radius-sm: 0.5rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.25rem;
+  /* Radius - Sedikit dikurangi agar tidak terlalu memakan space visual */
+  --radius-sm: 0.4rem;
+  --radius-md: 0.6rem;
+  --radius-lg: 0.8rem;
+  --radius-xl: 1rem;
 
   --font-sans: var(--font-poppins);
   --font-heading: var(--font-poppins);
 }
 
-/* Light Mode Only - Eye Friendly */
 :root {
   --background: #F8F5F0;
   --foreground: #2C2C2C;
-  --card: #FFFFFF;
-  --card-foreground: #2C2C2C;
-  --popover: #FFFFFF;
-  --popover-foreground: #2C2C2C;
   --primary: #D4AF97;
-  --primary-foreground: #2C2C2C;
-  --secondary: #F0EDE6;
-  --secondary-foreground: #2C2C2C;
-  --muted: #F0EDE6;
-  --muted-foreground: #6B6B6B;
-  --accent: #D4AF97;
-  --accent-foreground: #2C2C2C;
-  --destructive: #B95C5C;
-  --border: #E5E0D8;
-  --input: #F8F5F0;
-  --ring: #D4AF97;
+  /* ... variabel lainnya mengikuti @theme ... */
 }
 
-/* Base Styles */
 @layer base {
   * {
     @apply border-border;
+    /* Mencegah overflow horizontal secara global pada elemen */
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    /* Mencegah scroll horizontal pada body */
+    overflow-x: hidden; 
+    width: 100%;
   }
 
   html {
     @apply font-sans scroll-smooth;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight text-[#2C2C2C];
-  }
+  /* Responsive Typography: Agar heading tidak terlalu raksasa di mobile */
+  h1 { @apply text-3xl md:text-5xl font-bold leading-tight; }
+  h2 { @apply text-2xl md:text-4xl font-semibold leading-tight; }
+  h3 { @apply text-xl md:text-2xl font-semibold; }
 }
 
-/* Utility Classes */
 @layer utilities {
-  .gold-text {
-    color: #D4AF97;
-  }
+  .gold-text { color: #D4AF97; }
+  .gold-border { border-color: #D4AF97; }
 
-  .gold-border {
-    border-color: #D4AF97;
-  }
-
+  /* FIX: Section Padding dibuat responsive */
+  /* py-12 di mobile, py-24 di desktop (md) */
   .section-padding {
-    @apply py-24 px-6;
+    @apply py-12 md:py-24 px-4 md:px-8;
   }
 
+  /* FIX: Card Premium agar lebih ringan di mobile */
   .card-premium {
-    @apply bg-white border border-[#E5E0D8] rounded-2xl shadow-sm hover:shadow-md transition-all;
+    @apply bg-white border border-[#E5E0D8] rounded-xl md:rounded-2xl 
+           p-5 md:p-8 shadow-sm hover:shadow-md transition-all;
   }
 
-    .no-scrollbar {
-    -ms-overflow-style: none; /* IE & Edge lama */
-    scrollbar-width: none; /* Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
-
   .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+    display: none;
   }
 }
 
-/* Button Styles */
 @layer components {
+  /* Perbaikan Button: Menambahkan padding yang lebih proporsional */
   .btn-primary {
-    @apply bg-[#D4AF97] text-[#2C2C2C] hover:bg-[#E8C8A0] font-medium transition-all;
+    @apply inline-flex items-center justify-center px-6 py-2.5 
+           bg-[#D4AF97] text-[#2C2C2C] hover:bg-[#E8C8A0] 
+           rounded-lg font-medium transition-all active:scale-95;
   }
 
   .btn-outline {
-    @apply border border-[#D4AF97] text-[#2C2C2C] hover:bg-[#D4AF97]/10 transition-all;
+    @apply inline-flex items-center justify-center px-6 py-2.5 
+           border border-[#D4AF97] text-[#2C2C2C] hover:bg-[#D4AF97]/10 
+           rounded-lg transition-all active:scale-95;
   }
 }
 
 @theme {
   --animate-shimmer: shimmer 2s infinite linear;
-
   @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
+    100% { transform: translateX(100%); }
   }
 }

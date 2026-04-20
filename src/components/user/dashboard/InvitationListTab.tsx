@@ -9,19 +9,30 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   Calendar, 
   ExternalLink, 
   Settings2, 
-  Users, 
-  MessageSquare 
+  MessageSquare, 
+  MoreHorizontal,
+  Eye,
+  Share2,
+  Trash2,
+  Globe
 } from "lucide-react";
 import Link from "next/link";
 import { DeleteInvitationButton } from "./DeleteInvitationButton";
 import { ShareInvitationModal } from "./ShareInvitationModal";
-import { DownloadGuestDataButton } from "./DownloadGuestDataButton";
 
 interface InvitationWithStats {
   id: string;
@@ -40,80 +51,118 @@ interface InvitationWithStats {
 
 export function InvitationListTab({ invitations }: { invitations: InvitationWithStats[] }) {
   return (
-    <div className="bg-white border border-[#E5E0D8] rounded-2xl overflow-hidden animate-in fade-in duration-700">
+    <div className="bg-white border border-[#F0EDE6] rounded-[2rem] overflow-hidden shadow-sm animate-in fade-in duration-700">
       <Table>
-        <TableHeader className="bg-[#F8F5F0]">
-          <TableRow className="hover:bg-transparent border-[#E5E0D8]">
-            <TableHead className="font-bold text-[#2C2C2C] py-4">Nama Acara</TableHead>
-            <TableHead className="font-bold text-[#2C2C2C]">Tanggal</TableHead>
-            <TableHead className="font-bold text-[#2C2C2C]">Status</TableHead>
-            <TableHead className="font-bold text-[#2C2C2C]">Stats</TableHead>
-            <TableHead className="font-bold text-[#2C2C2C] text-right">Aksi</TableHead>
+        <TableHeader className="bg-[#FDFCFB]">
+          <TableRow className="hover:bg-transparent border-[#F0EDE6]">
+            <TableHead className="py-5 px-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Detail Undangan</TableHead>
+            <TableHead className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Jadwal Acara</TableHead>
+            <TableHead className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Status</TableHead>
+            <TableHead className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Engagement</TableHead>
+            <TableHead className="text-right px-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B]">Opsi</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {invitations.length > 0 ? (
             invitations.map((item) => {
-              const eventDate = item.contentData?.acara?.[0]?.tanggal || "-";
+              const eventDate = item.contentData?.acara?.[0]?.tanggal || "Belum diatur";
               
               return (
-                <TableRow key={item.id} className="border-[#E5E0D8] hover:bg-slate-50/50 transition-colors">
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[#2C2C2C]">{item.title}</span>
-                      <span className="text-xs text-[#6B6B6B] uppercase tracking-wider">
-                        {item.template?.category || "Custom"}
+                <TableRow key={item.id} className="border-[#F0EDE6] hover:bg-[#FDFCFB]/50 transition-colors group">
+                  <TableCell className="px-6 py-5">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="font-bold text-[#2C2C2C] tracking-tight group-hover:text-[#D4AF97] transition-colors">
+                        {item.title}
                       </span>
+                      <div className="flex items-center gap-1.5">
+                        <Globe className="size-3 text-[#9B9B9B]" />
+                        <span className="text-[10px] text-[#9B9B9B] font-bold uppercase tracking-widest">
+                          {item.slug}
+                        </span>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2 text-[#6B6B6B] text-sm">
-                      <Calendar className="size-3.5 text-[#D4AF97]" />
+                    <div className="flex items-center gap-2 text-[#6B6B6B] text-xs font-medium">
+                      <div className="p-1.5 rounded-lg bg-[#D4AF97]/5 text-[#D4AF97]">
+                        <Calendar className="size-3.5" />
+                      </div>
                       {eventDate}
                     </div>
                   </TableCell>
                   <TableCell>
                     {item.isActive ? (
-                      <Badge variant="outline" className="bg-emerald-50 text-emerald-600 border-emerald-100 rounded-full px-3">
-                        Aktif
-                      </Badge>
+                      <div className="flex items-center gap-1.5 text-emerald-600">
+                        <div className="size-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-wider">Live</span>
+                      </div>
                     ) : (
-                      <Badge variant="secondary" className="bg-slate-100 text-slate-500 border-slate-200 rounded-full px-3">
-                        Nonaktif
-                      </Badge>
+                      <div className="flex items-center gap-1.5 text-[#9B9B9B]">
+                        <div className="size-1.5 rounded-full bg-[#E5E0D8]" />
+                        <span className="text-[10px] font-black uppercase tracking-wider">Draft</span>
+                      </div>
                     )}
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5" title="Jumlah RSVP">
-                        <MessageSquare className="size-3.5 text-[#D4AF97]" />
-                        <span className="text-sm font-medium">{item._count.guestWishes}</span>
+                      <div className="flex items-center gap-2 px-2.5 py-1 rounded-full border border-[#F0EDE6] bg-white" title="Pesan Ucapan">
+                        <MessageSquare className="size-3 text-[#D4AF97]" />
+                        <span className="text-xs font-bold text-[#2C2C2C]">{item._count.guestWishes}</span>
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button asChild variant="outline" className="flex-1 rounded-xl h-10 text-xs gap-2">
-                        <Link href={`/edit/${item.id}`}>
-                          <Settings2 className="size-3.5" /> Edit
-                        </Link>
-                      </Button>
-                      <Button asChild variant="secondary" className="flex-1 rounded-xl h-10 text-xs gap-2">
-                        <a href={`/undangan/preview/${item.slug}`} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="size-3.5" /> Preview
-                        </a>
-                      </Button>
-                      <ShareInvitationModal slug={item.slug} title={item.title} />
-                      <DeleteInvitationButton id={item.id} title={item.title} />
-                    </div>
+                  <TableCell className="text-right px-6">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost">
+                          <MoreHorizontal className="size-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-52 rounded-2xl border-[#F0EDE6] p-2 shadow-xl shadow-[#D4AF97]/5">
+                        <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] px-3 py-2">
+                          Manajemen Konten
+                        </DropdownMenuLabel>
+                        <DropdownMenuItem asChild className="rounded-xl focus:bg-[#FDFCFB] focus:text-[#D4AF97] cursor-pointer">
+                          <Link href={`/edit/${item.id}`} className="flex items-center gap-2 w-full py-2.5 font-bold text-xs text-[#2C2C2C]">
+                            <Settings2 className="size-4" /> Edit Undangan
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild className="rounded-xl focus:bg-[#FDFCFB] focus:text-[#D4AF97] cursor-pointer">
+                          <a href={`/undangan/preview/${item.slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 w-full py-2.5 font-bold text-xs text-[#2C2C2C]">
+                            <Eye className="size-4" /> Lihat Preview
+                          </a>
+                        </DropdownMenuItem>
+                        
+                        <DropdownMenuSeparator className="bg-[#F0EDE6] my-1" />
+                        
+                        <DropdownMenuLabel className="text-[10px] font-black uppercase tracking-[0.2em] text-[#9B9B9B] px-3 py-2">
+                          Distribusi & Data
+                        </DropdownMenuLabel>
+                        <div className="p-1 space-y-1">
+                           {/* Kita bungkus modal dalam div/custom item agar trigger tetap elegan */}
+                          <div className="flex items-center gap-2 w-full px-2 py-2 text-xs font-bold text-[#2C2C2C] hover:bg-[#FDFCFB] hover:text-[#D4AF97] rounded-xl transition-all cursor-pointer">
+                            <ShareInvitationModal slug={item.slug} title={item.title}/>
+                          </div>
+                        </div>
+
+                        <DropdownMenuSeparator className="bg-[#F0EDE6] my-1" />
+                        
+                        <div className="p-1">
+                          <DeleteInvitationButton id={item.id} title={item.title} />
+                        </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               );
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={5} className="h-32 text-center text-[#6B6B6B]">
-                Belum ada undangan.
+              <TableCell colSpan={5} className="h-40 text-center">
+                <div className="flex flex-col items-center justify-center gap-2 text-[#9B9B9B]">
+                  <Globe className="size-8 opacity-20" />
+                  <p className="text-[11px] font-black uppercase tracking-widest">Belum ada kampanye aktif</p>
+                </div>
               </TableCell>
             </TableRow>
           )}

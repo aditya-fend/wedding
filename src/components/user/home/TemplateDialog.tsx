@@ -21,193 +21,138 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Eye } from "lucide-react";
+import { Eye, Search } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Template } from "@/types/invitation";
+import { cn } from "@/lib/utils";
 
-type TemplateItem = Template & {
-  thumbnailLabel?: string;
-};
-
-function TemplateCard({ template }: { template: TemplateItem }) {
+export function TemplateCard({ template }: { template: Template & { thumbnailLabel?: string } }) {
   return (
-    <Card className="group overflow-hidden rounded-[1.75rem] border-border bg-white shadow-sm transition-all duration-300 hover:shadow-xl">
-      <div className="relative h-44 overflow-hidden rounded-t-3xl">
+    <Card className="group overflow-hidden rounded-2xl border-[#E5E0D8] bg-white shadow-sm transition-all duration-300 hover:shadow-md">
+      {/* Thumbnail: Tinggi dikurangi dari h-44 ke h-36 agar lebih kompak */}
+      <div className="relative h-36 overflow-hidden">
         {template.thumbnailUrl ? (
           <Image
             src={template.thumbnailUrl}
             alt={template.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-linear-to-br from-[#F6EEE6] via-[#F8F3EE] to-[#FDF8F4] px-4 text-center">
-            <div>
-              <div className="mb-3 inline-flex items-center justify-center rounded-full bg-[#D4AF97]/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#2C2C2C]">
-                {template.category}
-              </div>
-              <p className="text-sm font-semibold text-[#2C2C2C]">
-                {template.title}
-              </p>
-            </div>
+          <div className="flex h-full items-center justify-center bg-[#FDFCFB] px-4 text-center">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF97] opacity-60">
+              No Preview
+            </p>
           </div>
         )}
-        {/* Overlay kategori untuk thumbnail */}
-        {template.thumbnailUrl && (
-          <div className="absolute top-3 left-3">
-            <div className="inline-flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-[#2C2C2C]">
-              {template.category}
-            </div>
+        {/* Badge: Ukuran teks diperkecil ke text-[10px] */}
+        <div className="absolute top-2.5 left-2.5">
+          <div className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-sm px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#2C2C2C] shadow-sm">
+            {template.category}
           </div>
-        )}
-      </div>
-      <CardContent className="space-y-4 px-5 pb-0 pt-5 grow">
-        <div className="space-y-2">
-          <h3 className="text-lg font-semibold text-[#2C2C2C] tracking-tight transition-colors group-hover:text-[#D4AF97]">
-            {template.title}
-          </h3>
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            {template.description ||
-              "Template undangan digital eksklusif untuk momen spesial Anda."}
-          </p>
         </div>
+      </div>
+
+      <CardContent className="p-4 pb-0">
+        <h3 className="text-sm font-bold text-[#2C2C2C] truncate group-hover:text-[#D4AF97] transition-colors">
+          {template.title}
+        </h3>
+        <p className="mt-1 text-xs leading-relaxed text-[#6B6B6B] line-clamp-2">
+          {template.description || "Template undangan digital eksklusif."}
+        </p>
       </CardContent>
-      <CardFooter className="flex gap-3 flex-col items-stretch sm:flex-row sm:justify-between sm:items-center px-5 pt-4 pb-5">
-        <Button
-          variant="outline"
-          size="sm"
-          asChild
-          className="w-full sm:w-auto rounded-xl"
-        >
-          <Link
-            href={template.previewUrl || "#"}
-            className="inline-flex items-center gap-2"
-          >
-            <Eye className="size-4" /> Preview
+
+      <CardFooter className="flex gap-2 p-4 pt-3">
+        <Button variant="outline" size="sm" asChild className="h-8 flex-1 rounded-lg text-[11px] border-[#E5E0D8]">
+          <Link href={template.previewUrl || "#"}>
+            <Eye className="mr-1.5 size-3" /> Preview
           </Link>
         </Button>
-        <Button size="sm" className="w-full sm:w-auto rounded-xl">
-          <Link
-            href="/masuk"
-            className="inline-flex items-center gap-2"
-          >
-            Pilih Template
-          </Link>
+        <Button size="sm" className="h-8 flex-1 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]">
+          <Link href="/masuk">Pilih</Link>
         </Button>
       </CardFooter>
     </Card>
   );
 }
 
-interface TemplateDialogProps {
-  templates: Template[];
-}
-
-export function TemplateDialog({ templates }: TemplateDialogProps) {
+export function TemplateDialog({ templates }: { templates: Template[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Semua Kategori");
-  const [categories, setCategories] = useState<string[]>([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [categories, setCategories] = useState<string[]>(["Semua Kategori"]);
 
-  // Fetch categories from API on mount
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch("/api/templates/categories");
-        if (response.ok) {
-          const data = await response.json();
-          setCategories(["Semua Kategori", ...data.categories]);
-        } else {
-          // Fallback: derive categories from templates
-          const uniqueCategories = Array.from(
-            new Set(templates.map((item) => item.category)),
-          );
-          setCategories(["Semua Kategori", ...uniqueCategories]);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        // Fallback: derive categories from templates
-        const uniqueCategories = Array.from(
-          new Set(templates.map((item) => item.category)),
-        );
-        setCategories(["Semua Kategori", ...uniqueCategories]);
-      } finally {
-        setIsLoadingCategories(false);
-      }
-    };
-
-    fetchCategories();
+    const unique = Array.from(new Set(templates.map((t) => t.category)));
+    setCategories(["Semua Kategori", ...unique]);
   }, [templates]);
 
   const filteredTemplates = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-
-    return templates.filter((template) => {
-      const matchesCategory =
-        selectedCategory === "Semua Kategori" ||
-        template.category === selectedCategory;
-      const matchesQuery =
-        query === "" ||
-        template.title.toLowerCase().includes(query) ||
-        template.description?.toLowerCase().includes(query) ||
-        template.category.toLowerCase().includes(query);
-
-      return matchesCategory && matchesQuery;
+    return templates.filter((t) => {
+      const mCat = selectedCategory === "Semua Kategori" || t.category === selectedCategory;
+      const mQue = !query || t.title.toLowerCase().includes(query) || t.category.toLowerCase().includes(query);
+      return mCat && mQue;
     });
   }, [searchQuery, selectedCategory, templates]);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full sm:w-auto">Lihat Semua Template</Button>
+        <Button variant="outline" className="h-10 px-6 rounded-xl border-[#D4AF97] text-[#2C2C2C] text-sm">
+          Lihat Semua Template
+        </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-6xl">
-        <DialogHeader>
-          <DialogTitle>Semua Template</DialogTitle>
-          <DialogDescription>
-            Cari template sesuai kategori dan kata kunci. Temukan desain yang
-            cocok untuk gaya undangan Anda.
+      
+      {/* Dialog Content: max-w-5xl (lebih ramping) dan max-h-screen */}
+      <DialogContent className="md:min-w-4xl lg:min-w-5xl max-h-[90vh] overflow-hidden flex flex-col p-0 rounded-2xl border-none">
+        <DialogHeader className="p-6 pb-0">
+          <DialogTitle className="text-xl font-bold text-[#2C2C2C]">Katalog Template</DialogTitle>
+          <DialogDescription className="text-xs text-[#6B6B6B]">
+            Pilih desain yang paling menggambarkan momen bahagia Anda.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-[1.5fr_1fr]">
-          <Input
-            placeholder="Cari template..."
-            value={searchQuery}
-            onChange={(event) => setSearchQuery(event.target.value)}
-          />
+        {/* Filter Bar: Lebih compact */}
+        <div className="px-6 mt-4 flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[#6B6B6B]/50" />
+            <Input
+              placeholder="Cari desain..."
+              className="pl-9 h-9 text-xs rounded-lg border-[#E5E0D8]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger aria-label="Pilih kategori" className="w-full">
-              <SelectValue placeholder="Semua Kategori" />
+            <SelectTrigger className="h-9 w-full sm:w-[180px] text-xs rounded-lg border-[#E5E0D8]">
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
+              {categories.map((c) => (
+                <SelectItem key={c} value={c} className="text-xs">{c}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-          {filteredTemplates.length > 0 ? (
-            filteredTemplates.map((template) => (
-              <TemplateCard key={template.id} template={template} />
-            ))
-          ) : (
-            <div className="col-span-full rounded-3xl border border-dashed border-border bg-[#FBF8F4] p-10 text-center text-sm text-muted-foreground">
-              Tidak ada template yang sesuai dengan filter Anda. Coba kata kunci
-              lain atau pilih kategori lain.
-            </div>
-          )}
+        {/* Scrollable Area */}
+        <div className="flex-1 overflow-y-auto p-6 pt-4 no-scrollbar">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredTemplates.length > 0 ? (
+              filteredTemplates.map((t) => <TemplateCard key={t.id} template={t} />)
+            ) : (
+              <div className="col-span-full py-20 text-center rounded-2xl border border-dashed border-[#E5E0D8] bg-[#FDFCFB]">
+                <p className="text-xs text-[#6B6B6B]">Template tidak ditemukan.</p>
+              </div>
+            )}
+          </div>
         </div>
 
-        <DialogFooter className="mt-6 justify-end">
+        <DialogFooter className="p-4 border-t border-[#F0EDE6] bg-[#FDFCFB]/50">
           <DialogClose asChild>
-            <Button variant="secondary">Tutup</Button>
+            <Button variant="ghost" size="sm" className="text-xs hover:bg-[#F0EDE6]">Tutup</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

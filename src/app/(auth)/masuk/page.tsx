@@ -15,8 +15,9 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, KeyRound, Mail, Loader2 } from "lucide-react";
+import { LogIn, KeyRound, Mail, Loader2, ChevronLeft } from "lucide-react";
 import { getUserRole } from "@/lib/actions/auth";
+import { cn } from "@/lib/utils";
 
 export default function MasukPage() {
   const [email, setEmail] = useState("");
@@ -50,74 +51,64 @@ export default function MasukPage() {
       return;
     }
 
-    // 🔥 Ambil role dari database
     const actualRole = await getUserRole(data.user.id);
 
     await fetch("/api/set-session", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: data.user.id,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: data.user.id }),
     });
 
     toast.success("Login berhasil! Mengalihkan...");
-
-    // 🔥 PENTING: tunggu sebentar agar cookie Supabase tersimpan
     await new Promise((resolve) => setTimeout(resolve, 300));
-
-    // 🔥 Refresh dulu supaya server component kebaca session
     router.refresh();
 
-    // 🔥 Baru redirect
     if (actualRole === "admin") {
       router.push("/admin");
     } else {
       router.push("/dashboard");
     }
-
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center p-6">
-      <div className="w-full max-w-[420px] space-y-8">
+    <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center p-4">
+      <div className="w-full max-w-[400px] space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        
         {/* Brand Header */}
         <div className="text-center space-y-2">
-          <Link href="/" className="inline-block">
-            <h1 className="text-3xl font-bold tracking-tight text-[#2C2C2C]">
-              Undang Dong
-            </h1>
+          <Link href="/" className="inline-block font-bold text-2xl tracking-tighter text-[#2C2C2C]">
+            Undang<span className="text-[#D4AF97]">Dong</span>
           </Link>
-          <p className="text-[#6B6B6B]">
-            Kelola undangan digital Anda dengan mudah
+          <p className="text-[#9B9B9B] text-[10px] font-bold uppercase tracking-[0.2em]">
+            Welcome Back • Member Access
           </p>
         </div>
 
-        <Card className="border-[#E5E0D8] shadow-xl">
-          <CardHeader className="space-y-1 pb-6 text-center">
-            <CardTitle className="text-2xl font-semibold text-[#2C2C2C]">
-              Selamat Datang Kembali
+        <Card className="border-[#F0EDE6] shadow-xl shadow-[#D4AF97]/5 rounded-[2rem] overflow-hidden bg-white">
+          <CardHeader className="bg-[#FDFCFB] border-b border-[#F0EDE6] p-6 md:p-8 text-center space-y-2">
+            <CardTitle className="text-xl md:text-2xl font-bold text-[#2C2C2C] tracking-tight">
+              Selamat Datang
             </CardTitle>
-            <CardDescription className="text-[#6B6B6B]">
-              Masuk untuk melanjutkan pengaturan undangan Anda.
+            <CardDescription className="text-xs md:text-sm text-[#6B6B6B] leading-relaxed">
+              Masuk untuk melanjutkan pengaturan dan pantau undangan digital Anda.
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6">
+          <CardContent className="p-6 md:p-8 space-y-6">
             <form onSubmit={handleLogin} className="space-y-4">
               {/* Input Email */}
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#6B6B6B]/50" />
+              <div className="space-y-1.5">
+                <Label htmlFor="email" className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]">
+                  Alamat Email
+                </Label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-[#9B9B9B] group-focus-within:text-[#D4AF97] transition-colors" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="nama@email.com"
-                    className="pl-10"
+                    className="pl-11 h-11 rounded-xl border-[#F0EDE6] focus:border-[#D4AF97] focus:ring-[#D4AF97]/10 transition-all bg-[#FDFCFB]/30"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -127,23 +118,22 @@ export default function MasukPage() {
               </div>
 
               {/* Input Password */}
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Kata Sandi</Label>
-                  <Link
-                    href="/lupa-password"
-                    className="text-xs text-[#D4AF97] font-medium hover:underline"
-                  >
+                  <Label htmlFor="password" className="text-[11px] font-bold uppercase tracking-widest text-[#2C2C2C]">
+                    Kata Sandi
+                  </Label>
+                  <Link href="/lupa-password" className="text-[10px] font-bold text-[#D4AF97] uppercase tracking-tighter hover:underline">
                     Lupa sandi?
                   </Link>
                 </div>
-                <div className="relative">
-                  <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#6B6B6B]/50" />
+                <div className="relative group">
+                  <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 size-4 text-[#9B9B9B] group-focus-within:text-[#D4AF97] transition-colors" />
                   <Input
                     id="password"
                     type="password"
                     placeholder="••••••••"
-                    className="pl-10"
+                    className="pl-11 h-11 rounded-xl border-[#F0EDE6] focus:border-[#D4AF97] focus:ring-[#D4AF97]/10 transition-all bg-[#FDFCFB]/30"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -156,35 +146,38 @@ export default function MasukPage() {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-11 text-base mt-2"
-                size="default"
+                className={cn(
+                  "w-full h-12 bg-[#D4AF97] hover:bg-[#B99575] text-white font-bold rounded-xl text-sm transition-all mt-2 shadow-lg shadow-[#D4AF97]/10",
+                  "flex items-center justify-center gap-2"
+                )}
               >
                 {loading ? (
-                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  <>
+                    <Loader2 className="size-4 animate-spin" />
+                    Memproses...
+                  </>
                 ) : (
-                  <LogIn className="mr-2 size-4" />
+                  <>
+                    <LogIn className="size-4" />
+                    Masuk Sekarang
+                  </>
                 )}
-                {loading ? "Memproses..." : "Masuk Sekarang"}
               </Button>
             </form>
 
-            {/* Separator untuk Footer Card */}
-            <div className="relative pt-2">
+            <div className="relative py-2">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-[#E5E0D8]" />
+                <span className="w-full border-t border-[#F0EDE6]" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-[#6B6B6B]">Atau</span>
+              <div className="relative flex justify-center text-[10px] font-bold uppercase tracking-widest">
+                <span className="bg-white px-4 text-[#9B9B9B]">Atau</span>
               </div>
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-xs text-[#9B9B9B] font-medium">
                 Belum memiliki akun?{" "}
-                <Link
-                  href="/daftar"
-                  className="text-[#D4AF97] font-semibold hover:underline"
-                >
+                <Link href="/daftar" className="text-[#D4AF97] font-bold hover:underline italic">
                   Daftar di sini
                 </Link>
               </p>
@@ -192,11 +185,15 @@ export default function MasukPage() {
           </CardContent>
         </Card>
 
-        {/* Footer Link */}
-        <p className="text-center text-xs text-[#6B6B6B]">
-          &copy; {new Date().getFullYear()} UndangDong. Semua hak cipta
-          dilindungi.
-        </p>
+        {/* Back Link & Copyright */}
+        <div className="flex flex-col items-center gap-4">
+          <Link href="/" className="text-[10px] font-bold uppercase tracking-widest text-[#9B9B9B] hover:text-[#2C2C2C] flex items-center transition-colors">
+            <ChevronLeft className="size-3 mr-1" /> Kembali ke Beranda
+          </Link>
+          <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
+            © 2026 UndangDong • Member Area
+          </p>
+        </div>
       </div>
     </div>
   );

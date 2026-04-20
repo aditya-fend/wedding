@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { Separator as SeparatorPrimitive } from "radix-ui"
-
 import { cn } from "@/lib/utils"
 
 function Separator({
@@ -17,9 +16,15 @@ function Separator({
       decorative={decorative}
       orientation={orientation}
       className={cn(
-        // Modifikasi: Menggunakan warna border spesifik tema (#E5E0D8)
-        // Penambahan opacity 0.8 untuk kesan yang lebih 'airy' dan elegan
-        "shrink-0 bg-[#E5E0D8]/80 data-horizontal:h-px data-horizontal:w-full data-vertical:h-full data-vertical:w-px",
+        "shrink-0 transition-opacity",
+        // Menggunakan warna tema dengan opasitas yang lebih dinamis
+        // Opasitas 60% memberikan kesan 'invisible until noticed' yang sangat mewah
+        "bg-[#E5E0D8]/60",
+        // Logic dimensi
+        "data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full",
+        "data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px",
+        // Menambahkan margin otomatis yang aman untuk mobile agar tidak sesak
+        "data-[orientation=horizontal]:my-4 md:data-[orientation=horizontal]:my-6",
         className
       )}
       {...props}

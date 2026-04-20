@@ -1,18 +1,18 @@
 "use client"
 
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full overflow-x-auto"
+      // Perbaikan: Shadow halus dan rounded agar kontainer tabel terlihat seperti kartu premium
+      className="relative w-full overflow-x-auto rounded-xl border border-[#E5E0D8] bg-white shadow-sm"
     >
       <table
         data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
+        className={cn("w-full caption-bottom text-sm text-[#2C2C2C]", className)}
         {...props}
       />
     </div>
@@ -23,7 +23,8 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      // Header menggunakan background cream sangat tipis agar hirarki jelas
+      className={cn("bg-[#F0EDE6]/30 [&_tr]:border-b border-[#E5E0D8]", className)}
       {...props}
     />
   )
@@ -44,7 +45,7 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
     <tfoot
       data-slot="table-footer"
       className={cn(
-        "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
+        "border-t border-[#E5E0D8] bg-[#F0EDE6]/50 font-medium [&>tr]:last:border-b-0",
         className
       )}
       {...props}
@@ -57,7 +58,7 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     <tr
       data-slot="table-row"
       className={cn(
-        "border-b transition-colors hover:bg-muted/50 has-aria-expanded:bg-muted/50 data-[state=selected]:bg-muted",
+        "border-b border-[#E5E0D8] transition-colors hover:bg-[#F0EDE6]/20 data-[state=selected]:bg-[#F0EDE6]/40",
         className
       )}
       {...props}
@@ -70,7 +71,8 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     <th
       data-slot="table-head"
       className={cn(
-        "h-10 px-2 text-left align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pr-0",
+        // Padding lebih lega (px-4) agar teks tidak menempel ke garis
+        "h-12 px-4 text-left align-middle font-bold uppercase text-[11px] tracking-widest text-[#6B6B6B] whitespace-nowrap [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -83,7 +85,8 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+        // Responsivitas: text-base di mobile (mudah dibaca), text-sm di desktop
+        "p-4 align-middle text-base md:text-sm whitespace-nowrap [&:has([role=checkbox])]:pr-0",
         className
       )}
       {...props}
@@ -98,7 +101,7 @@ function TableCaption({
   return (
     <caption
       data-slot="table-caption"
-      className={cn("mt-4 text-sm text-muted-foreground", className)}
+      className={cn("p-4 text-xs italic text-[#6B6B6B]/80", className)}
       {...props}
     />
   )
