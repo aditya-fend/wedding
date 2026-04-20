@@ -60,7 +60,7 @@ export default async function DashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-4 shrink-0">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 shrink-0">
           <div className="animate-in fade-in zoom-in-95 duration-700 delay-300">
             <AddTokensModal currentTokens={totalTokens} totalTokens={totalTokens}/>
           </div>

@@ -27,27 +27,32 @@ export default function CreateMobileView({
   initialData,
   initialTemplate,
 }: CreateMobileViewProps) {
-  const { 
-    formData, 
-    setFormData, 
-    setInvitationId, 
-    setIsSaving, 
-    activeTemplate, 
-    setActiveTemplate 
+  const {
+    formData,
+    setFormData,
+    setInvitationId,
+    setIsSaving,
+    activeTemplate,
+    setActiveTemplate,
   } = useEditorStore();
-  
+
   const [isPreviewOpen, setIsPreviewOpen] = React.useState(false);
-  const [isMounted, setIsMounted] = React.useState(false);
 
   // 1. Sinkronisasi Awal (Hanya dijalankan sekali saat mount)
   React.useEffect(() => {
-    if (initialData && !isMounted) {
+    if (initialData && !hasData ) {
       setFormData(initialData);
       setInvitationId(invitationId);
       setActiveTemplate(initialTemplate);
-      setIsMounted(true);
     }
-  }, [initialData, invitationId, initialTemplate, setFormData, setInvitationId, setActiveTemplate, isMounted]);
+  }, [
+    initialData,
+    invitationId,
+    initialTemplate,
+    setFormData,
+    setInvitationId,
+    setActiveTemplate,
+  ]);
 
   // 2. Logika Auto-save (Debounced 1.5 detik)
   const debouncedSave = useDebouncedCallback(
@@ -67,13 +72,16 @@ export default function CreateMobileView({
 
   // Trigger Save ketika data atau template berubah
   React.useEffect(() => {
-    if (isMounted && formData && (Object.keys(formData).length > 0 || activeTemplate)) {
+    if (
+      formData &&
+      (Object.keys(formData).length > 0 || activeTemplate)
+    ) {
       debouncedSave(formData, activeTemplate);
     }
-  }, [formData, activeTemplate, debouncedSave, isMounted]);
+  }, [formData, activeTemplate, debouncedSave]);
 
   // Handle Loading State yang lebih premium
-  if (!isMounted || !formData || Object.keys(formData).length === 0) {
+  if (!formData || Object.keys(formData).length === 0) {
     return (
       <div className="h-screen w-full flex items-center justify-center bg-[#FDFCFB]">
         <div className="flex flex-col items-center gap-6">
@@ -87,7 +95,11 @@ export default function CreateMobileView({
             </p>
             <div className="flex gap-1 justify-center">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="size-1 rounded-full bg-[#D4AF97]/40 animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                <div
+                  key={i}
+                  className="size-1 rounded-full bg-[#D4AF97]/40 animate-bounce"
+                  style={{ animationDelay: `${i * 0.2}s` }}
+                />
               ))}
             </div>
           </div>
@@ -96,13 +108,15 @@ export default function CreateMobileView({
     );
   }
 
+  const hasData = formData && Object.keys(formData).length > 0;
+
   return (
     <div className="flex flex-col h-screen bg-[#F8F5F0] overflow-hidden relative">
       {/* ── TOP STATUS BAR (Optional) ── */}
       <div className="h-1 w-full bg-slate-100 overflow-hidden shrink-0">
         <AnimatePresence>
           {useEditorStore.getState().isSaving && (
-            <motion.div 
+            <motion.div
               initial={{ x: "-100%" }}
               animate={{ x: "0%" }}
               exit={{ opacity: 0 }}
@@ -114,17 +128,17 @@ export default function CreateMobileView({
       </div>
 
       {/* ── SCROLLABLE EDITOR AREA ── */}
-      <div className="flex-1 h-full overflow-y-auto pb-32 no-scrollbar bg-[#F8F5F0]">
+      <div className="flex-1 pt-14 overflow-y-auto no-scrollbar min-h-0 bg-[#F8F5F0]">
         <EditorSidebar templates={templates} musics={musics} />
       </div>
 
       {/* ── FLOATING ACTION BUTTON ── */}
-      <div className="absolute bottom-8 right-6 z-[100]">
+      <div className="absolute bottom-8 right-6 z-[100] pointer-events-none">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsPreviewOpen(true)}
-          className="group relative size-16 flex items-center justify-center rounded-full bg-[#2C2C2C] text-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-[3px] border-white overflow-hidden"
+          className="pointer-events-auto group relative size-16 flex items-center justify-center rounded-full bg-[#2C2C2C] text-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border-[3px] border-white overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-[#D4AF97]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           <Play size={24} className="fill-white ml-1 relative z-10" />
@@ -142,7 +156,6 @@ export default function CreateMobileView({
           >
             {/* Header Modal */}
             <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
-
               <button
                 onClick={() => setIsPreviewOpen(false)}
                 className="size-11 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-2xl text-white transition-all active:scale-90"
@@ -153,7 +166,7 @@ export default function CreateMobileView({
 
             {/* Container Preview (Memanggil Component LivePreview Anda) */}
             <div className="flex-1 overflow-hidden relative">
-               <LivePreview />
+              <LivePreview />
             </div>
           </motion.div>
         )}

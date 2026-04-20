@@ -23,28 +23,24 @@ export default function EditInvitationClient({
   initialTemplate,
   slug,
 }: EditInvitationClientProps) {
-  const [isMobile, setIsMobile] = useState<boolean | null>(() => {
-    if (typeof window !== "undefined") {
-      return window.innerWidth < 1024;
-    }
-    return null;
-  });
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024);
     };
 
-    if (isMobile === null) checkMobile();
+    checkMobile();
     window.addEventListener("resize", checkMobile);
+
     return () => window.removeEventListener("resize", checkMobile);
-  }, [isMobile]);
+  }, []);
 
   // Loading state while checking screen size
   if (isMobile === null) {
     return (
-      <div className="h-screen w-full flex items-center justify-center bg-[#F8F5F0]">
-        <div className="animate-pulse flex flex-col items-center gap-3">
+      <div className="flex flex-col h-screen bg-[#F8F5F0] overflow-hidden relative">
+        <div className="animate-pulse flex flex-col items-center gap-3 h-1 w-full bg-slate-100 overflow-hidden shrink-">
           <div className="size-8 bg-slate-200 rounded-full" />
           <div className="h-2 w-24 bg-slate-100 rounded" />
         </div>
