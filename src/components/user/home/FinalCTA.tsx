@@ -27,7 +27,7 @@ export default function FinalCTA() {
 
         {/* Button Group - Optimasi padding agar pas di layar kecil */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Link href="/register" className="w-full sm:w-auto">
+          <Link href="/daftar" className="w-full sm:w-auto">
             <Button 
               size="lg" 
               className="btn-primary text-base md:text-lg px-8 md:px-12 py-6 md:py-7 rounded-2xl font-medium flex items-center justify-center gap-3 group w-full"

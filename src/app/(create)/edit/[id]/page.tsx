@@ -39,7 +39,7 @@ export default async function EditInvitationPage({ params }: EditInvitationPageP
       <EditInvitationClient
         invitationId={invitation.id}
         initialData={initialData}
-        initialTemplate={invitation.template?.title || "Pink"}
+        initialTemplate={invitation.template?.title || "Royal"}
         templates={templates}
         musics={musics}
         slug={invitation.slug || ""}

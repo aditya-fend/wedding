@@ -27,7 +27,7 @@ export default async function PublicInvitationPage({
 
   const templateId = invitation.template?.title
     ? normalizeTemplateName(invitation.template.title).toLowerCase()
-    : "pink";
+    : "Royal";
 
   return (
     <PublicInvitationClient

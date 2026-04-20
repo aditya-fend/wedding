@@ -23,10 +23,10 @@ export default function Footer() {
             <h4 className="font-medium text-[#2C2C2C] mb-5">Navigasi</h4>
             <div className="space-y-3 text-sm">
               <Link
-                href="/"
+                href="#template"
                 className="block text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
               >
-                Beranda
+                Template
               </Link>
               <Link
                 href="#fitur"
@@ -35,16 +35,16 @@ export default function Footer() {
                 Fitur
               </Link>
               <Link
-                href="#template"
-                className="block text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
-              >
-                Template
-              </Link>
-              <Link
                 href="#harga"
                 className="block text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
               >
                 Harga
+              </Link>
+              <Link
+                href="/testimoni"
+                className="block text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
+              >
+                testimoni
               </Link>
             </div>
           </div>
@@ -97,9 +97,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="flex justify-between items-center mt-8">
+        <div className="flex justify-center items-center mt-8">
           <p className="text-xs text-[#6B6B6B]">
-            © 2026 UndangDong, Semua hak dilindungi
+            © 2026 Semua hak dilindungi, UndangDong
           </p>
           {/* <p className="text-xs text-[#6B6B6B]">
             <Link

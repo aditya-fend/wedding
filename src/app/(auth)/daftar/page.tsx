@@ -12,14 +12,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { 
-  InfoIcon, 
-  ArrowRight, 
-  CheckCircle2, 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  InfoIcon,
+  ArrowRight,
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
   ChevronLeft,
-  Crown
+  Crown,
 } from "lucide-react";
 import { PaymentModal } from "@/components/user/pay/modal-pembayaran";
 import { cn } from "@/lib/utils";
@@ -70,7 +70,9 @@ const packages = [
 export default function DaftarPage() {
   const [step, setStep] = React.useState(1);
   const [selectedPackage, setSelectedPackage] = React.useState("Basic");
-  const [expandedPackage, setExpandedPackage] = React.useState<string | null>("Basic");
+  const [expandedPackage, setExpandedPackage] = React.useState<string | null>(
+    "Basic",
+  );
   const [showPaymentModal, setShowPaymentModal] = React.useState(false);
   const [formData, setFormData] = React.useState({
     nama: "",
@@ -97,21 +99,28 @@ export default function DaftarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center p-4 md:p-6">
-      <div className="w-full max-w-120 space-y-6">
+    <div className="min-h-screen bg-[#F8F5F0] flex items-center justify-center p-3 sm:p-4 md:p-6">
+      <div className="w-full max-w-xl md:max-w-2xl space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight text-[#2C2C2C]">Undang Dong</h1>
-          <p className="text-muted-foreground text-sm">Wujudkan undangan pernikahan impian Anda</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[#2C2C2C]">
+            Undang Dong
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            Wujudkan undangan pernikahan impian Anda
+          </p>
         </div>
 
-        <Card className="border-border max-w-md mx-auto shadow-xl rounded-2xl overflow-hidden">
-          <CardHeader className="bg-white border-b border-border/50 pb-6">
+        <Card className="border-border w-full max-w-md md:max-w-xl mx-auto shadow-xl rounded-2xl overflow-hidden">
+          <CardHeader className="bg-white border-b border-border/50 pb-5 md:pb-6">
             <div className="flex justify-between items-center mb-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4AF97]">
                 Langkah {step} dari 2
               </span>
               {step === 2 && (
-                <button onClick={prevStep} className="text-xs flex items-center text-muted-foreground hover:text-[#2C2C2C]">
+                <button
+                  onClick={prevStep}
+                  className="text-xs flex items-center text-muted-foreground hover:text-[#2C2C2C]"
+                >
                   <ChevronLeft className="size-3 mr-1" /> Kembali
                 </button>
               )}
@@ -120,70 +129,109 @@ export default function DaftarPage() {
               {step === 1 ? "Pilih Paket Anda" : "Data Akun"}
             </CardTitle>
             <CardDescription className="text-[#6B6B6B]">
-              {step === 1 ? "Pilih layanan yang paling sesuai dengan kebutuhan pernikahan Anda." : "Lengkapi detail untuk pembuatan akun otomatis."}
+              {step === 1
+                ? "Pilih layanan yang paling sesuai dengan kebutuhan pernikahan Anda."
+                : "Lengkapi detail untuk pembuatan akun otomatis."}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="pt-6 space-y-6">
             {step === 1 ? (
               /* STEP 1: PILIH PAKET */
-              <div className="space-y-3">
+              <div className="space-y-3 md:space-y-4">
                 {packages.map((pkg) => (
-                  <div 
+                  <div
                     key={pkg.name}
                     className={cn(
                       "group border rounded-xl transition-all duration-200 cursor-pointer overflow-hidden",
-                      selectedPackage === pkg.name 
-                        ? "border-[#D4AF97] bg-[#F8F5F0]/50 ring-1 ring-[#D4AF97]" 
-                        : "border-[#E5E0D8] bg-white hover:border-[#D4AF97]/50"
+                      selectedPackage === pkg.name
+                        ? "border-[#D4AF97] bg-[#F8F5F0]/50 ring-1 ring-[#D4AF97]"
+                        : "border-[#E5E0D8] bg-white hover:border-[#D4AF97]/50",
                     )}
-                    onClick={(e) => {setSelectedPackage(pkg.name); e.stopPropagation(); toggleExpand(pkg.name);}}
+                    onClick={(e) => {
+                      setSelectedPackage(pkg.name);
+                      e.stopPropagation();
+                      toggleExpand(pkg.name);
+                    }}
                   >
                     <div className="p-4 flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className={cn(
-                          "size-5 rounded-full border flex items-center justify-center transition-colors",
-                          selectedPackage === pkg.name ? "border-[#D4AF97] bg-[#D4AF97]" : "border-[#E5E0D8]"
-                        )}>
-                          {selectedPackage === pkg.name && <div className="size-2 bg-white rounded-full" />}
+                        <div
+                          className={cn(
+                            "size-5 rounded-full border flex items-center justify-center transition-colors",
+                            selectedPackage === pkg.name
+                              ? "border-[#D4AF97] bg-[#D4AF97]"
+                              : "border-[#E5E0D8]",
+                          )}
+                        >
+                          {selectedPackage === pkg.name && (
+                            <div className="size-2 bg-white rounded-full" />
+                          )}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="font-bold text-[#2C2C2C]">{pkg.name}</p>
+                            <p className="font-bold text-[#2C2C2C]">
+                              {pkg.name}
+                            </p>
                             {pkg.popular && (
                               <span className="bg-[#D4AF97] text-white text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1">
                                 <Crown className="size-2" /> Populer
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-[#6B6B6B]">{pkg.description}</p>
+                          <p className="text-xs text-[#6B6B6B]">
+                            {pkg.description}
+                          </p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-bold text-[#2C2C2C]">Rp {pkg.price}</p>
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); toggleExpand(pkg.name); }}
+                        <p className="text-sm font-bold text-[#2C2C2C]">
+                          Rp {pkg.price}
+                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleExpand(pkg.name);
+                          }}
                           className="text-[#D4AF97] hover:bg-[#D4AF97]/10 rounded-full p-1 transition-colors"
                         >
-                          {expandedPackage === pkg.name ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
+                          {expandedPackage === pkg.name ? (
+                            <ChevronUp className="size-4" />
+                          ) : (
+                            <ChevronDown className="size-4" />
+                          )}
                         </button>
                       </div>
                     </div>
 
-                    {expandedPackage === pkg.name && (
-                      <div className="px-4 pb-4 pt-0 space-y-2 border-t border-[#E5E0D8]/30 mt-1">
-                        <p className="text-[10px] font-bold text-[#6B6B6B] uppercase pt-3">Fitur yang didapat:</p>
-                        {pkg.features.map((feat) => (
-                          <div key={feat} className="flex items-center gap-2 text-xs text-[#6B6B6B]">
-                            <CheckCircle2 className="size-3 text-[#D4AF97]" />
-                            {feat}
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                    <div
+                      className={cn(
+                        "px-4 space-y-2 border-t border-[#E5E0D8]/30 mt-1 overflow-hidden transition-all duration-300 ease-in-out",
+                        expandedPackage === pkg.name
+                          ? "max-h-44 opacity-100 py-3"
+                          : "max-h-0 opacity-0 py",
+                      )}
+                    >
+                      <p className="text-[10px] font-bold text-[#6B6B6B] uppercase pt-3">
+                        Fitur yang didapat:
+                      </p>
+                      {pkg.features.map((feat) => (
+                        <div
+                          key={feat}
+                          className="flex items-center gap-2 text-xs text-[#6B6B6B]"
+                        >
+                          <CheckCircle2 className="size-3 text-[#D4AF97]" />
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 ))}
-                <Button onClick={nextStep} className="w-full h-12 mt-4 btn-primary" size="lg">
+                <Button
+                  onClick={nextStep}
+                  className="w-full h-12 mt-4 btn-primary"
+                  size="lg"
+                >
                   Lanjut ke Data Diri <ArrowRight className="ml-2 size-4" />
                 </Button>
               </div>
@@ -192,33 +240,64 @@ export default function DaftarPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="nama">Nama Lengkap</Label>
-                  <Input id="nama" placeholder="Contoh: Aditya Tri Susanto" value={formData.nama} onChange={handleInputChange} required />
+                  <Input
+                    id="nama"
+                    placeholder="Contoh: Aditya Tri Susanto"
+                    value={formData.nama}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="nama@email.com" value={formData.email} onChange={handleInputChange} required />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="nama@email.com"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="whatsapp">Nomor WhatsApp</Label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-[#6B6B6B] font-medium border-r border-[#E5E0D8] pr-3">+62</span>
-                    <Input id="whatsapp" type="tel" placeholder="81234567890" className="pl-16" value={formData.whatsapp} onChange={handleInputChange} required />
+                  <div className="relative flex items-center">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-[#6B6B6B] font-medium border-r border-[#E5E0D8] pr-3">
+                      +62
+                    </span>
+                    <Input
+                      id="whatsapp"
+                      type="tel"
+                      placeholder="81234567890"
+                      className="pl-12"
+                      value={formData.whatsapp}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
 
                 <div className="bg-[#F0EDE6]/50 border border-[#D4AF97]/30 p-4 rounded-xl flex gap-3">
                   <InfoIcon className="w-5 h-5 text-[#D4AF97] shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="text-sm font-semibold text-[#2C2C2C]">Informasi Akun</p>
+                    <p className="text-sm font-semibold text-[#2C2C2C]">
+                      Informasi Akun
+                    </p>
                     <p className="text-xs leading-relaxed text-[#6B6B6B]">
-                      Kata sandi Anda akan dibuatkan secara otomatis oleh sistem setelah pembayaran paket <strong>{selectedPackage}</strong> terverifikasi.
+                      Kata sandi Anda akan dibuatkan secara otomatis oleh sistem
+                      setelah pembayaran paket{" "}
+                      <strong>{selectedPackage}</strong> terverifikasi.
                     </p>
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full h-12 text-base mt-2 btn-primary" size="lg">
+                <Button
+                  type="submit"
+                  className="w-full h-11 md:h-12 text-sm md:text-base mt-2 btn-primary"
+                  size="lg"
+                >
                   Selesaikan Pendaftaran <ArrowRight className="ml-2 size-4" />
                 </Button>
               </form>
@@ -227,7 +306,12 @@ export default function DaftarPage() {
             <div className="pt-4 text-center border-t border-[#E5E0D8]/50">
               <p className="text-sm text-[#6B6B6B]">
                 Sudah punya akun?{" "}
-                <Link href="/masuk" className="text-[#D4AF97] font-semibold hover:underline">Masuk di sini</Link>
+                <Link
+                  href="/masuk"
+                  className="text-[#D4AF97] font-semibold hover:underline"
+                >
+                  Masuk di sini
+                </Link>
               </p>
             </div>
           </CardContent>
@@ -245,7 +329,7 @@ export default function DaftarPage() {
         userData={{
           nama: formData.nama,
           email: formData.email,
-          package: selectedPackage // Kita kirim data paket ke modal
+          package: selectedPackage, // Kita kirim data paket ke modal
         }}
       />
     </div>
