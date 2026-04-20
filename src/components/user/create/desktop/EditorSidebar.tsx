@@ -43,9 +43,14 @@ import {
   MapPin,
   Map as MapIconUI,
 } from "lucide-react";
-import MapPicker from "./MapPicker";
+import dynamic from 'next/dynamic';
 import { SectionCard } from "./SectionCard";
 import { Music as MusicType, Template } from "@/types";
+
+const MapPicker = dynamic(() => import('./MapPicker'), { 
+  ssr: false,
+  loading: () => <div className="h-full w-full bg-slate-100 animate-pulse flex items-center justify-center">Memuat Peta...</div>
+});
 
 interface SidebarProps {
   templates: Template[];

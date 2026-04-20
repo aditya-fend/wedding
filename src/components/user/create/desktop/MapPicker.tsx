@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Map, { MapRef, NavigationControl } from "react-map-gl/maplibre";
-import "maplibre-gl/dist/maplibre-gl.css";
+import React, { useState, useEffect, useCallback } from "react";
+import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
@@ -17,17 +18,47 @@ import {
 import { useDebounce } from "use-debounce";
 import { cn } from "@/lib/utils";
 
+// Interface
 interface MapPickerProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (data: { address: string; link: string }) => void;
+  onConfirm: (data: {
+    address: string;
+    link: string;
+    lat: number;
+    lng: number;
+  }) => void;
 }
 
 interface Suggestion {
-  place_id: number;
+  place_id: string;
   display_name: string;
-  lat: string;
-  lon: string;
+  lat: number;
+  lon: number;
+}
+
+// Komponen Internal untuk menangani pergerakan peta
+function MapEventsHandler({
+  onMove,
+}: {
+  onMove: (lat: number, lng: number) => void;
+}) {
+  useMapEvents({
+    moveend: (e) => {
+      const center = e.target.getCenter();
+      onMove(center.lat, center.lng);
+    },
+  });
+  return null;
+}
+
+// Komponen untuk menggerakkan kamera (FlyTo)
+function ChangeView({ center }: { center: [number, number] }) {
+  const map = useMap();
+  useEffect(() => {
+    map.flyTo(center, map.getZoom());
+  }, [center, map]);
+  return null;
 }
 
 export default function MapPicker({
@@ -36,11 +67,10 @@ export default function MapPicker({
   onConfirm,
 }: MapPickerProps) {
   const [mounted, setMounted] = useState(false);
-  const [viewState, setViewState] = useState({
-    latitude: -6.2088,
-    longitude: 106.8456,
-    zoom: 15,
-  });
+  const [center, setCenter] = useState<[number, number]>([-6.2088, 106.8456]);
+
+  // Debounce untuk koordinat agar tidak spam API saat peta digeser
+  const [debouncedCenter] = useDebounce(center, 800);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch] = useDebounce(searchQuery, 600);
@@ -49,54 +79,46 @@ export default function MapPicker({
 
   const [address, setAddress] = useState("Mencari lokasi...");
   const [isGeocoding, setIsGeocoding] = useState(false);
-  const mapRef = useRef<MapRef>(null);
 
+  // Efek inisialisasi
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
       navigator.geolocation.getCurrentPosition(
-        (pos) =>
-          setViewState((prev) => ({
-            ...prev,
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-          })),
-        () => {},
-        { enableHighAccuracy: true }
+        (pos) => setCenter([pos.coords.latitude, pos.coords.longitude]),
+        () => console.warn("Akses lokasi ditolak"),
+        { enableHighAccuracy: true },
       );
     }
   }, []);
 
+  // Fungsi Reverse Geocode (Koordinat -> Alamat)
   const reverseGeocode = useCallback(async (lat: number, lng: number) => {
     setIsGeocoding(true);
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
     try {
-      const response = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=id`,
-        { signal: controller.signal }
-      );
+      // Panggil API route yang baru saja kita buat
+      const response = await fetch(`/api/geocode?lat=${lat}&lon=${lng}`);
+
+      if (!response.ok) throw new Error("Gagal mengambil data");
+
       const data = await response.json();
-      clearTimeout(timeout);
-
-      const admin = data.localityInfo?.administrative || [];
-      const findLevel = (lvl: number) => admin.find((a: any) => a.adminLevel === lvl)?.name;
-
-      const jalan = data.localityInfo?.informative?.find((i: any) => i.description === "street")?.name || data.locality || "";
-      const desa = findLevel(8) || findLevel(7) || "";
-      const kecamatan = findLevel(6) || "";
-      const kabupaten = findLevel(5) || findLevel(4) || "";
-
-      const parts = [jalan, desa, kecamatan, kabupaten].filter((v, i, arr) => v && arr.indexOf(v) === i);
-      setAddress(parts.join(", ") || "Lokasi tanpa nama jalan");
+      setAddress(data.display_name || "Lokasi tidak diketahui");
     } catch (error) {
-      setAddress("Gagal memuat alamat presisi");
+      console.error("Geocoding Error:", error);
+      setAddress("Gagal memuat alamat");
     } finally {
       setIsGeocoding(false);
     }
   }, []);
 
+  // Hanya panggil API jika debouncedCenter berubah (pengguna berhenti menggeser peta)
+  useEffect(() => {
+    if (isOpen && mounted) {
+      reverseGeocode(debouncedCenter[0], debouncedCenter[1]);
+    }
+  }, [debouncedCenter, isOpen, mounted, reverseGeocode]);
+
+  // Fungsi Pencarian (Search Input)
   useEffect(() => {
     const handleSearch = async () => {
       if (!debouncedSearch || debouncedSearch.length < 3) {
@@ -105,18 +127,22 @@ export default function MapPicker({
       }
       setIsSearching(true);
       try {
-        const res = await fetch(`https://photon.komoot.io/api?q=${encodeURIComponent(debouncedSearch)}&limit=5`);
+        const res = await fetch(
+          `https://photon.komoot.io/api?q=${encodeURIComponent(debouncedSearch)}&limit=5`,
+        );
         const data = await res.json();
-        const formatted = (data.features || []).map((f: any) => {
-          const p = f.properties;
-          const label = [p.name, p.street, p.district, p.city].filter(Boolean).join(", ");
-          return {
-            place_id: p.osm_id || Math.random(),
-            display_name: label,
-            lat: f.geometry.coordinates[1].toString(),
-            lon: f.geometry.coordinates[0].toString(),
-          };
-        });
+        const formatted = (data.features || []).map((f: any) => ({
+          place_id: f.properties.osm_id?.toString() || Math.random().toString(),
+          display_name: [
+            f.properties.name,
+            f.properties.city,
+            f.properties.country,
+          ]
+            .filter(Boolean)
+            .join(", "),
+          lat: f.geometry.coordinates[1],
+          lon: f.geometry.coordinates[0],
+        }));
         setSuggestions(formatted);
       } catch (error) {
         console.error(error);
@@ -127,76 +153,59 @@ export default function MapPicker({
     handleSearch();
   }, [debouncedSearch]);
 
-  useEffect(() => {
-    if (isOpen && mounted) {
-      reverseGeocode(viewState.latitude, viewState.longitude);
-    }
-  }, [isOpen, mounted, viewState.latitude, viewState.longitude, reverseGeocode]);
-
-  const goToPlace = (item: Suggestion) => {
-    setViewState((prev) => ({
-      ...prev,
-      longitude: parseFloat(item.lon),
-      latitude: parseFloat(item.lat),
-      zoom: 17,
-    }));
-    setSuggestions([]);
-    setSearchQuery("");
-  };
-
   if (!isOpen || !mounted) return null;
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       <motion.div
-        initial={{ opacity: 0, scale: 1.1 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 1.05 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         className="fixed inset-0 z-[9999] bg-white flex flex-col overflow-hidden"
       >
-        {/* Header UI */}
-        <div className="absolute top-0 inset-x-0 z-[101] p-6 flex flex-col items-center gap-4 pointer-events-none">
+        {/* Search Bar UI */}
+        <div className="absolute top-0 inset-x-0 z-[1001] p-6 flex flex-col items-center gap-4 pointer-events-none">
           <div className="w-full max-w-xl flex items-center gap-3 pointer-events-auto">
-            <div className="relative flex-1 group">
-              <div className="bg-white/90 backdrop-blur-2xl shadow-2xl rounded-[1.5rem] border border-[#F0EDE6] flex items-center p-1.5 transition-all focus-within:ring-4 focus-within:ring-[#D4AF97]/10">
+            <div className="relative flex-1">
+              <div className="bg-white shadow-2xl rounded-2xl border border-slate-200 flex items-center p-1.5 focus-within:ring-2 ring-[#D4AF97]">
                 <div className="pl-4 text-[#D4AF97]">
-                  {isSearching ? <Loader2 size={18} className="animate-spin" /> : <Search size={18} />}
+                  {isSearching ? (
+                    <Loader2 size={18} className="animate-spin" />
+                  ) : (
+                    <Search size={18} />
+                  )}
                 </div>
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari lokasi acara..."
-                  className="flex-1 h-11 px-3 bg-transparent outline-none text-sm font-bold text-[#2C2C2C] placeholder:text-[#9B9B9B] placeholder:font-medium"
+                  placeholder="Cari lokasi (cth: Grand Indonesia)..."
+                  className="flex-1 h-11 px-3 bg-transparent outline-none text-sm font-semibold text-slate-800"
                 />
               </div>
 
-              {/* Suggestions */}
               <AnimatePresence>
                 {suggestions.length > 0 && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute top-full left-0 right-0 mt-3 bg-white/95 backdrop-blur-2xl border border-[#F0EDE6] rounded-[2rem] shadow-2xl overflow-hidden p-2"
+                    className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl shadow-2xl overflow-hidden p-2"
                   >
                     {suggestions.map((item) => (
                       <button
                         key={item.place_id}
-                        onClick={() => goToPlace(item)}
-                        className="w-full p-4 flex items-start gap-4 hover:bg-[#FDFCFB] rounded-2xl text-left transition-all group"
+                        onClick={() => {
+                          setCenter([item.lat, item.lon]);
+                          setSuggestions([]);
+                          setSearchQuery("");
+                        }}
+                        className="w-full p-4 flex items-start gap-4 hover:bg-slate-50 rounded-xl text-left transition-all group"
                       >
-                        <div className="bg-[#FDFCFB] p-2.5 rounded-xl text-[#D4AF97] group-hover:bg-[#D4AF97] group-hover:text-white transition-all shrink-0">
-                          <Compass size={16} />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-black text-[#2C2C2C] truncate uppercase tracking-tight">
-                            {item.display_name.split(",")[0]}
-                          </p>
-                          <p className="text-[10px] text-[#9B9B9B] font-medium truncate mt-0.5">
-                            {item.display_name.split(",").slice(1).join(",")}
-                          </p>
-                        </div>
+                        <Compass className="text-slate-400 mt-1" size={16} />
+                        <span className="text-sm text-slate-700 font-medium line-clamp-2">
+                          {item.display_name}
+                        </span>
                       </button>
                     ))}
                   </motion.div>
@@ -206,81 +215,112 @@ export default function MapPicker({
 
             <button
               onClick={onClose}
-              className="size-14 bg-white/90 backdrop-blur-2xl shadow-xl rounded-2xl border border-[#F0EDE6] flex items-center justify-center text-[#2C2C2C] hover:text-rose-500 transition-colors pointer-events-auto active:scale-90"
+              className="size-14 bg-white shadow-xl rounded-2xl border border-slate-200 flex items-center justify-center text-slate-600 hover:text-rose-500 transition-all active:scale-90"
             >
               <X size={20} />
             </button>
           </div>
         </div>
 
-        {/* Engine */}
-        <Map
-          {...viewState}
-          onMove={(evt) => setViewState(evt.viewState)}
-          mapStyle="https://tiles.openfreemap.org/styles/bright"
-          style={{ width: "100%", height: "100%" }}
-          ref={mapRef}
-        >
-          <div className="absolute bottom-32 right-6 flex flex-col gap-2">
-            <button 
-                onClick={() => navigator.geolocation.getCurrentPosition((p) => mapRef.current?.flyTo({ center: [p.coords.longitude, p.coords.latitude], zoom: 16 }))}
-                className="size-12 bg-white shadow-xl rounded-xl flex items-center justify-center text-[#2C2C2C] border border-[#F0EDE6] active:bg-slate-50"
+        {/* Leaflet Engine */}
+        <div className="flex-1 w-full h-full relative z-[1000]">
+          <MapContainer
+            center={center}
+            zoom={15}
+            zoomControl={false}
+            className="w-full h-full"
+          >
+            <TileLayer
+              attribution="© OpenStreetMap contributors"
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <MapEventsHandler onMove={(lat, lng) => setCenter([lat, lng])} />
+            <ChangeView center={center} />
+          </MapContainer>
+
+          <div className="absolute bottom-32 right-6 z-[1001] flex flex-col gap-2">
+            <button
+              onClick={() => {
+                navigator.geolocation.getCurrentPosition((pos) => {
+                  setCenter([pos.coords.latitude, pos.coords.longitude]);
+                });
+              }}
+              className="size-12 bg-white shadow-xl rounded-xl flex items-center justify-center text-slate-700 border border-slate-200 active:bg-slate-50 pointer-events-auto"
             >
               <LocateFixed size={20} />
             </button>
-            <NavigationControl showCompass={false} />
           </div>
-        </Map>
+        </div>
 
-        {/* Center Marker Pin */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <div className="relative mb-12 flex flex-col items-center">
+        {/* Fixed Center Marker */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[1001]">
+          <div className="relative mb-10 flex flex-col items-center">
             <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-              className="relative drop-shadow-2xl"
+              animate={isGeocoding ? { y: [0, -10, 0] } : { y: 0 }}
+              transition={{ duration: 1, repeat: isGeocoding ? Infinity : 0 }}
+              className="drop-shadow-2xl"
             >
-              <MapPin size={52} className="text-[#D4AF97] fill-[#D4AF97]/20 stroke-[2.5]" />
-              <div className="absolute top-[14px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-white rounded-full border-2 border-[#D4AF97]" />
+              <MapPin
+                size={48}
+                className="text-[#D4AF97] fill-[#D4AF97]/20 stroke-[2.5]"
+              />
             </motion.div>
-            <div className="w-4 h-1.5 bg-black/10 blur-[2px] rounded-full mt-1 scale-x-150" />
+            <div className="w-3 h-1 bg-black/20 blur-[1px] rounded-full mt-1" />
           </div>
         </div>
 
         {/* Bottom Panel */}
-        <div className="absolute bottom-0 inset-x-0 z-[101] p-8 flex flex-col items-center pointer-events-none">
+        <div className="absolute bottom-0 inset-x-0 z-[1001] p-6 flex flex-col items-center pointer-events-none">
           <div className="w-full max-w-xl flex flex-col gap-4 pointer-events-auto">
-            <motion.div 
-              layout
-              className="bg-white/90 backdrop-blur-2xl shadow-2xl rounded-[2rem] border border-[#F0EDE6] p-5 flex items-center gap-5"
-            >
-              <div className={cn(
-                "size-12 rounded-2xl flex items-center justify-center transition-colors",
-                isGeocoding ? "bg-amber-50 text-amber-500" : "bg-[#FDFCFB] text-[#D4AF97]"
-              )}>
-                {isGeocoding ? <Loader2 size={20} className="animate-spin" /> : <Navigation size={20} />}
+            <div className="bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl border border-slate-200 p-5 flex items-center gap-4">
+              <div
+                className={cn(
+                  "size-12 rounded-2xl flex items-center justify-center shrink-0 transition-colors",
+                  isGeocoding
+                    ? "bg-amber-50 text-amber-500"
+                    : "bg-slate-50 text-[#D4AF97]",
+                )}
+              >
+                {isGeocoding ? (
+                  <Loader2 size={20} className="animate-spin" />
+                ) : (
+                  <Navigation size={20} />
+                )}
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-[#9B9B9B]">Detail Alamat Terpilih</span>
-                <p className="text-sm font-black text-[#2C2C2C] leading-tight line-clamp-2 mt-0.5">
-                  {address}
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  Lokasi Terpilih
+                </p>
+                <p className="text-sm font-bold text-slate-800 line-clamp-2 mt-0.5 leading-snug">
+                  {isGeocoding ? "Mencari alamat..." : address}
                 </p>
               </div>
-            </motion.div>
+            </div>
 
             <button
               onClick={() => {
-                const gmapsUrl = `https://www.google.com/maps?q=${viewState.latitude},${viewState.longitude}`;
-                onConfirm({ address, link: gmapsUrl });
+                const gmapsUrl = `https://www.google.com/maps?q=${center[0]},${center[1]}`;
+                onConfirm({
+                  address,
+                  link: gmapsUrl,
+                  lat: center[0],
+                  lng: center[1],
+                });
                 onClose();
               }}
               disabled={isGeocoding}
-              className="group w-full bg-[#2C2C2C] hover:bg-black disabled:bg-slate-400 text-white h-16 rounded-[2rem] shadow-2xl flex items-center justify-center gap-4 transition-all active:scale-[0.98]"
+              className="w-full bg-slate-900 hover:bg-black disabled:bg-slate-300 text-white h-16 rounded-3xl shadow-2xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]"
             >
-              <div className="size-8 bg-white/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Check size={18} className="text-[#D4AF97]" />
-              </div>
-              <span className="text-xs font-black uppercase tracking-[0.4em]">Simpan Lokasi Ini</span>
+              {isGeocoding ? (
+                <Loader2 size={20} className="animate-spin" />
+              ) : (
+                <>
+                  <Check size={20} className="text-[#D4AF97]" />
+                  <span className="text-sm font-bold uppercase tracking-widest">
+                    Konfirmasi Lokasi
+                  </span>
+                </>
+              )}
             </button>
           </div>
         </div>
