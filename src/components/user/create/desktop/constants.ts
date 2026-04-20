@@ -5,7 +5,6 @@ import {
   BookHeart,
   ImageIcon,
   Wallet,
-  Shirt,
   MailCheck,
   MessageCircle,
   Sparkles,

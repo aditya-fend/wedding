@@ -5,7 +5,7 @@ import { CreateInvitationModal } from "@/components/user/dashboard/CreateInvitat
 import { AddTokensModal } from "@/components/user/dashboard/AddTokensModal";
 import { getDashboardStats } from "@/lib/actions/dashboard";
 import { OverviewTab } from "@/components/user/dashboard/OverviewTab";
-import { Sparkles } from "lucide-react";
+import { LayoutDashboard, Sparkles } from "lucide-react";
 
 export default async function DashboardPage() {
   const supabase = await createServerSupabase();
@@ -49,7 +49,7 @@ export default async function DashboardPage() {
       <section className="flex flex-col md:flex-row md:items-end justify-between gap-8 animate-in fade-in slide-in-from-top-4 duration-1000 ease-out">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <div className="h-px w-8 bg-[#D4AF97]" />
+            <LayoutDashboard className="size-4 text-[#D4AF97]" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF97]">Dashboard</span>
           </div>
           <h1 className="text-4xl font-black text-[#2C2C2C] tracking-tighter lg:text-5xl">

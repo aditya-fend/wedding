@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LogIn, KeyRound, Mail, Loader2, ChevronLeft } from "lucide-react";
+import { LogIn, KeyRound, Mail, Loader2 } from "lucide-react";
 import { getUserRole } from "@/lib/actions/auth";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +23,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const supabase = createClient();
 
@@ -30,50 +31,60 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      // 1. LOGIN SUPABASE
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    if (error) {
+      if (error) {
+        toast.error(
+          error.message === "Invalid login credentials"
+            ? "Email atau kata sandi salah"
+            : error.message,
+        );
+        return;
+      }
+
+      if (!data.user) {
+        toast.error("User tidak ditemukan");
+        return;
+      }
+
+      // 2. AMBIL ROLE
+      let actualRole = "user";
+
+      try {
+        actualRole = await getUserRole(data.user.id);
+      } catch (err) {
+        console.error("getUserRole error:", err);
+      }
+
+      // 3. SUCCESS
+      toast.success("Login berhasil! Mengalihkan...");
+
+      await new Promise((r) => setTimeout(r, 300));
+
+      router.refresh();
+
+      // 4. REDIRECT
+      if (actualRole === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Terjadi kesalahan saat login");
+    } finally {
       setLoading(false);
-      toast.error(
-        error.message === "Invalid login credentials"
-          ? "Email atau kata sandi salah"
-          : error.message,
-      );
-      return;
     }
-
-    if (!data.user) {
-      setLoading(false);
-      toast.error("User tidak ditemukan");
-      return;
-    }
-
-    const actualRole = await getUserRole(data.user.id);
-
-    await fetch("/api/set-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: data.user.id }),
-    });
-
-    toast.success("Login berhasil! Mengalihkan...");
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    router.refresh();
-
-    if (actualRole === "admin") {
-      router.push("/admin");
-    } else {
-      router.push("/dashboard");
-    }
-    setLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] flex items-center justify-center p-4">
-      <div className="w-full max-w-100 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="w-full max-w-lg space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Brand Header */}
         <div className="text-center space-y-2">
           <Link
@@ -191,9 +202,9 @@ export default function LoginPage() {
                 Belum memiliki akun?{" "}
                 <Link
                   href="/register"
-                  className="text-[#D4AF97] font-bold hover:underline italic"
+                  className="text-[#D4AF97] font-bold hover:underline"
                 >
-                  register di sini
+                  daftar di sini
                 </Link>
               </p>
             </div>
@@ -202,12 +213,6 @@ export default function LoginPage() {
 
         {/* Back Link & Copyright */}
         <div className="flex flex-col items-center gap-4">
-          <Link
-            href="/"
-            className="text-[10px] font-bold uppercase tracking-widest text-[#9B9B9B] hover:text-[#2C2C2C] flex items-center transition-colors"
-          >
-            <ChevronLeft className="size-3 mr-1" /> Kembali ke Beranda
-          </Link>
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
             © 2026 UndangDong • Member Area
           </p>

@@ -1,7 +1,4 @@
 // /lib/templateRegistry.ts
-import NeroGold from "@/components/templates/NeroGold";
-import AuraDark from "@/components/templates/AuraDark";
-import Pink from "@/components/templates/Pink";
 import Royal from "@/components/templates/royal/Royal";
 import { InvitationContent } from "@/types/invitation";
 
@@ -12,9 +9,6 @@ export type TemplateComponent = React.ComponentType<{
 
 // Gunakan keys dalam lowercase untuk kompatibilitas pencarian
 export const templateRegistry: Record<string, TemplateComponent> = {
-  nerogold: NeroGold,
-  auradark: AuraDark,
-  pink: Pink,
   royal: Royal,
 };
 

@@ -15,7 +15,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       position="bottom-center"
       offset={20}
       icons={{
-        success: <CircleCheckIcon className="size-4 text-[#D4AF97]" />,
+        success: <CircleCheckIcon className="size-4 text-[#25D366]" />,
         info: <InfoIcon className="size-4 text-[#6B6B6B]" />,
         warning: <TriangleAlertIcon className="size-4 text-[#D4AF97]" />,
         error: <OctagonXIcon className="size-4 text-[#B95C5C]" />,

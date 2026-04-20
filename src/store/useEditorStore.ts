@@ -41,7 +41,7 @@ export const useEditorStore = create<EditorState>((set) => ({
     additional_info_list: [],
   } as InvitationContent,
   invitationId: "",
-  activeSection: "cover",
+  activeSection: "",
   activeTemplate: "",
   isSaving: false,
 

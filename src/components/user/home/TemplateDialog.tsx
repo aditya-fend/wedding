@@ -25,7 +25,6 @@ import { Eye, Search } from "lucide-react";
 import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Template } from "@/types/invitation";
-import { cn } from "@/lib/utils";
 
 export function TemplateCard({
   template,
@@ -33,9 +32,11 @@ export function TemplateCard({
   template: Template & { thumbnailLabel?: string };
 }) {
   return (
-    <Card className="group overflow-hidden rounded-2xl border-[#E5E0D8] bg-white shadow-sm transition-all duration-300 hover:shadow-md">
-      {/* Thumbnail: Tinggi dikurangi dari h-44 ke h-36 agar lebih kompak */}
-      <div className="relative h-36 overflow-hidden">
+    <Card
+      key={template.id}
+      className="group overflow-hidden rounded-[28px] border transition duration-300 "
+    >
+      <div className="relative aspect-square overflow-hidden bg-slate-100">
         {template.thumbnailUrl ? (
           <Image
             src={template.thumbnailUrl}
@@ -74,7 +75,7 @@ export function TemplateCard({
           asChild
           className="h-8 flex-1 rounded-lg text-[11px] border-[#E5E0D8]"
         >
-          <Link href={template.previewUrl || "#"}>
+          <Link href={template.previewUrl || "#"} target="_blank" rel="noreferrer">
             <Eye className="mr-1.5 size-3" /> Preview
           </Link>
         </Button>

@@ -117,7 +117,7 @@ export default function CreateMobileView({
       </div>
 
       {/* ── FLOATING ACTION BUTTON ── */}
-      <div className="absolute bottom-8 right-6 z-[100] pointer-events-none">
+      <div className="absolute bottom-14 right-6 z-[100] pointer-events-none">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
