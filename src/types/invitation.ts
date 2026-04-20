@@ -5,7 +5,7 @@ export interface CoupleDetail {
   ortu_ayah: string;
   ortu_ibu: string;
   instagram?: string; // [cite: 68, 69]
-  foto: string
+  foto?: string
 }
 
 export interface EventDetail {
@@ -105,12 +105,14 @@ export interface InvitationData {
     ortu_ayah: string;
     ortu_ibu: string;
     instagram?: string;
+    foto?: string;
   };
   mempelai_wanita: {
     nama: string;
     ortu_ayah: string;
     ortu_ibu: string;
     instagram?: string;
+    foto?: string;
   };
   acara: {
     tipe: string;
@@ -123,7 +125,7 @@ export interface InvitationData {
   love_story: {
     tahun: string;
     cerita: string;
-    foto: string;
+    foto?: string;
   }[];
   gallery: string[];
   digital_envelope: {
