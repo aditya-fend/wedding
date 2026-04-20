@@ -78,7 +78,7 @@ function SelectContent({
         data-align-trigger={position === "item-aligned"}
         className={cn(
           // Modifikasi: Popover putih dengan shadow-xl dan border premium
-          "relative z-50 max-h-(--radix-select-content-available-height) min-w-36 overflow-hidden rounded-xl bg-white text-[#2C2C2C] shadow-xl border border-[#E5E0D8] duration-200",
+          "relative z-[110] max-h-(--radix-select-content-available-height) min-w-36 overflow-hidden rounded-xl bg-white text-[#2C2C2C] shadow-xl border border-[#E5E0D8] duration-200",
           "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
           position === "popper" && "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className
@@ -91,7 +91,7 @@ function SelectContent({
         <SelectPrimitive.Viewport
           className={cn(
             "p-1",
-            position === "popper" && "h-(--radix-select-trigger-height) w-full min-w-(--radix-select-trigger-width)"
+            position === "popper" && "w-full min-w-(--radix-select-trigger-width)"
           )}
         >
           {children}
