@@ -95,7 +95,7 @@ export default async function CreateInvitationPage() {
       <EditInvitationClient
         invitationId={invitationData?.id || "guest-mode"}
         initialData={initialData}
-        initialTemplate={invitationData?.template?.title || "Royal"}
+        initialTemplate={invitationData?.template?.title}
         templates={templates}
         musics={musics}
         slug={invitationData?.slug || "demo"}
