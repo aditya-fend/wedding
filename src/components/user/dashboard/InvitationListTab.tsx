@@ -142,8 +142,8 @@ export function InvitationListTab({
                   <TableCell className="text-right px-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="secondary" size="icon" className="p-2 w-5 h-5 text-[#2C2C2C]">
-                          ...
+                        <Button variant="secondary" size="icon" className="p-4">
+                          <MoreHorizontal className="w-5 h-5 text-[#2C2C2C]" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
