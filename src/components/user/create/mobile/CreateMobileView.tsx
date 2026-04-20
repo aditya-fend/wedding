@@ -111,7 +111,7 @@ export default function CreateMobileView({
   const hasData = formData && Object.keys(formData).length > 0;
 
   return (
-    <div className="flex flex-col h-screen bg-[#F8F5F0] overflow-hidden relative">
+    <div className="flex flex-col max-h-screen bg-[#F8F5F0] overflow-hidden relative">
       {/* ── TOP STATUS BAR (Optional) ── */}
       <div className="h-1 w-full bg-slate-100 overflow-hidden shrink-0">
         <AnimatePresence>
@@ -152,7 +152,7 @@ export default function CreateMobileView({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-[#2C2C2C]/95 backdrop-blur-2xl flex flex-col pt-safe"
+            className="fixed inset-0 z-[200] backdrop-blur-2xl flex flex-col pt-safe"
           >
             {/* Header Modal */}
             <div className="flex items-center justify-between px-6 py-6 border-b border-white/5">
