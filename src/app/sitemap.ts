@@ -1,48 +1,55 @@
-import { MetadataRoute } from 'next';
+import { MetadataRoute } from "next";
 import { prisma } from "@/lib/prisma";
 
+/**
+ * FINAL SITEMAP GENERATOR - SAJI JANJI
+ * Mekanisme ini membantu Google mengindeks Landing Page dan 
+ * seluruh undangan user secara otomatis.
+ */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://saji-janji.vercel.app";
 
-  // 1. Ambil semua slug undangan dari database yang sudah dipublish
-  // Kita hanya ambil 'slug' dan 'updatedAt' untuk efisiensi performa
+  // 1. Fetch data dari database berdasarkan skema model Invitation
+  // Menggunakan 'createdAt' karena skema belum memiliki 'updatedAt'
   const invitations = await prisma.invitation.findMany({
+    where: {
+      isActive: true, // Hanya indeks undangan yang aktif
+    },
     select: {
       slug: true,
-      updatedAt: true,
+      createdAt: true,
     },
-    // Optional: Tambahkan filter jika Anda punya status 'PUBLISHED'
-    // where: { status: 'PUBLISHED' } 
   });
 
-  // 2. Generate URL untuk setiap undangan
+  // 2. Mapping data undangan ke format URL Sitemap
   const invitationUrls = invitations.map((inv) => ({
     url: `${baseUrl}/undangan/${inv.slug}`,
-    lastModified: inv.updatedAt,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7, // Prioritas sedikit di bawah halaman utama
+    lastModified: inv.createdAt,
+    changeFrequency: "weekly" as const,
+    priority: 0.6, // Fokus utama tetap pada landing page
   }));
 
-  // 3. Gabungkan dengan halaman statis utama
-  return [
+  // 3. Daftar halaman statis utama
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1.0, // Halaman utama selalu prioritas tertinggi
+      changeFrequency: "daily",
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/register`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${baseUrl}/login`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
+      changeFrequency: "monthly",
       priority: 0.5,
     },
-    ...invitationUrls,
   ];
+
+  return [...staticPages, ...invitationUrls];
 }
