@@ -115,8 +115,8 @@ export function InvitationListTab({ invitations }: { invitations: InvitationWith
                   <TableCell className="text-right px-6">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost">
-                          <Menu className="size-4" />
+                        <Button variant="secondary">
+                          <MoreHorizontal className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-52 rounded-2xl border-[#F0EDE6] p-2 shadow-xl shadow-[#D4AF97]/5">

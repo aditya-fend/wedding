@@ -151,14 +151,14 @@ export function AddTokensModal({
 
           <div className="flex flex-col sm:flex-row gap-3 mt-2">
             <DialogClose asChild>
-              <Button variant="ghost" className="rounded-2xl font-bold text-[#9B9B9B] hover:text-[#2C2C2C] flex-1">
+              <Button variant="ghost">
                 Batal
               </Button>
             </DialogClose>
             <Button
               onClick={handlePaymentClick}
               disabled={!isValid}
-              className="rounded-2xl bg-[#D4AF97] hover:bg-[#B99575] text-white font-bold flex-[2] h-12 shadow-lg shadow-[#D4AF97]/20 transition-all active:scale-[0.98]"
+              variant="default"
             >
               Lanjutkan Pembayaran
             </Button>
