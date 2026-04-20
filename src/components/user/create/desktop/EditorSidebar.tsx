@@ -18,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Palette,
   Music,
@@ -25,30 +26,30 @@ import {
   Heart,
   CalendarDays,
   ImageIcon,
+  LayoutDashboard,
   Plus,
   Trash2,
   BookHeart,
   Wallet,
+  MailCheck,
+  MessageCircle,
   Sparkles,
   Flag,
+  Eye,
+  MousePointerClick,
   Play,
   Pause,
   Search,
+  MapPin,
   Map as MapIconUI,
-  Calendar,
 } from "lucide-react";
-import dynamic from "next/dynamic";
+import dynamic from 'next/dynamic';
 import { SectionCard } from "./SectionCard";
 import { Music as MusicType, Template } from "@/types";
-import TemplateCard from "@/components/shared/TemplateCard";
 
-const MapPicker = dynamic(() => import("./MapPicker"), {
+const MapPicker = dynamic(() => import('./MapPicker'), { 
   ssr: false,
-  loading: () => (
-    <div className="h-full w-full bg-slate-100 animate-pulse flex items-center justify-center">
-      Memuat Peta...
-    </div>
-  ),
+  loading: () => <div className="h-full w-full bg-slate-100 animate-pulse flex items-center justify-center">Memuat Peta...</div>
 });
 
 interface SidebarProps {
@@ -197,7 +198,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             <DialogTrigger asChild>
               <button
                 type="button"
-                className="group flex w-full items-center justify-between rounded-4xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
+                className="group flex w-full items-center justify-between rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
               >
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">
@@ -232,22 +233,96 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                   const isSelected = template.id === activeTemplate;
 
                   return (
-                    <TemplateCard
+                    <Card
                       key={template.id}
-                      template={template}
-                      isSelected={isSelected}
-                      used={() => {
-                        setActiveTemplate(template.id);
-                      }}
-                    />
+                      className={
+                        "group overflow-hidden rounded-[28px] border transition duration-300 " +
+                        (isSelected
+                          ? "border-[#D4AF97] shadow-lg"
+                          : "border-[#E5E0D8] hover:border-[#D4AF97] hover:shadow-xl")
+                      }
+                    >
+                      <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
+                        {template.thumbnailUrl ? (
+                          <Image
+                            src={template.thumbnailUrl}
+                            alt={template.title}
+                            fill
+                            className="object-cover"
+                            unoptimized
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-[#D4AF97]/40">
+                            <LayoutDashboard className="size-12" />
+                          </div>
+                        )}
+                      </div>
+
+                      <CardContent className="space-y-3">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <h3 className="text-base font-semibold text-[#2C2C2C]">
+                              {template.title}
+                            </h3>
+                            <p className="mt-1 text-sm text-[#6B6B6B] line-clamp-2">
+                              {template.description ??
+                                "Template undangan digital eksklusif."}
+                            </p>
+                          </div>
+                          {isSelected ? (
+                            <span className="rounded-full bg-[#D4AF97]/20 px-2.5 py-1 text-[11px] font-semibold text-[#2C2C2C]">
+                              Dipilih
+                            </span>
+                          ) : null}
+                        </div>
+                      </CardContent>
+
+                      <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="w-full sm:w-auto"
+                        >
+                          <a
+                            href={template.previewUrl ?? "#"}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <Eye className="size-4 mr-2" /> Preview
+                          </a>
+                        </Button>
+
+                        <DialogClose asChild>
+                          <Button
+                            size="sm"
+                            className="w-full sm:w-auto"
+                            onClick={() => {
+                              setActiveTemplate(template.title);
+                            }}
+                          >
+                            <MousePointerClick className="size-4 mr-2" />{" "}
+                            Gunakan
+                          </Button>
+                        </DialogClose>
+                      </CardFooter>
+                    </Card>
                   );
                 })}
               </div>
+
+              <DialogFooter className="justify-end">
+                <DialogClose asChild>
+                  <Button variant="ghost" size="sm">
+                    Tutup
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
 
-        <div className="space-y-2 mb-10">
+        <div className="space-y-2">
           <Label className="text-[9px] font-black uppercase text-slate-500 flex items-center gap-2">
             <Music className="size-3 text-[#D4AF97]" /> Musik Latar
           </Label>
@@ -256,7 +331,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
             <DialogTrigger asChild>
               <button
                 type="button"
-                className="group flex w-full items-center justify-between rounded-4xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
+                className="group flex w-full items-center justify-between rounded-3xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:border-[#D4AF97] hover:bg-[#F8F5F0]"
               >
                 <div className="flex-1">
                   <p className="text-xs uppercase tracking-[0.3em] text-slate-400 font-bold">
@@ -354,96 +429,17 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                   })
                 )}
               </div>
+
+              <DialogFooter className="justify-end">
+                <DialogClose asChild>
+                  <Button variant="ghost" size="sm">
+                    Tutup
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>
-
-        <SectionCard
-          title="Cover / Pembuka"
-          icon={Sparkles}
-          isActive={activeSection === "cover"}
-          onClick={() =>
-            setActiveSection(activeSection === "cover" ? "" : "cover") 
-          }
-        >
-          <div className="flex flex-col gap-4">
-            <div className="space-y-3">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Hero Image / Foto Utama
-              </Label>
-
-              <div
-                className={`group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
-                  heroDragActive
-                    ? "border-[#D4AF97] bg-[#ECFDF5]"
-                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
-                }`}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setHeroDragActive(true);
-                }}
-                onDragLeave={() => setHeroDragActive(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setHeroDragActive(false);
-                  const file = e.dataTransfer.files?.[0];
-                  if (file && file.type.startsWith("image/")) {
-                    const url = URL.createObjectURL(file);
-                    setFormData({ hero_image: url });
-                  }
-                }}
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/*";
-                  input.onchange = (e) => {
-                    const file = (e.target as HTMLInputElement).files?.[0];
-                    if (file) {
-                      const url = URL.createObjectURL(file);
-                      setFormData({ hero_image: url });
-                    }
-                  };
-                  input.click();
-                }}
-              >
-                {formData.hero_image ? (
-                  <>
-                    <Image
-                      src={formData.hero_image}
-                      alt="Hero Preview"
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
-                        <ImageIcon size={16} />
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
-                    <ImageIcon size={24} className="opacity-40" />
-                    <p className="text-[10px] font-bold uppercase tracking-wider">
-                      Drop atau Klik Foto
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              <div className="relative">
-                <Input
-                  value={formData.hero_image || ""}
-                  onChange={(e) => setFormData({ hero_image: e.target.value })}
-                  placeholder="Atau loginkan URL gambar..."
-                  className="rounded-xl bg-white text-xs pl-8"
-                />
-                <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
-              </div>
-            </div>
-          </div>
-        </SectionCard>
-
         {/* ═══════════════════════════════════════════
             Section: Mempelai Pria
         ═══════════════════════════════════════════ */}
@@ -713,10 +709,99 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
         </SectionCard>
 
         {/* ═══════════════════════════════════════════
+            Section: Cover / Pembuka
+        ═══════════════════════════════════════════ */}
+        <SectionCard
+          title="Cover / Pembuka"
+          icon={Sparkles}
+          isActive={activeSection === "cover"}
+          onClick={() =>
+            setActiveSection(activeSection === "cover" ? "" : "cover")
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <div className="space-y-3">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                Hero Image / Foto Utama
+              </Label>
+
+              <div
+                className={`group relative aspect-video cursor-pointer overflow-hidden rounded-2xl border-2 border-dashed transition-all ${
+                  heroDragActive
+                    ? "border-[#D4AF97] bg-[#ECFDF5]"
+                    : "border-slate-200 bg-white hover:border-[#D4AF97]"
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(true);
+                }}
+                onDragLeave={() => setHeroDragActive(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setHeroDragActive(false);
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.type.startsWith("image/")) {
+                    const url = URL.createObjectURL(file);
+                    setFormData({ hero_image: url });
+                  }
+                }}
+                onClick={() => {
+                  const input = document.createElement("input");
+                  input.type = "file";
+                  input.accept = "image/*";
+                  input.onchange = (e) => {
+                    const file = (e.target as HTMLInputElement).files?.[0];
+                    if (file) {
+                      const url = URL.createObjectURL(file);
+                      setFormData({ hero_image: url });
+                    }
+                  };
+                  input.click();
+                }}
+              >
+                {formData.hero_image ? (
+                  <>
+                    <Image
+                      src={formData.hero_image}
+                      alt="Hero Preview"
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="rounded-full bg-white/90 p-2 text-[#2C2C2C] shadow-lg">
+                        <ImageIcon size={16} />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 text-slate-400">
+                    <ImageIcon size={24} className="opacity-40" />
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Drop atau Klik Foto
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="relative">
+                <Input
+                  value={formData.hero_image || ""}
+                  onChange={(e) => setFormData({ hero_image: e.target.value })}
+                  placeholder="Atau masukkan URL gambar..."
+                  className="rounded-xl bg-white text-xs pl-8"
+                />
+                <ImageIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-300" />
+              </div>
+            </div>
+          </div>
+        </SectionCard>
+
+        {/* ═══════════════════════════════════════════
             Section: Jadwal Acara
         ═══════════════════════════════════════════ */}
         <SectionCard
-          title="Jadwal dan Lokasi Acara"
+          title="Jadwal Acara"
           icon={CalendarDays}
           isActive={activeSection === "acara"}
           onClick={() =>
@@ -878,7 +963,7 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
         ═══════════════════════════════════════════ */}
         <SectionCard
           title="Detail Acara"
-          icon={Calendar}
+          icon={CalendarDays}
           isActive={activeSection === "event_details"}
           onClick={() =>
             setActiveSection(
