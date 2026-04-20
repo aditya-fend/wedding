@@ -1,8 +1,8 @@
-// components/home/Navbar.tsx
 "use client";
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image"; // Import Image untuk optimasi logo
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,6 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Menangani efek blur saat scroll agar lebih dinamis
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -36,12 +35,21 @@ export default function Navbar() {
       )}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-1.5 group">
-          <span className="font-bold text-xl tracking-tighter text-[#2C2C2C]">
-            Undang
-            <span className="text-[#D4AF97] group-hover:text-[#B99575] transition-colors">
-              Dong
+        {/* Logo Section dioptimasi untuk SEO */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="relative w-10 h-10 overflow-hidden rounded-xl shadow-sm border border-[#D4AF97]/20">
+            <Image
+              src="/android-chrome-192x192.png" // Menggunakan aset tertajam yang Anda punya
+              alt="Logo Saji Janji - Undangan Pernikahan Digital"
+              fill
+              priority // Memastikan logo dimuat instan (LCP optimization)
+              className="object-cover group-hover:scale-110 transition-transform duration-300"
+            />
+          </div>
+          <span className="font-bold text-xl tracking-tight text-[#2C2C2C]">
+            Saji
+            <span className="text-[#D4AF97] group-hover:text-[#B99575] transition-colors ml-0.5">
+              Janji
             </span>
           </span>
         </Link>
@@ -52,7 +60,7 @@ export default function Navbar() {
             <a
               key={link.name}
               href={link.href}
-              className="text-sm font-medium text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
+              className="text-sm font-semibold text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
             >
               {link.name}
             </a>
@@ -64,14 +72,14 @@ export default function Navbar() {
           <Link href="/login">
             <Button
               variant="ghost"
-              className="text-[#2C2C2C] hover:bg-[#F0EDE6] rounded-xl px-5"
+              className="text-[#2C2C2C] hover:bg-[#F0EDE6] rounded-xl px-5 font-semibold"
             >
               Masuk
             </Button>
           </Link>
           <Link href="/register">
-            <Button className="bg-[#D4AF97] hover:bg-[#B99575] text-white shadow-md shadow-[#D4AF97]/20 rounded-xl px-6">
-              Daftar
+            <Button className="bg-[#D4AF97] hover:bg-[#B99575] text-white shadow-lg shadow-[#D4AF97]/20 rounded-xl px-6 font-bold transition-all hover:scale-[1.02]">
+              Daftar Gratis
             </Button>
           </Link>
         </div>
@@ -89,7 +97,7 @@ export default function Navbar() {
       {/* Mobile Menu Overlay */}
       <div
         className={cn(
-          "absolute top-full left-0 right-0 bg-white border-b border-[#E5E0D8] p-6 lg:hidden transition-all duration-300 origin-top",
+          "absolute top-full left-0 right-0 bg-white border-b border-[#E5E0D8] p-6 lg:hidden transition-all duration-300 origin-top shadow-xl",
           isOpen
             ? "opacity-100 scale-y-100 visible"
             : "opacity-0 scale-y-95 invisible",
@@ -101,7 +109,7 @@ export default function Navbar() {
               key={link.name}
               href={link.href}
               onClick={() => setIsOpen(false)}
-              className="text-base font-medium text-[#2C2C2C] py-2 border-b border-[#F0EDE6]/50 last:border-0"
+              className="text-base font-bold text-[#2C2C2C] py-2 border-b border-[#F0EDE6]/50 last:border-0"
             >
               {link.name}
             </a>
@@ -111,14 +119,14 @@ export default function Navbar() {
             <Link href="/login" onClick={() => setIsOpen(false)}>
               <Button
                 variant="outline"
-                className="w-full h-12 border-[#D4AF97] text-[#2C2C2C] rounded-xl"
+                className="w-full h-12 border-[#E5E0D8] text-[#2C2C2C] rounded-xl font-bold"
               >
-                login
+                Masuk
               </Button>
             </Link>
             <Link href="/register" onClick={() => setIsOpen(false)}>
-              <Button className="w-full h-12 bg-[#D4AF97] hover:bg-[#B99575] text-white rounded-xl">
-                register Sekarang
+              <Button className="w-full h-12 bg-[#D4AF97] hover:bg-[#B99575] text-white rounded-xl font-bold">
+                Daftar Sekarang
               </Button>
             </Link>
           </div>
