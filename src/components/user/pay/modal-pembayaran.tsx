@@ -37,7 +37,7 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
   const handleWhatsAppChat = () => {
     const adminNumber = "6288290483433";
     const message =
-      `Halo Admin Undang Dong, saya telah melakukan pembayaran.\n\n` +
+      `Halo Admin Saji Janji, saya telah melakukan pembayaran.\n\n` +
       `*Detail Akun*:\n` +
       `- Nama: ${userData.nama}\n` +
       `- Email: ${userData.email}\n` +
@@ -95,7 +95,7 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
                 <div className="aspect-square relative rounded-xl overflow-hidden bg-[#F8F5F0]">
                   <Image
                     src={qrisImage}
-                    alt="QRIS Undang Dong"
+                    alt="QRIS Saji Janji"
                     fill
                     className="object-cover"
                     priority
@@ -104,7 +104,7 @@ export function PaymentModal({ isOpen, onClose, userData }: PaymentModalProps) {
 
                 <div className="mt-3 py-1.5 bg-[#F8F5F0] rounded-lg text-center">
                   <p className="text-[10px] font-bold text-[#2C2C2C]">
-                    UNDANG DONG INDONESIA
+                    SAJI JANJI
                   </p>
                 </div>
               </div>

@@ -54,7 +54,7 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           <Sparkles className="size-5 text-[#D4AF97]" />
           <span className="font-bold text-lg tracking-tighter text-[#2C2C2C]">
-            Undang<span className="text-[#D4AF97]">Dong</span>
+            Saji <span className="text-[#D4AF97]">Janji</span>
           </span>
         </div>
         <Button
@@ -151,7 +151,7 @@ export function Navbar() {
               href="/dashboard"
               className="font-bold text-xl tracking-tighter text-[#2C2C2C] animate-in fade-in duration-700"
             >
-              Undang<span className="text-[#D4AF97]">Dong</span>
+              Saji <span className="text-[#D4AF97]">Janji</span>
             </Link>
           )}
         </div>

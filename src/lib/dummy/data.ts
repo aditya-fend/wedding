@@ -72,7 +72,7 @@ export const data = {
     },
   ],
   music_url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-  rsvp_url: "https://undangdong.co.id/rsvp/12345",
+  rsvp_url: "https://saji-janji.vercel.app/rsvp/12345",
   rsvp_note: "Klik tombol RSVP untuk konfirmasi kehadiran Anda.",
   countdown_date: "2026-12-12T08:00:00",
   additional_info: "Pilih busana formal dengan sentuhan pink atau dusty rose.",

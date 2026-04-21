@@ -91,7 +91,7 @@ export default function LoginPage() {
             href="/"
             className="inline-block font-bold text-2xl tracking-tighter text-[#2C2C2C]"
           >
-            Undang<span className="text-[#D4AF97]">Dong</span>
+            Saji <span className="text-[#D4AF97]">Janji</span>
           </Link>
           <p className="text-[#9B9B9B] text-[10px] font-bold uppercase tracking-[0.2em]">
             Welcome Back • Member Access
@@ -214,7 +214,7 @@ export default function LoginPage() {
         {/* Back Link & Copyright */}
         <div className="flex flex-col items-center gap-4">
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-            © 2026 UndangDong • Member Area
+            © 2026 Saji Janji • Member Area
           </p>
         </div>
       </div>

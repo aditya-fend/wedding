@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Column 1 - Brand */}
           <div className="space-y-3">
             <div className="font-bold text-xl tracking-tighter text-[#2C2C2C]">
-              Undang<span className="text-[#D4AF97]">Dong</span>
+              Saji <span className="text-[#D4AF97]">Janji</span>
             </div>
             <p className="text-[#6B6B6B] text-[12px] leading-relaxed max-w-[200px]">
               Platform undangan pernikahan digital modern. Elegan, praktis, dan berkesan.
@@ -63,8 +63,8 @@ export default function Footer() {
               <a href="tel:+6281234567890" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors">
                 <Phone className="size-3" /> +62 812-3456-7890
               </a>
-              <a href="mailto:hello@undangdong.id" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors">
-                <Mail className="size-3" /> hello@undangdong.id
+              <a href="mailto:sajijanji@gmail.com" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors">
+                <Mail className="size-3" /> sajijanji@gmail.com
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#F0EDE6] flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-            © 2026 UNDANGDONG INDONESIA
+            © 2026 Saji Janji
           </p>
           <div className="flex gap-6 text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
             <span className="cursor-default">Privacy</span>

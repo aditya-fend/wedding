@@ -94,7 +94,7 @@ export default function RegisterPage() {
             href="/"
             className="inline-block font-bold text-2xl tracking-tighter text-[#2C2C2C]"
           >
-            Undang<span className="text-[#D4AF97]">Dong</span>
+            Saji <span className="text-[#D4AF97]">Janji</span>
           </Link>
           <p className="text-[#9B9B9B] text-[10px] font-bold uppercase tracking-[0.2em]">
             Step {step} of 2 • Registration
@@ -315,7 +315,7 @@ export default function RegisterPage() {
         </Card>
 
         <p className="text-center text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-          © 2026 UndangDong • Secure Registration
+          © 2026 Saji Janji • Secure Registration
         </p>
       </div>
 

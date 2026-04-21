@@ -38,7 +38,7 @@ export function PaymentModalTokens({
   const handleWhatsAppChat = () => {
     const adminNumber = "6288290483433";
     const message =
-      `Halo Admin Undang Dong, saya telah melakukan pembayaran.\n\n` +
+      `Halo Admin Saji Janji, saya telah melakukan pembayaran.\n\n` +
       `*Detail Pembelian Token*:\n` +
       `- Jumlah Token: ${tokenAmount}\n` +
       `- Total Harga: Rp ${totalPrice.toLocaleString("id-ID")}\n\n` +
@@ -101,7 +101,7 @@ export function PaymentModalTokens({
                 <div className="absolute inset-0 border border-[#F0EDE6] rounded-[1.8rem] pointer-events-none" />
                 <Image
                   src={qrisImage}
-                  alt="QRIS Undang Dong"
+                  alt="QRIS Saji Janji"
                   width={250}
                   height={250}
                   className="rounded-[1.2rem] grayscale-[0.2] hover:grayscale-0 transition-all duration-500"
