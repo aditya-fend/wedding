@@ -56,7 +56,7 @@ export default function Testimonials() {
                 <div className="relative size-10 rounded-full overflow-hidden border border-[#E5E0D8]">
                   <img 
                     src={t.avatar} 
-                    alt={t.name}
+                    alt={`Foto pasangan ${t.name} — pengguna SajiJanji yang puas dengan undangan digital premium untuk pernikahan mereka`}
                     className="object-cover size-full"
                   />
                 </div>
@@ -70,7 +70,7 @@ export default function Testimonials() {
         </div>
 
         <div className="text-center mt-10">
-          <p className="text-[10px] text-[#9B9B9B] font-bold uppercase tracking-[0.2em] opacity-70">
+          <p className="text-[10px] text-[#9B9B9B] font-bold uppercase tracking-[0.2em] opacity-70" aria-label="SajiJanji sudah dipercaya oleh lebih dari 2000 pasangan bahagia di seluruh Indonesia untuk undangan pernikahan digital mereka">
             Trusted by 2,000+ Happy Couples
           </p>
         </div>

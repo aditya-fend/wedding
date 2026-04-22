@@ -10,6 +10,7 @@ const packages = [
     name: "Basic",
     price: "49.900",
     description: "Esensial untuk undangan digital.",
+    ariaLabel: "Paket Basic SajiJanji seharga Rp49.900 — 10 token, 1 template, galeri 10 foto, RSVP standar, link unik, musik latar, bayar sekali aktif selamanya",
     features: [
       "10 Token / 1 Template",
       "Galeri 10 foto",
@@ -23,6 +24,7 @@ const packages = [
     name: "Standard",
     price: "99.900",
     description: "Pilihan favorit para pasangan.",
+    ariaLabel: "Paket Standard SajiJanji seharga Rp99.900 — pilihan favorit pasangan, galeri 20 foto, RSVP plus pesan tamu, masa aktif selamanya, prioritas dukungan",
     features: [
       "Semua fitur Basic",
       "Galeri hingga 20 foto",
@@ -36,6 +38,7 @@ const packages = [
     name: "Premium",
     price: "199.000",
     description: "Fitur terlengkap tanpa batas.",
+    ariaLabel: "Paket Premium SajiJanji seharga Rp199.000 — fitur terlengkap, video wedding story, galeri foto tanpa batas, desain custom khusus, dukungan 24/7",
     features: [
       "Semua fitur Standard",
       "Video & Wedding Story",
@@ -73,6 +76,7 @@ export default function Pricing() {
                   ? "border-[#D4AF97] shadow-lg shadow-[#D4AF97]/5 scale-[1.01] z-20"
                   : "shadow-sm border-opacity-60",
               )}
+              aria-label={pkg.ariaLabel}
             >
               {pkg.popular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-30">

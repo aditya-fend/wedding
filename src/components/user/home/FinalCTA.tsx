@@ -32,6 +32,7 @@ export default function FinalCTA() {
           <Link href="/daftar" className="w-full sm:w-auto">
             <Button 
               className="h-12 px-8 rounded-xl bg-[#D4AF97] text-white hover:bg-[#B99575] text-sm font-bold shadow-lg shadow-[#D4AF97]/20 flex items-center justify-center gap-2 group w-full"
+              aria-label="Buat undangan pernikahan digital gratis sekarang di SajiJanji — tanpa kartu kredit, tanpa langganan, aktif selamanya"
             >
               Buat Undangan Gratis
               <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />

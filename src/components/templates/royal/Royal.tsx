@@ -136,9 +136,10 @@ export default function Royal({ data, invitationId }: RoyalProps) {
             </AnimatePresence>
 
             <footer className="py-10 text-center bg-white">
-               <p className="text-[9px] text-slate-300 tracking-[0.2em] uppercase">
-                 Created with love for {groomName} & {brideName}
-               </p>
+              <p className="text-[10px] uppercase tracking-widest font-bold opacity-60 text-slate-400">Created with love by</p>
+              <a href="https://sajijanji.id" target="_blank" rel="noopener noreferrer" className="text-xs font-black mt-1 text-pink-400 hover:opacity-80 transition-opacity">
+                SajiJanji
+              </a>
             </footer>
           </motion.div>
         )}

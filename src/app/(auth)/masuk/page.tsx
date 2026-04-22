@@ -191,7 +191,7 @@ export default function MasukPage() {
             <ChevronLeft className="size-3 mr-1" /> Kembali ke Beranda
           </Link>
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-            © 2026 UndangDong • Member Area
+            © 2026 SajiJanji • Member Area
           </p>
         </div>
       </div>

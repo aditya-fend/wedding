@@ -1,5 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/supabase/actions";
+
+async function isAuthorizedAdmin() {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
+  
+  return dbUser?.role === "admin";
+}
 
 const packageMap: Record<string, "BASIC" | "STANDARD" | "PREMIUM"> = {
   Basic: "BASIC",
@@ -9,6 +23,10 @@ const packageMap: Record<string, "BASIC" | "STANDARD" | "PREMIUM"> = {
 };
 
 export async function GET() {
+  if (!(await isAuthorizedAdmin())) {
+    return NextResponse.json({ error: "Akses Ditolak: Memerlukan hak akses admin" }, { status: 403 });
+  }
+
   try {
     const users = await prisma.user.findMany({
       select: {
@@ -53,6 +71,10 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  if (!(await isAuthorizedAdmin())) {
+    return NextResponse.json({ error: "Akses Ditolak: Memerlukan hak akses admin" }, { status: 403 });
+  }
+
   try {
     const body = await request.json();
     const { name, email, password, packageType, role } = body;

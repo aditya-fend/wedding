@@ -185,7 +185,7 @@ export default function AuraDark({ data }: TemplateProps) {
           {pria.split(" ")[0]} & {wanita.split(" ")[0]}
         </h4>
         <p className="text-[9px] uppercase tracking-[0.4em] mt-4 opacity-30 font-bold">
-          Created by Undang Dong
+          Created with love by <a href="https://sajijanji.id" target="_blank" className="hover:text-[#D4AF97] transition-colors">SajiJanji</a>
         </p>
       </footer>
     </div>

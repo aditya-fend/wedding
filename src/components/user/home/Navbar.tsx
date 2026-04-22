@@ -20,10 +20,10 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { name: "Fitur", href: "#fitur" },
-    { name: "Template", href: "#template" },
-    { name: "Harga", href: "#harga" },
-    { name: "Testimoni", href: "#testimoni" },
+    { name: "Fitur", href: "#fitur", ariaLabel: "Lihat fitur unggulan SajiJanji: RSVP online, amplop digital, live preview, love story, galeri foto, countdown timer" },
+    { name: "Template", href: "#template", ariaLabel: "Jelajahi koleksi 11+ template undangan digital premium dari berbagai budaya Nusantara" },
+    { name: "Harga", href: "#harga", ariaLabel: "Lihat daftar harga paket undangan digital SajiJanji mulai dari Rp49.900" },
+    { name: "Testimoni", href: "#testimoni", ariaLabel: "Baca testimoni dari 2000+ pasangan Indonesia yang puas menggunakan SajiJanji" },
   ];
 
   return (
@@ -37,7 +37,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-1.5 group">
+        <Link href="/" className="flex items-center gap-1.5 group" aria-label="SajiJanji — Platform undangan pernikahan digital premium Indonesia, klik untuk kembali ke beranda">
           <span className="font-bold text-xl tracking-tighter text-[#2C2C2C]">
             Undang<span className="text-[#D4AF97] group-hover:text-[#B99575] transition-colors">Dong</span>
           </span>
@@ -49,6 +49,7 @@ export default function Navbar() {
             <a 
               key={link.name}
               href={link.href} 
+              aria-label={link.ariaLabel}
               className="text-sm font-medium text-[#6B6B6B] hover:text-[#D4AF97] transition-colors"
             >
               {link.name}
@@ -67,7 +68,7 @@ export default function Navbar() {
             </Button>
           </Link>
           <Link href="/daftar">
-            <Button className="bg-[#D4AF97] hover:bg-[#B99575] text-white shadow-md shadow-[#D4AF97]/20 rounded-xl px-6">
+            <Button className="bg-[#D4AF97] hover:bg-[#B99575] text-white shadow-md shadow-[#D4AF97]/20 rounded-xl px-6" aria-label="Daftar akun gratis SajiJanji untuk mulai membuat undangan pernikahan digital premium">
               Daftar Gratis
             </Button>
           </Link>
@@ -77,7 +78,7 @@ export default function Navbar() {
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="lg:hidden text-[#2C2C2C] p-2 hover:bg-[#F0EDE6] rounded-lg transition-colors"
-          aria-label="Toggle Menu"
+          aria-label="Buka menu navigasi SajiJanji — akses fitur, template, harga, dan testimoni"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -96,6 +97,7 @@ export default function Navbar() {
               key={link.name}
               href={link.href} 
               onClick={() => setIsOpen(false)}
+              aria-label={link.ariaLabel}
               className="text-base font-medium text-[#2C2C2C] py-2 border-b border-[#F0EDE6]/50 last:border-0"
             >
               {link.name}

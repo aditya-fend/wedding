@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { InvitationContent } from "@/types/invitation";
 import { revalidatePath } from "next/cache";
+import { invitationContentSchema } from "@/lib/validations/invitationSchema";
 
 export async function updateInvitationContent(
   invitationId: string,
@@ -28,9 +29,11 @@ export async function updateInvitationContent(
       throw new Error("Anda tidak memiliki akses untuk mengubah undangan ini.");
     }
 
-    // 2. Siapkan data update
+    // 2. Siapkan data update (Validasi menggunakan Zod)
+    const parsedContent = invitationContentSchema.parse(content);
+
     const updateData: any = {
-      contentData: content as any,
+      contentData: parsedContent as any,
     };
 
     // Jika ada templateTitle, cari template yang sesuai di DB
@@ -151,10 +154,12 @@ export async function createInitialInvitation(formData: {
 
 export async function saveInvitation(id: string, content: InvitationContent) {
   try {
+    const parsedContent = invitationContentSchema.parse(content);
+
     const updated = await prisma.invitation.update({
       where: { id },
       data: {
-        contentData: content as any,
+        contentData: parsedContent as any,
       },
     });
 

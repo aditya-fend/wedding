@@ -62,6 +62,12 @@ const templatesToSeed = [
     description: 'Kekayaan warna dan kemewahan sutra Bugis.',
     category: 'Tradisional',
     configPath: 'templates/bugis-golden-silk.json',
+  },
+  {
+    title: 'Gen Z Pastel',
+    description: 'Clean aesthetic minimalis ala Gen Z — cream, sage, beige dengan sentuhan elegan classy.',
+    category: 'Gen-Z',
+    configPath: 'templates/gen-z-pastel.json',
   }
 ];
 

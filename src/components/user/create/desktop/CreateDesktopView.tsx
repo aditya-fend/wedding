@@ -36,13 +36,16 @@ export default function CreateDesktopView({
   } = useEditorStore();
   const [isReady, setIsReady] = React.useState(true);
 
+  const initialized = React.useRef(false);
+
   // 1. Inisialisasi Store dengan data dari Server (Prisma)
   React.useEffect(() => {
-    if (initialData) {
+    if (initialData && !initialized.current) {
       setFormData(initialData);
       setInvitationId(invitationId);
       setActiveTemplate(initialTemplate);
       setIsReady(true);
+      initialized.current = true;
     }
   }, [
     initialData,

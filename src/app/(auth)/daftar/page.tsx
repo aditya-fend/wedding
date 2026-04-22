@@ -195,7 +195,7 @@ export default function DaftarPage() {
         </Card>
 
         <p className="text-center text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-          © 2026 UndangDong • Secure Registration
+          © 2026 SajiJanji • Secure Registration
         </p>
       </div>
 

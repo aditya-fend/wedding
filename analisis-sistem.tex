@@ -1,0 +1,585 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[bahasa]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,fit}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=cyan}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Analisis Sistem Digital Wedding Invitation SaaS}
+\lhead{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  backgroundcolor=\color{gray!10},
+  frame=single, breaklines=true,
+  keywordstyle=\color{blue}\bfseries,
+  commentstyle=\color{green!60!black},
+  stringstyle=\color{orange},
+  numbers=left, numberstyle=\tiny\color{gray},
+  tabsize=2
+}
+
+\title{
+  \textbf{Analisis Sistem Komprehensif} \\
+  \large Digital Wedding Invitation SaaS \\
+  \normalsize Next.js App Router + Prisma + Supabase + Zustand
+}
+\author{Analisis Teknis Arsitektur}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Gambaran Umum Sistem}
+% ============================================================
+
+Sistem ini adalah \textbf{platform SaaS undangan pernikahan digital} berbasis web yang
+memungkinkan pengguna membuat, mengedit, dan mempublikasikan undangan pernikahan
+dengan berbagai template premium. Sistem dibangun menggunakan:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\bfseries}l l l}
+\toprule
+Komponen & Teknologi & Fungsi \\
+\midrule
+Framework      & Next.js 15 (App Router) & SSR + RSC + Routing \\
+Database ORM   & Prisma 7 + PostgreSQL   & Persistensi data \\
+Auth Provider  & Supabase Auth           & Autentikasi JWT \\
+State Mgmt     & Zustand                 & Editor client state \\
+Storage        & Supabase Storage        & File/Gambar/Musik \\
+UI Animation   & Framer Motion           & Template animations \\
+Styling        & Tailwind CSS            & Utility-first CSS \\
+\bottomrule
+\end{tabular}
+\caption{Stack Teknologi Utama}
+\end{table}
+
+% ============================================================
+\section{Arsitektur Aplikasi}
+% ============================================================
+
+\subsection{Struktur Direktori}
+
+\begin{lstlisting}[language=bash, caption=Struktur Direktori Utama]
+src/
+  app/
+    (admin)/          # Route group admin
+    (auth)/           # Login / Register
+    (create)/create/  # Editor undangan
+    (invitation)/     # Public view undangan
+    (preview)/        # Preview template
+    (user)/           # Dashboard user
+    api/              # API endpoints
+  components/
+    templates/        # 11+ template komponen
+    user/create/      # Editor UI components
+    ui/               # Shared UI (shadcn)
+  lib/
+    actions/          # Server Actions (Next.js)
+    templateRegistry.ts
+    prisma.ts
+  store/
+    useEditorStore.ts # Zustand global state
+  types/
+    invitation.ts     # TypeScript interfaces
+\end{lstlisting}
+
+\subsection{Route Group Architecture}
+
+Next.js App Router menggunakan \textit{Route Groups} dengan tanda kurung
+untuk pengelompokan tanpa mempengaruhi URL. Sistem ini memiliki 6 route group:
+
+\begin{enumerate}
+  \item \texttt{(admin)} --- Panel administrasi (user, token, template CRUD)
+  \item \texttt{(auth)} --- Halaman login dan registrasi via Supabase
+  \item \texttt{(create)} --- Editor undangan dengan live preview
+  \item \texttt{(invitation)} --- Halaman publik undangan \texttt{/undangan/[slug]}
+  \item \texttt{(preview)} --- Preview template \texttt{/preview/[template]}
+  \item \texttt{(user)} --- Dashboard pengguna
+\end{enumerate}
+
+% ============================================================
+\section{Skema Database (Prisma)}
+% ============================================================
+
+\subsection{Model Data}
+
+Database menggunakan PostgreSQL dengan Prisma sebagai ORM. Berikut adalah
+relasi antar model:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\bfseries}l l l}
+\toprule
+Model & Field Kunci & Relasi \\
+\midrule
+User       & id, email, tokens, role, status   & has many Invitation \\
+Template   & id, title, category, configPath    & has many Invitation \\
+Invitation & id, slug, contentData (JSON), userId, templateId & belongs to User, Template \\
+GuestWish  & id, guestName, message, isPresent  & belongs to Invitation \\
+Music      & id, title, url, artist             & standalone \\
+\bottomrule
+\end{tabular}
+\caption{Relasi Antar Model Database}
+\end{table}
+
+\subsection{Field contentData (JSON)}
+
+Field \texttt{contentData} bertipe \texttt{Json?} di Prisma dan di-cast ke
+interface TypeScript \texttt{InvitationContent}:
+
+\begin{lstlisting}[language=typescript, caption=Interface InvitationContent]
+interface CoupleDetail {
+  nama: string;         // Nama mempelai
+  ortu_ayah: string;    // Nama ayah
+  ortu_ibu: string;     // Nama ibu
+  instagram?: string;
+  foto?: string;        // URL foto
+}
+
+interface EventDetail {
+  tipe: string;         // "Akad Nikah" | "Resepsi"
+  tanggal: string;
+  jam: string;
+  lokasi: string;
+  alamat_lengkap: string;
+  link_maps: string;
+}
+
+interface InvitationContent {
+  mempelai_pria: CoupleDetail;
+  mempelai_wanita: CoupleDetail;
+  acara: EventDetail[];
+  love_story: LoveStory[];
+  gallery: string[];
+  digital_envelope: DigitalEnvelope[];
+  guest_wishes: GuestWishEntry[];
+  music_url?: string;
+  rsvp_url?: string;
+  countdown_date?: string;
+  cover_title?: string;
+  hero_image?: string;
+  wedding_date?: string;
+  dress_code?: string;
+  closing_message?: string;
+}
+\end{lstlisting}
+
+% ============================================================
+\section{Sistem Autentikasi}
+% ============================================================
+
+Autentikasi menggunakan \textbf{Supabase Auth} dengan JWT session.
+Alur autentikasi adalah sebagai berikut:
+
+\begin{enumerate}
+  \item User melakukan login via Supabase UI
+  \item Supabase mengembalikan JWT token yang disimpan sebagai cookie
+  \item Setiap Server Component/Action memanggil \texttt{createServerSupabase()} untuk memvalidasi sesi
+  \item Jika session valid, \texttt{user.id} digunakan untuk query Prisma
+  \item Role \texttt{admin} memiliki akses ke route \texttt{(admin)}
+\end{enumerate}
+
+\subsection{Token Economy}
+
+Sistem menggunakan \textit{token economy} unik:
+\begin{itemize}
+  \item Setiap user memiliki field \texttt{tokens: Int}
+  \item Membuat undangan baru membutuhkan \textbf{10 token}
+  \item Token dikurangi secara atomik via Prisma transaction
+  \item Admin dapat menambah token via dashboard admin
+\end{itemize}
+
+% ============================================================
+\section{Sistem Template}
+% ============================================================
+
+\subsection{Arsitektur Template Registry}
+
+Template di-register secara statis di \texttt{src/lib/templateRegistry.ts}.
+Sistem key normalisasi:
+
+\begin{lstlisting}[language=typescript, caption=Key Normalization]
+// Title template -> key registry
+// "Gen Z Pastel" -> "genzpastel"
+const key = title.replace(/\s+/g, "").toLowerCase();
+
+export const templateRegistry = {
+  nerogold: NeroGold,
+  auradark: AuraDark,
+  genzpastel: GenZPastel,
+  // ...11 template total
+};
+\end{lstlisting}
+
+\subsection{Template yang Tersedia}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\bfseries}l l l}
+\toprule
+Key & Nama Template & Kategori \\
+\midrule
+nerogold          & Nero Gold            & Modern \\
+auradark          & Aura Dark            & Modern \\
+pink              & Pink                 & Romantis \\
+royal             & Royal                & Klasik \\
+jawaroyalkeraton  & Jawa Royal Keraton   & Tradisional \\
+sundaanggunpriangan & Sunda Anggun Priangan & Tradisional \\
+minangmaharaja    & Minang Maharaja      & Tradisional \\
+balisacredluxury  & Bali Sacred Luxury   & Tradisional \\
+batakheritage     & Batak Heritage       & Tradisional \\
+bugisgoldensilk   & Bugis Golden Silk    & Tradisional \\
+genzpastel        & Gen Z Pastel         & Gen-Z \\
+\bottomrule
+\end{tabular}
+\caption{Daftar Template Terdaftar}
+\end{table}
+
+\subsection{Anatomi Template}
+
+Setiap template adalah React Client Component dengan struktur:
+
+\begin{lstlisting}[language=typescript, caption=Struktur Template Wajib]
+"use client"; // WAJIB baris pertama
+
+import { InvitationContent } from "@/types/invitation";
+
+export default function NamaTemplate({
+  data
+}: {
+  data: InvitationContent
+}) {
+  // useState untuk: opened, playing, countdown
+  // useEffect untuk: audio, countdown timer, auto-slider
+  return ( /* JSX */ );
+}
+\end{lstlisting}
+
+\subsection{Alur Resolusi Template}
+
+\begin{enumerate}
+  \item Database menyimpan \texttt{Invitation.templateId} (relasi ke \texttt{Template.id})
+  \item Saat halaman publik \texttt{/undangan/[slug]} diakses, Server Component fetch undangan beserta template
+  \item \texttt{template.title} dinormalisasi: \texttt{title.replace(/\textbackslash s+/g,"").toLowerCase()}
+  \item Key digunakan untuk lookup di \texttt{templateRegistry}
+  \item Komponen yang ditemukan di-render dengan \texttt{data={contentData}}
+\end{enumerate}
+
+% ============================================================
+\section{Sistem Editor (Live Preview)}
+% ============================================================
+
+\subsection{Komponen Editor}
+
+Editor terdiri dari 4 komponen utama:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\bfseries}l l}
+\toprule
+Komponen & Fungsi \\
+\midrule
+\texttt{CreateDesktopView} & Layout utama grid 2 kolom \\
+\texttt{EditorSidebar}     & Form input semua field + template picker \\
+\texttt{LivePreview}       & Preview real-time via MobileDeviceEmulator \\
+\texttt{SectionCard}       & Accordion UI per section \\
+\bottomrule
+\end{tabular}
+\caption{Komponen Editor}
+\end{table}
+
+\subsection{State Management dengan Zustand}
+
+\begin{lstlisting}[language=typescript, caption=useEditorStore State]
+interface EditorState {
+  formData: InvitationContent;  // Data undangan
+  invitationId: string;         // ID undangan aktif
+  activeSection: SectionId;     // Section form aktif
+  activeTemplate: string;       // Title template aktif
+  isSaving: boolean;            // Status auto-save
+
+  setFormData: (data: Partial<InvitationContent>) => void;
+  // Merge partial update dengan spread operator
+}
+\end{lstlisting}
+
+\subsection{Alur Data Editor}
+
+\begin{enumerate}
+  \item \texttt{CreateDesktopView} (Server Component) fetch data awal dari Prisma
+  \item Data dikirim ke \texttt{EditInvitationClient} sebagai props
+  \item \texttt{useEffect} menginisialisasi Zustand store dengan data awal
+  \item User mengetik di \texttt{EditorSidebar} → \texttt{setFormData()} dipanggil → store update
+  \item \texttt{LivePreview} subscribe ke \texttt{useEditorStore} → re-render template
+  \item \texttt{useDebouncedCallback} (1500ms) trigger \texttt{updateInvitationContent()} Server Action
+  \item Server Action validasi ownership → update Prisma → \texttt{revalidatePath()}
+\end{enumerate}
+
+\subsection{Fix: Mencegah Template Remount}
+
+\textbf{Masalah kritis yang ditemukan:} Sebelumnya \texttt{LivePreview} memanggil
+\texttt{renderTemplate()} sebagai fungsi biasa, menyebabkan React menganggap
+\texttt{Component} sebagai instance baru setiap render → template remount →
+semua \texttt{useState} (termasuk \texttt{opened}) reset.
+
+\textbf{Solusi:}
+
+\begin{lstlisting}[language=typescript, caption=Fix useMemo di LivePreview]
+// SEBELUM (buggy): Component berubah reference tiap render
+const renderTemplate = () => {
+  const Component = getTemplate[key]; // baru tiap render!
+  return <Component data={formData} />;
+};
+
+// SESUDAH (fixed): Component hanya berubah jika template berganti
+const Component = useMemo(() => {
+  return getTemplate[normalizeTemplateName(activeTemplate)];
+}, [activeTemplate]); // formData tidak masuk dependency
+\end{lstlisting}
+
+% ============================================================
+\section{Alur Publik Undangan}
+% ============================================================
+
+\subsection{Public Page Flow}
+
+\begin{enumerate}
+  \item Tamu mengakses \texttt{/undangan/[slug]}
+  \item Next.js Server Component fetch: \texttt{prisma.invitation.findUnique(\{where:\{slug\}, include:\{template:true\}\})}
+  \item \texttt{contentData} di-cast ke \texttt{InvitationContent}
+  \item Template dinormalisasi dan di-lookup di registry
+  \item \texttt{PublicInvitationClient} di-render dengan data
+  \item Template client-side menghandle: cover animation, musik autoplay, countdown, RSVP
+\end{enumerate}
+
+\subsection{SEO dan Caching}
+
+\begin{itemize}
+  \item Halaman public di-render sebagai \textbf{RSC (React Server Component)} untuk SEO
+  \item \texttt{revalidatePath()} dipanggil setelah setiap update untuk invalidasi ISR cache
+  \item Metadata halaman dapat di-generate dari \texttt{contentData}
+\end{itemize}
+
+% ============================================================
+\section{Server Actions}
+% ============================================================
+
+Sistem menggunakan \textbf{Next.js Server Actions} untuk operasi database,
+menggantikan API Routes tradisional:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\ttfamily\footnotesize}l l l}
+\toprule
+\textrm{Action} & Fungsi & Auth \\
+\midrule
+createInitialInvitation & Buat undangan baru (deduct 10 token) & Required \\
+updateInvitationContent & Update content + template            & Required + Owner \\
+deleteInvitation        & Hapus undangan                       & Required + Owner \\
+getInvitationById       & Fetch undangan by ID                 & Public \\
+saveInvitation          & Quick save tanpa auth check          & None \\
+\bottomrule
+\end{tabular}
+\caption{Daftar Server Actions}
+\end{table}
+
+\subsection{Keamanan Server Actions}
+
+\begin{itemize}
+  \item Setiap action destructive memvalidasi \texttt{user.id} dari Supabase session
+  \item Ownership check: \texttt{invitation.userId === user.id}
+  \item Prisma transaction digunakan untuk operasi atomik (token deduction + invitation create)
+  \item Error P2002 (unique constraint) ditangani secara eksplisit untuk slug conflicts
+\end{itemize}
+
+% ============================================================
+\section{Arsitektur Gen Z Pastel Template}
+% ============================================================
+
+\subsection{Design System}
+
+Template \textit{Gen Z Pastel} mengimplementasikan design system berikut:
+
+\begin{table}[h]
+\centering
+\begin{tabular}{>{\bfseries}l l l}
+\toprule
+Token & Nilai & Penggunaan \\
+\midrule
+bg      & \texttt{\#FDFBF7} & Background utama \\
+beige   & \texttt{\#E5E0D8} & Card background \\
+sage    & \texttt{\#A3B19B} & Accent + button + border \\
+sageDark & \texttt{\#7A9070} & Heading accent \\
+text    & \texttt{\#4A4A4A} & Body text \\
+muted   & \texttt{\#888880} & Secondary text \\
+\bottomrule
+\end{tabular}
+\caption{Color Tokens Gen Z Pastel}
+\end{table}
+
+\subsection{Seksi Template (Berurutan)}
+
+\begin{enumerate}
+  \item \textbf{Cover} --- Full-screen overlay, decorative blobs, pulse button animation
+  \item \textbf{Hero} --- Parallax background, nama mempelai besar dengan italic serif
+  \item \textbf{Mempelai} --- Arch-shaped photo (CSS border-radius asimetris), info orang tua
+  \item \textbf{Countdown} --- Real-time timer dengan \texttt{setInterval}, 4 kolom grid
+  \item \textbf{Jadwal Acara} --- Vertical timeline, map CTA link
+  \item \textbf{Love Story} --- Auto-slider 4.8 detik, progress pill dots
+  \item \textbf{Gallery} --- CSS columns-2 masonry, aspect-ratio bervariasi
+  \item \textbf{Amplop Digital} --- Copy to clipboard, QRIS image support
+  \item \textbf{RSVP} --- CTA button link + sticky footer CTA
+  \item \textbf{Ucapan} --- Infinite horizontal marquee animation
+  \item \textbf{Closing} --- Quote penutup, nama mempelai serif
+\end{enumerate}
+
+\subsection{State Lokal Template}
+
+\begin{lstlisting}[language=typescript, caption=State Template]
+const [opened, setOpened]    = useState(false);  // Cover toggle
+const [playing, setPlaying]  = useState(true);   // Audio state
+const [story, setStory]      = useState(0);       // Love story index
+const [copied, setCopied]    = useState({});      // Copy feedback
+const [tl, setTl]            = useState({d,h,m,s}); // Countdown
+const audio                  = useRef<Audio>();   // Audio ref
+\end{lstlisting}
+
+% ============================================================
+\section{Seed System}
+% ============================================================
+
+Template didaftarkan ke database via script \texttt{seed-templates.ts}:
+
+\begin{lstlisting}[language=bash, caption=Menjalankan Seed]
+pnpm seed:templates
+# => dotenv --file .env.local -- tsx seed-templates.ts
+\end{lstlisting}
+
+Logika seed menggunakan \textit{upsert pattern} — jika template dengan
+title yang sama sudah ada, dilewati (\texttt{[DILEWATI]}), jika belum
+ada maka dibuat (\texttt{[DIBUAT]}).
+
+% ============================================================
+\section{Diagram Alur Sistem}
+% ============================================================
+
+\subsection{Alur Pembuatan Undangan}
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.2cm,
+  box/.style={rectangle, rounded corners, draw, minimum width=3.5cm, minimum height=0.8cm, font=\small},
+  arrow/.style={->, thick}
+]
+\node[box, fill=blue!10]   (login)    {User Login (Supabase)};
+\node[box, fill=green!10]  (dash)     [below=of login]    {Dashboard /dashboard};
+\node[box, fill=yellow!10] (create)   [below=of dash]     {Klik "Buat Undangan"};
+\node[box, fill=orange!10] (token)    [below=of create]   {Cek Token >= 10};
+\node[box, fill=red!10]    (db)       [below=of token]    {Prisma Transaction};
+\node[box, fill=purple!10] (editor)   [below=of db]       {Editor /create};
+\node[box, fill=teal!10]   (preview)  [below=of editor]   {Live Preview};
+\node[box, fill=gray!10]   (save)     [below=of preview]  {Auto-save (1500ms debounce)};
+\node[box, fill=blue!20]   (public)   [below=of save]     {Publik /undangan/[slug]};
+
+\draw[arrow] (login) -- (dash);
+\draw[arrow] (dash)  -- (create);
+\draw[arrow] (create)-- (token);
+\draw[arrow] (token) -- node[right]{\tiny -10 token} (db);
+\draw[arrow] (db)    -- (editor);
+\draw[arrow] (editor)-- (preview);
+\draw[arrow] (preview)-- (save);
+\draw[arrow] (save)  -- (public);
+\end{tikzpicture}
+\end{center}
+
+\subsection{Alur Resolusi Template di Halaman Publik}
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.1cm,
+  box/.style={rectangle, rounded corners, draw, minimum width=4.5cm, minimum height=0.75cm, font=\small},
+  arrow/.style={->, thick}
+]
+\node[box, fill=blue!10]   (url)    {GET /undangan/[slug]};
+\node[box, fill=green!10]  (fetch)  [below=of url]  {Prisma: findUnique(slug) + include template};
+\node[box, fill=yellow!10] (norm)   [below=of fetch] {Normalize: title.replace(\textbackslash s+,"").toLowerCase()};
+\node[box, fill=orange!10] (reg)    [below=of norm]  {Lookup templateRegistry[key]};
+\node[box, fill=purple!10] (comp)   [below=of reg]   {<Component data=\{contentData\} />};
+\node[box, fill=teal!10]   (render) [below=of comp]  {Client Render: animasi, musik, countdown};
+\draw[arrow] (url)   -- (fetch);
+\draw[arrow] (fetch) -- (norm);
+\draw[arrow] (norm)  -- (reg);
+\draw[arrow] (reg)   -- (comp);
+\draw[arrow] (comp)  -- (render);
+\end{tikzpicture}
+\end{center}
+
+% ============================================================
+\section{Temuan dan Rekomendasi}
+% ============================================================
+
+\subsection{Temuan Teknis}
+
+\begin{enumerate}
+  \item \textbf{Bug LivePreview (Fixed)} --- \texttt{Component} reference baru setiap render menyebabkan remount template. Diselesaikan dengan \texttt{useMemo([activeTemplate])}.
+  \item \textbf{Schema Mismatch} --- Template awal menggunakan field yang tidak sesuai dengan \texttt{InvitationContent} (e.g., \texttt{nama\_lengkap} vs \texttt{nama}). Diselesaikan dengan menyesuaikan ke schema resmi.
+  \item \textbf{Audio Management} --- \texttt{useRef} digunakan untuk audio agar tidak trigger re-render saat play/pause.
+  \item \textbf{Token Race Condition} --- Ditangani dengan Prisma \texttt{\$transaction} dan atomik \texttt{decrement}.
+\end{enumerate}
+
+\subsection{Rekomendasi Pengembangan}
+
+\begin{itemize}
+  \item Tambahkan \textbf{image optimization} via Supabase Storage transform API untuk gallery
+  \item Implementasi \textbf{WebSocket} atau \textbf{Server-Sent Events} untuk collaborative editing
+  \item Tambahkan \textbf{Zod validation} di Server Actions untuk type-safe input
+  \item Pertimbangkan \textbf{Redis caching} untuk halaman undangan yang sering dikunjungi
+  \item Tambahkan \textbf{OG Image generation} (via \texttt{@vercel/og}) per undangan untuk WhatsApp preview
+  \item Implementasi \textbf{A/B testing} template dengan analytics konversi
+\end{itemize}
+
+% ============================================================
+\section{Kesimpulan}
+% ============================================================
+
+Sistem Digital Wedding Invitation SaaS ini merupakan implementasi yang
+solid dari \textit{full-stack modern web architecture} dengan beberapa keunggulan:
+
+\begin{itemize}
+  \item \textbf{Separation of Concerns} yang baik antara template, editor, dan data layer
+  \item \textbf{Type Safety} end-to-end dengan TypeScript + Prisma + Zod
+  \item \textbf{Mobile-First} template design yang konsisten
+  \item \textbf{Scalable Template System} via registry pattern
+  \item \textbf{Secure Server Actions} dengan ownership validation
+  \item \textbf{Real-time Preview} dengan debounced auto-save yang efisien
+\end{itemize}
+
+Sistem siap untuk production dengan beberapa improvement yang direkomendasikan
+di atas untuk meningkatkan performa dan pengalaman pengguna.
+
+\vspace{1cm}
+\hrule
+\vspace{0.3cm}
+\noindent\small\textit{Dokumen ini dihasilkan dari analisis kode sumber project
+\texttt{d:\textbackslash memekgosong\textbackslash wedding} pada April 2026.}
+
+\end{document}

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Presence } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "../supabase/server";
+import sanitizeHtml from "sanitize-html";
 
 export async function saveGuestWish(data: {
   invitationId: string;
@@ -25,11 +26,14 @@ export async function saveGuestWish(data: {
       presenceValue = Presence.Belum_Konfirmasi;
     }
 
+    const sanitizedName = sanitizeHtml(data.guestName, { allowedTags: [], allowedAttributes: {} }).trim();
+    const sanitizedMessage = sanitizeHtml(data.message, { allowedTags: [], allowedAttributes: {} }).trim();
+
     const wish = await prisma.guestWish.create({
       data: {
         invitationId: data.invitationId,
-        guestName: data.guestName,
-        message: data.message,
+        guestName: sanitizedName,
+        message: sanitizedMessage,
         isPresent: presenceValue,
         guestCount: data.guestCount || 1,
       },

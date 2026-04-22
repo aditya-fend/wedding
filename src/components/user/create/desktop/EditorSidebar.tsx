@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
-import { useEditorStore } from "@/store/useEditorStore";
+import { useEditorStore, defaultFormData } from "@/store/useEditorStore";
 import { InvitationContent } from "@/types/invitation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Palette,
@@ -79,6 +86,25 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
   );
   const [isMapPickerOpen, setIsMapPickerOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Template Filtering Logic
+  const [templateSearchQuery, setTemplateSearchQuery] = useState("");
+  const [templateSelectedCategory, setTemplateSelectedCategory] = useState("Semua Kategori");
+  const [templateCategories, setTemplateCategories] = useState<string[]>(["Semua Kategori"]);
+
+  useEffect(() => {
+    const unique = Array.from(new Set(templates.map((t) => t.category)));
+    setTemplateCategories(["Semua Kategori", ...unique]);
+  }, [templates]);
+
+  const filteredTemplates = useMemo(() => {
+    const query = templateSearchQuery.toLowerCase().trim();
+    return templates.filter((t) => {
+      const mCat = templateSelectedCategory === "Semua Kategori" || t.category === templateSelectedCategory;
+      const mQue = !query || t.title.toLowerCase().includes(query) || (t.category && t.category.toLowerCase().includes(query));
+      return mCat && mQue;
+    });
+  }, [templateSearchQuery, templateSelectedCategory, templates]);
 
   // Handle music playback
   useEffect(() => {
@@ -228,8 +254,32 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                 </DialogDescription>
               </DialogHeader>
 
+              {/* Template Search & Filter */}
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+                  <Input
+                    placeholder="Cari template berdasarkan judul atau kategori..."
+                    className="pl-10 h-10 rounded-xl border-slate-200 bg-white text-sm"
+                    value={templateSearchQuery}
+                    onChange={(e) => setTemplateSearchQuery(e.target.value)}
+                  />
+                </div>
+                <Select value={templateSelectedCategory} onValueChange={setTemplateSelectedCategory}>
+                  <SelectTrigger className="h-10 w-full sm:w-[200px] rounded-xl border-slate-200 bg-white text-sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {templateCategories.map((c) => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 mt-6">
-                {templates.map((template) => {
+                {filteredTemplates.length > 0 ? (
+                  filteredTemplates.map((template) => {
                   const isSelected = template.id === activeTemplate;
 
                   return (
@@ -295,10 +345,12 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
 
                         <DialogClose asChild>
                           <Button
+                            type="button"
                             size="sm"
                             className="flex-1 h-8 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]"
                             onClick={() => {
                               setActiveTemplate(template.title);
+                              setFormData(defaultFormData);
                             }}
                           >
                             <MousePointerClick className="size-3 mr-1.5" />{" "}
@@ -308,7 +360,14 @@ export function EditorSidebar({ templates, musics }: SidebarProps) {
                       </CardFooter>
                     </Card>
                   );
-                })}
+                })
+              ) : (
+                <div className="col-span-full py-16 text-center rounded-3xl border-2 border-dashed border-slate-200 bg-slate-50">
+                  <Palette className="size-8 text-slate-300 mx-auto mb-3" />
+                  <p className="text-sm font-semibold text-slate-600">Template tidak ditemukan</p>
+                  <p className="text-xs text-slate-400 mt-1">Coba gunakan kata kunci pencarian yang lain.</p>
+                </div>
+              )}
               </div>
 
               <DialogFooter className="justify-end">

@@ -369,6 +369,14 @@ export default function BatakHeritage({ data }: { data: InvitationContent }) {
         </h2>
         <p className="text-[8px] uppercase tracking-[0.3em] opacity-50 mt-16 text-black font-bold">Divine Nexus</p>
       </section>
-    </div>
+    
+        {/* ── WATERMARK SAJIJANJI ── */}
+        <div className="w-full py-10 text-center flex flex-col items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+          <p className="text-[10px] uppercase tracking-widest font-bold mb-1">Created with love by</p>
+          <a href="https://sajijanji.id" target="_blank" rel="noopener noreferrer" className="text-sm font-black">
+            SajiJanji
+          </a>
+        </div>
+      </div>
   );
 }

@@ -1,6 +1,20 @@
 import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 import { prisma } from "@/lib/prisma";
 import { readFile } from "node:fs/promises";
+import { getCurrentUser } from "@/lib/supabase/actions";
+
+async function isAuthorizedAdmin() {
+  const user = await getCurrentUser();
+  if (!user) return false;
+  
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+    select: { role: true },
+  });
+  
+  return dbUser?.role === "admin";
+}
 
 const tokenFile = new URL("./data.json", import.meta.url);
 
@@ -26,6 +40,10 @@ async function loadTokens(): Promise<TokenRecord[]> {
 }
 
 export async function GET() {
+  if (!(await isAuthorizedAdmin())) {
+    return NextResponse.json({ error: "Akses Ditolak: Memerlukan hak akses admin" }, { status: 403 });
+  }
+
   try {
     const tokens = await loadTokens();
     const userIds = tokens

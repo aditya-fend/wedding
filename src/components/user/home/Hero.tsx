@@ -14,7 +14,7 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2.5 bg-white/80 backdrop-blur-md border border-[#E5E0D8] px-4 py-2 rounded-full mb-8 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="inline-flex items-center gap-2.5 bg-white/80 backdrop-blur-md border border-[#E5E0D8] px-4 py-2 rounded-full mb-8 shadow-sm animate-in fade-in slide-in-from-bottom-4 duration-700" aria-label="SajiJanji menyediakan layanan undangan pernikahan digital premium dengan template eksklusif budaya Nusantara untuk calon pengantin Indonesia">
             <Sparkles className="w-4 h-4 text-[#D4AF97]" />
             <span className="font-semibold text-[#2C2C2C] text-[11px] md:text-xs uppercase tracking-widest">
               Undangan Pernikahan Digital Premium
@@ -38,6 +38,7 @@ export default function Hero() {
             <Link href="/daftar" className="w-full sm:w-auto">
               <Button
                 size="lg"
+                aria-label="Mulai buat undangan pernikahan digital gratis di SajiJanji sekarang — proses cepat 10 menit tanpa coding"
                 className="bg-[#D4AF97] hover:bg-[#B99575] text-white text-base md:text-lg px-10 py-7 rounded-2xl font-bold w-full flex items-center justify-center gap-3 group shadow-xl shadow-[#D4AF97]/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 Mulai Buat Sekarang
@@ -49,6 +50,7 @@ export default function Hero() {
               <Button
                 size="lg"
                 variant="outline"
+                aria-label="Lihat koleksi 11+ template undangan digital premium SajiJanji dari gaya modern, klasik, tradisional Nusantara, hingga Gen Z pastel"
                 className="text-base md:text-lg px-10 py-7 rounded-2xl border-[#E5E0D8] text-[#2C2C2C] hover:bg-[#F0EDE6]/30 w-full bg-white/50 backdrop-blur-sm transition-all hover:border-[#D4AF97]/50"
               >
                 Lihat Template

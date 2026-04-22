@@ -16,10 +16,10 @@ export default function Footer() {
               Platform undangan pernikahan digital modern. Elegan, praktis, dan berkesan.
             </p>
             <div className="flex items-center gap-3 pt-2">
-              <Link href="#" className="text-[#9B9B9B] hover:text-[#D4AF97] transition-colors">
+              <Link href="#" className="text-[#9B9B9B] hover:text-[#D4AF97] transition-colors" aria-label="Ikuti SajiJanji di Instagram untuk inspirasi undangan digital dan tips pernikahan">
                 <Instagram className="size-4" />
               </Link>
-              <Link href="#" className="text-[#9B9B9B] hover:text-[#D4AF97] transition-colors">
+              <Link href="#" className="text-[#9B9B9B] hover:text-[#D4AF97] transition-colors" aria-label="Tonton tutorial dan review undangan digital SajiJanji di YouTube">
                 <Youtube className="size-4" />
               </Link>
             </div>
@@ -60,11 +60,11 @@ export default function Footer() {
           <div>
             <h4 className="text-[11px] font-bold text-[#2C2C2C] uppercase tracking-[0.2em] mb-4">Hubungi Kami</h4>
             <div className="space-y-2 text-[12px] font-medium">
-              <a href="tel:+6281234567890" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors">
+              <a href="tel:+6281234567890" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors" aria-label="Hubungi customer service SajiJanji via WhatsApp atau telepon untuk bantuan langsung">
                 <Phone className="size-3" /> +62 812-3456-7890
               </a>
-              <a href="mailto:hello@undangdong.id" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors">
-                <Mail className="size-3" /> hello@undangdong.id
+              <a href="mailto:hello@sajijanji.id" className="flex items-center gap-2 text-[#6B6B6B] hover:text-[#D4AF97] transition-colors" aria-label="Hubungi tim SajiJanji via email di hello@sajijanji.id untuk pertanyaan atau bantuan undangan digital">
+                <Mail className="size-3" /> hello@sajijanji.id
               </a>
             </div>
           </div>
@@ -73,7 +73,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-[#F0EDE6] flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-            © 2026 UNDANGDONG INDONESIA
+            © 2026 SAJIJANJI INDONESIA
           </p>
           <div className="flex gap-6 text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
             <span className="cursor-default">Privacy</span>

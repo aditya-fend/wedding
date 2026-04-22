@@ -78,7 +78,7 @@ export default async function DashboardPage() {
       {/* Optional: Footer Divider */}
       <footer className="pt-12 border-t border-[#F0EDE6] flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-[10px] font-bold text-[#9B9B9B] uppercase tracking-widest">
-          &copy; 2026 UndangDong UI Pattern v2.0
+          &copy; 2026 SajiJanji UI Pattern v2.0
         </p>
         <div className="flex gap-6">
           <button className="text-[10px] font-bold text-[#9B9B9B] hover:text-[#D4AF97] uppercase tracking-widest transition-colors">Bantuan</button>

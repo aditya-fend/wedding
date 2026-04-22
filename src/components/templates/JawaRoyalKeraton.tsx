@@ -384,6 +384,14 @@ export default function JawaRoyalKeraton({ data }: { data: InvitationContent }) 
           <p className="mt-8 text-[10px] opacity-30">Created with love by Divine Nexus</p>
         </div>
       </section>
-    </div>
+    
+        {/* ── WATERMARK SAJIJANJI ── */}
+        <div className="w-full py-10 text-center flex flex-col items-center justify-center opacity-60 hover:opacity-100 transition-opacity">
+          <p className="text-[10px] uppercase tracking-widest font-bold mb-1">Created with love by</p>
+          <a href="https://sajijanji.id" target="_blank" rel="noopener noreferrer" className="text-sm font-black">
+            SajiJanji
+          </a>
+        </div>
+      </div>
   );
 }

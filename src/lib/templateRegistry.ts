@@ -9,11 +9,13 @@ import MinangMaharaja from "@/components/templates/MinangMaharaja";
 import BaliSacredLuxury from "@/components/templates/BaliSacredLuxury";
 import BatakHeritage from "@/components/templates/BatakHeritage";
 import BugisGoldenSilk from "@/components/templates/BugisGoldenSilk";
+import GenZPastel from "@/components/templates/gen-z-pastel";
 import { InvitationContent } from "@/types/invitation";
 
 export type TemplateComponent = React.ComponentType<{
   data: InvitationContent;
   invitationId?: string;
+  guestName?: string | null;
 }>;
 
 // Gunakan keys dalam lowercase untuk kompatibilitas pencarian
@@ -28,6 +30,7 @@ export const templateRegistry: Record<string, TemplateComponent> = {
   balisacredluxury: BaliSacredLuxury,
   batakheritage: BatakHeritage,
   bugisgoldensilk: BugisGoldenSilk,
+  genzpastel: GenZPastel,
 };
 
 // getTemplate sekarang merujuk ke registry yang sama untuk konsistensi

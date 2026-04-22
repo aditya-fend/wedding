@@ -8,6 +8,7 @@ import {
   templateRegistry,
 } from "@/lib/templateRegistry";
 import { InvitationContent } from "@/types/invitation";
+import { useSearchParams } from "next/navigation";
 
 interface Props {
   data: InvitationContent;
@@ -21,6 +22,8 @@ export default function PublicInvitationClient({
   invitationId,
 }: Props) {
   const [isDesktop, setIsDesktop] = React.useState(false);
+  const searchParams = useSearchParams();
+  const guestName = searchParams?.get("to");
 
   React.useEffect(() => {
     // Cek jika ukuran layar > 768px (Tablet ke atas)
@@ -39,7 +42,9 @@ export default function PublicInvitationClient({
 
     const Component = getTemplate[key] as TemplateComponent | undefined;
 
-    return <Component data={data} invitationId={invitationId} />;
+    if (!Component) return <div className="p-4 text-center">Template not found</div>;
+
+    return <Component data={data} invitationId={invitationId} guestName={guestName} />;
   };
 
   if (isDesktop) {

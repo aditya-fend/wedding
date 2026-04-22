@@ -7,21 +7,25 @@ const features = [
     icon: <Heart className="size-6 text-[#D4AF97]" />,
     title: "Desain Elegan",
     description: "Template modern dan klasik yang dirancang khusus untuk estetika pernikahan Indonesia.",
+    ariaLabel: "Fitur desain elegan SajiJanji — template modern dan klasik yang dirancang khusus untuk estetika pernikahan Indonesia dengan budaya Nusantara",
   },
   {
     icon: <Users className="size-6 text-[#D4AF97]" />,
     title: "RSVP Real-time",
     description: "Pantau daftar tamu dan konfirmasi kehadiran secara instan melalui dashboard pribadi.",
+    ariaLabel: "Fitur RSVP real-time SajiJanji — pantau daftar tamu dan konfirmasi kehadiran secara instan melalui dashboard pribadi",
   },
   {
     icon: <Calendar className="size-6 text-[#D4AF97]" />,
     title: "Pembayaran Mudah",
     description: "Proses cepat via QRIS dengan konfirmasi otomatis untuk efisiensi persiapan Anda.",
+    ariaLabel: "Fitur pembayaran mudah SajiJanji — proses cepat via QRIS dengan konfirmasi otomatis untuk efisiensi persiapan pernikahan",
   },
   {
     icon: <Sparkles className="size-6 text-[#D4AF97]" />,
     title: "Link Unik & Aman",
     description: "Setiap undangan memiliki link eksklusif yang aman untuk dibagikan ke seluruh sosial media.",
+    ariaLabel: "Fitur link unik dan aman SajiJanji — setiap undangan memiliki link eksklusif yang aman untuk dibagikan ke WhatsApp dan media sosial",
   },
 ];
 
@@ -43,6 +47,7 @@ export default function Features() {
             <Card 
               key={index} 
               className="border-[#E5E0D8] bg-[#FDFCFB]/50 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 group"
+              aria-label={feature.ariaLabel}
             >
               <div className="mb-5 inline-flex items-center justify-center size-12 rounded-xl bg-white border border-[#F0EDE6] shadow-sm group-hover:border-[#D4AF97]/30 transition-colors">
                 {feature.icon}
