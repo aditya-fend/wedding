@@ -83,7 +83,7 @@ export function TemplateCard({
           size="sm"
           className="h-8 flex-1 rounded-lg text-[11px] bg-[#D4AF97] hover:bg-[#B99575]"
         >
-          <Link href="/login">Pilih</Link>
+          <Link href="/login" rel="noreferrer">Pilih</Link>
         </Button>
       </CardFooter>
     </Card>
